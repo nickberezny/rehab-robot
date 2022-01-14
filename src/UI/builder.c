@@ -20,8 +20,8 @@
 
 /**
  * @file builder.c
- * @author My Self
- * @date 9 Sep 2012
+ * @author Nick Berezny
+ * @date 14 Jan 2022
  * @brief File containing example of doxygen usage for quick reference.
  *
  * Here typically goes a more extensive explanation of what the header
