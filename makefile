@@ -13,6 +13,8 @@ else
 	TARGET_EXTENSION=out
 endif
 
+
+
 .PHONY: clean
 .PHONY: test
 
@@ -23,6 +25,8 @@ PATHB = build/
 PATHD = build/depends/
 PATHO = build/objs/
 PATHR = build/results/
+
+PATHUI = src/UI/
 
 BUILD_PATHS = $(PATHB) $(PATHD) $(PATHO) $(PATHR)
 
@@ -40,6 +44,11 @@ RESULTS = $(patsubst $(PATHT)Test%.c,$(PATHR)Test%.txt,$(SRCT) )
 PASSED = `grep -s PASS $(PATHR)*.txt`
 FAIL = `grep -s FAIL $(PATHR)*.txt`
 IGNORE = `grep -s IGNORE $(PATHR)*.txt`
+
+
+ui:
+	gcc `pkg-config --cflags gtk+-3.0` -o $(PATHUI)builder $(PATHUI)builder.c  `pkg-config --libs gtk+-3.0 gmodule-2.0`
+	$(PATHUI)./builder
 
 test: $(BUILD_PATHS) $(RESULTS)
 	@echo "-----------------------\nIGNORES:\n-----------------------"
