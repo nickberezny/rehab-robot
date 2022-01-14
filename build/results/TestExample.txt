@@ -1,0 +1,5 @@
+test/TestExample.c:16:test_exampleFn:PASS
+
+-----------------------
+1 Tests 0 Failures 0 Ignored 
+OK
