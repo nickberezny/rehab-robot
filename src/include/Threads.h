@@ -1,1 +1,1 @@
-bool init_thread(pthread_attr_t * attr, struct sched_param * param, int priority);
+bool initThread(pthread_attr_t * attr, struct sched_param * param, int priority);

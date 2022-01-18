@@ -1,5 +1,6 @@
-test/TestThreads.c:36:test_initThread:PASS
+test/TestThreads.c:46:test_initThread:PASS
+test/TestThreads.c:47:test_CreateThread:PASS
 
 -----------------------
-1 Tests 0 Failures 0 Ignored 
+2 Tests 0 Failures 0 Ignored 
 OK

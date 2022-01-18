@@ -13,6 +13,10 @@ struct sched_param param[3];
 pthread_attr_t attr[3];
 pthread_t thread[3];
 
+void *threadDummy(void * d)
+{
+	return;
+}
 
 void setUp (void) 
 {
@@ -30,9 +34,16 @@ void test_initThread(void)
 	TEST_ASSERT_EQUAL_INT(97, param[0].sched_priority);
 }
 
+void test_CreateThread(void)
+{
+	initThread(&attr[1], &param[1], 98);
+	TEST_ASSERT_EQUAL(0,pthread_create(&thread[1], NULL, threadDummy, (void *)NULL));
+}
+
 int main(void)
 {
 	UNITY_BEGIN();
 	RUN_TEST(test_initThread);
+	RUN_TEST(test_CreateThread);
 	return UNITY_END();
 }

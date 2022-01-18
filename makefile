@@ -45,6 +45,10 @@ PASSED = `grep -s PASS $(PATHR)*.txt`
 FAIL = `grep -s FAIL $(PATHR)*.txt`
 IGNORE = `grep -s IGNORE $(PATHR)*.txt`
 
+builds:
+	sudo $(LINK) $(wildcard $(PATHS)*.c) -o robotController $(LIB)
+	
+
 docs:
 	sudo doxygen doxygen_config
 	firefox doc/html/index.html
