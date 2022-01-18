@@ -36,7 +36,7 @@ COMPILE=gcc -c
 LINK=gcc
 DEPEND=gcc -MM -MG -MF 
 CFLAGS=-I. -I$(PATHU) -I$(PATHS) -DTEST 
-LIB=-lm -lpthread 
+LIB=-lm -lpthread -lLabJackM
 
 RESULTS = $(patsubst $(PATHT)Test%.c,$(PATHR)Test%.txt,$(SRCT) )
 
@@ -45,6 +45,9 @@ PASSED = `grep -s PASS $(PATHR)*.txt`
 FAIL = `grep -s FAIL $(PATHR)*.txt`
 IGNORE = `grep -s IGNORE $(PATHR)*.txt`
 
+docs:
+	sudo doxygen doxygen_config
+	firefox doc/html/index.html
 
 ui:
 	gcc `pkg-config --cflags gtk+-3.0` -o $(PATHUI)builder $(PATHUI)builder.c  `pkg-config --libs gtk+-3.0 gmodule-2.0`

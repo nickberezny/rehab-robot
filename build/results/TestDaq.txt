@@ -1,0 +1,6 @@
+1
+test/TestDaq.c:20:test_initDaq:PASS
+
+-----------------------
+1 Tests 0 Failures 0 Ignored 
+OK

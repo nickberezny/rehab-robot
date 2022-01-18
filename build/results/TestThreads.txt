@@ -1,0 +1,5 @@
+test/TestThreads.c:36:test_initThread:PASS
+
+-----------------------
+1 Tests 0 Failures 0 Ignored 
+OK
