@@ -1,5 +1,0 @@
-test/TestController.c:16:test_controllerThread:PASS
-
------------------------
-1 Tests 0 Failures 0 Ignored 
-OK

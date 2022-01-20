@@ -18,4 +18,16 @@ int timeStep(struct timespec * ts, struct timespec * tf)
     return (tf->tv_sec - ts->tv_sec)*NSEC_IN_SEC + (tf->tv_nsec - ts->tv_nsec);;
 }
 
+void getTimeToSleep(struct timespec * ts, struct timespec * tf)
+{
+    tf->tv_nsec = ts->tv_nsec + STEP_SIZE_MS * 1000 * 1000;
+    tf->tv_sec = ts->tv_sec;
+
+    while(tf->tv_nsec > NSEC_IN_SEC)
+    {
+        tf->tv_nsec -= NSEC_IN_SEC;
+        tf->tv_sec += 1;
+    }
+}
+
 

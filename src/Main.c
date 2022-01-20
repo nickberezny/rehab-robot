@@ -13,6 +13,7 @@
 #include <sched.h>
 #include <stdbool.h>
 #include <limits.h>
+#include <string.h>
 
 #include "./include/Structures.h"
 
@@ -20,6 +21,7 @@
 #include "./include/Daq.h"
 #include "./include/Memory.h"
 #include "./include/Threads.h"
+#include "./include/Log.h"
 
 
 
@@ -28,7 +30,7 @@ int main(int argc, char* argv[])
 {
     printf("Starting controller...\n");
 
-    struct CUICStruct data = {0};
+    struct CUICStruct data[BUFFER_SIZE] = {0};
 
     struct sched_param param[NUMBER_OF_THREADS];
     pthread_attr_t attr[NUMBER_OF_THREADS];
@@ -39,13 +41,28 @@ int main(int argc, char* argv[])
     //init Mutexes
     //Data log etc...
 
+    time_t rawtime;
+    struct tm * timeinfo;
+
+    time ( &rawtime );
+    timeinfo = localtime ( &rawtime );
+
+    FILE * fp;
+
+    initLog("/test.txt", fp, timeinfo);
+
     //initDaq();
 
     for(int i = 0; i < NUMBER_OF_THREADS; i++)
     {
         initThread(&attr[i], &param[i], 98-i);
-        initMutex(&data.lock);
     }
+
+      for(int i = 0; i < BUFFER_SIZE; i++)
+    {
+        initMutex(&data[i].lock);
+    }
+
 
     //....
 

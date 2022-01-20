@@ -34,10 +34,10 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 
-G_MODULE_EXPORT void handle_button_click(GtkButton* button,
-                                         gpointer user_data)
+G_MODULE_EXPORT void handle_button_click()
 {
-  printf("click: %p, %X\n", button, *(int*)user_data);
+  printf("click\n");
+  system("./robotController");
 }
 
 int main(int argc, char** argv)
@@ -53,6 +53,11 @@ int main(int argc, char** argv)
     // Get the object called 'main_window' from the file and show it.
     GObject* window = gtk_builder_get_object(builder, "main_window");
     gtk_widget_show(GTK_WIDGET(window));
+
+    GtkWidget *button;
+
+    button = GTK_WIDGET (gtk_builder_get_object(builder,"button"));
+    g_signal_connect (button, "clicked", G_CALLBACK (handle_button_click), NULL);
 
     // Connect the signal handlers defined in the glade file.
     // (Note: if you're looking for the c++ way to do this, there's no
