@@ -32,7 +32,7 @@ bool initThread(pthread_attr_t * attr, struct sched_param * param, int priority)
     }
 
     // Set a specific stack size  
-    if (pthread_attr_setstacksize(attr, PTHREAD_STACK_MIN)) {
+    if (pthread_attr_setstacksize(attr, 15000)) { //PTHREAD_STACK_MIN
         printf("pthread setstacksize failed \n");
         return false;
     }

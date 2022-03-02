@@ -14,7 +14,6 @@ else
 endif
 
 
-
 .PHONY: clean
 .PHONY: test
 
@@ -45,9 +44,12 @@ PASSED = `grep -s PASS $(PATHR)*.txt`
 FAIL = `grep -s FAIL $(PATHR)*.txt`
 IGNORE = `grep -s IGNORE $(PATHR)*.txt`
 
-builds:
+build2:
 	sudo $(LINK) $(wildcard $(PATHS)*.c) -o robotController $(LIB)
 	
+
+builds:
+	sudo gcc `pkg-config --cflags gtk+-3.0` $(wildcard $(PATHS)*.c) -o robotController $(LIB) `pkg-config --libs gtk+-3.0 gmodule-2.0`
 
 docs:
 	sudo doxygen doxygen_config

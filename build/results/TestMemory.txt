@@ -1,0 +1,5 @@
+test/TestMemory.c:19:test_initMutex:PASS
+
+-----------------------
+1 Tests 0 Failures 0 Ignored 
+OK

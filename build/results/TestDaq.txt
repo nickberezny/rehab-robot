@@ -1,0 +1,6 @@
+0
+test/TestDaq.c:13:test_initDaq:FAIL: Expected Not-Equal
+
+-----------------------
+1 Tests 1 Failures 0 Ignored 
+FAIL

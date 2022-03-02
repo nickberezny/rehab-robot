@@ -17,14 +17,17 @@
 
 #include "./include/Parameters.h"
 #include "./include/Structures.h"
-#include "./include/Controller.h"
 #include "./include/TimeUtilities.h"
+#include "./include/Controller.h"
+#include "./include/CUIC.h"
+
 
 void * controllerThread (void * d)
 {
     printf("Starting control thread...\n");
 
-    struct CUICStruct *cont; // = (struct CUICStruct*)d;
+    struct States *s; // = (struct CUICStruct*)d;
+    struct Params *p;
     int j = 0;
 
     struct timespec t_last;
@@ -33,21 +36,29 @@ void * controllerThread (void * d)
     while(j < BUFFER_SIZE)
     {
 
-        cont = &((struct CUICStruct*)d)[j];
+        s = &((struct States*)d)[j];
+        p = &(s->p);
 
-        clock_gettime(CLOCK_MONOTONIC, &cont->t_start);  
+
+        clock_gettime(CLOCK_MONOTONIC, &s->t_start);  
         
-        printf("time: %d ; %d\n", cont->t_start.tv_sec - t_last.tv_sec, cont->t_start.tv_nsec - t_last.tv_nsec);
+        printf("time: %d ; %d\n", s->t_start.tv_sec - t_last.tv_sec, s->t_start.tv_nsec - t_last.tv_nsec);
 
-        pthread_mutex_lock(&cont->lock);
+        pthread_mutex_lock(&s->lock);
 
-        //** do control stuff ...
-        pthread_mutex_unlock(&cont->lock);
-        t_last = cont->t_start;
+        //read daq 
+
+        VirtualTrajectory(s,p);
+        GetCommand(s,p);
+
+        //write daq
+        
+        pthread_mutex_unlock(&s->lock);
+        t_last = s->t_start;
         j = j + 1;
 
-        getTimeToSleep(&cont->t_start, &cont->t_end);
-        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &cont->t_end, NULL);
+        getTimeToSleep(&s->t_start, &s->t_end);
+        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &s->t_end, NULL);
 
         
     }

@@ -27,9 +27,25 @@ void test_stepTime(void)
 
 }
 
+void test_getTimeToSleep(void)
+{
+	struct timespec ts;
+	struct timespec tf;
+
+	ts.tv_nsec = 2;
+	tf.tv_nsec = 5;
+	ts.tv_sec = 0;
+	tf.tv_sec = 0;
+
+	getTimeToSleep(&ts,&tf);
+
+	TEST_ASSERT_EQUAL(2,3);
+}
+
 int main(void)
 {
 UNITY_BEGIN();
 RUN_TEST(test_stepTime);
+RUN_TEST(test_getTimeToSleep);
 return UNITY_END();
 }

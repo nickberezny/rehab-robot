@@ -1,0 +1,6 @@
+test/TestCUIC.c:60:test_virtualTractory:PASS
+test/TestCUIC.c:52:test_GetCommand:FAIL: Expected TRUE Was FALSE
+
+-----------------------
+2 Tests 1 Failures 0 Ignored 
+FAIL
