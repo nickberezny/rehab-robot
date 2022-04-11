@@ -21,6 +21,29 @@
 #include "./include/Controller.h"
 #include "./include/TimeUtilities.h"
 
+void * logThread (void * d)
+{
+    //sleep(0.001f);
+    struct States *s; // = (struct CUICStruct*)d;
+    int i = 0;
+
+    while(i < BUFFER_SIZE-1)
+    {
+
+        s = &((struct States*)d)[i];
+        printf("%d mutex: %d\n", i, pthread_mutex_lock(&s->lock));
+        printf("Log Thread... %f \n", s->x);
+        //fprintf ((s->h.fp), "data %f \n", s->x);
+        printf("%d unlock mutex: %d\n", i, pthread_mutex_unlock(&s->lock));
+        i = i + 1;
+        
+    }
+    
+    printf("Done Log...\n");
+    //pthread_exit(NULL);
+    return NULL;
+}
+
 
 
 void initFolder(char * filename, struct tm * timeinfo, char * folder)
@@ -45,32 +68,30 @@ void initFolder(char * filename, struct tm * timeinfo, char * folder)
     mkdir(folder,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
     
-    
-    
 }
 
 
-void initLog(char * filename, FILE * fp, struct tm * timeinfo)
+void initLog(char * filename, struct States * s, struct tm * timeinfo)
 {
     char folder[1000] = "log/";
 
     initFolder(filename, timeinfo, folder);
     
     strcat(folder, filename);
-    printf("%s\n", folder); 
+    
 
-    fp = fopen(folder,"w");
+    strcpy(s->h.filepath, folder);
+    s->h.fp = fopen(folder,"w");
 
     //file header
-    fprintf(fp, "Rehab Robot Log File\n");
-    fprintf(fp, "%s\n", asctime(timeinfo));
+    fprintf(s->h.fp, "Rehab Robot Log File\n");
+    fprintf(s->h.fp, "%s\n", asctime(timeinfo));
+    fclose(s->h.fp);
 
-    fclose(fp);
+    printf("%s\n", folder); 
+
+   
 
 }
 
 
-void * logThread (void * d)
-{
-    return;
-}

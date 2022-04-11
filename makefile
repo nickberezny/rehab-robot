@@ -49,7 +49,10 @@ build2:
 	
 
 builds:
-	sudo gcc `pkg-config --cflags gtk+-3.0` $(wildcard $(PATHS)*.c) -o robotController $(LIB) `pkg-config --libs gtk+-3.0 gmodule-2.0`
+	sudo gcc $(wildcard $(PATHS)*.c) -o robotController $(LIB)
+
+basics:
+	sudo gcc `pkg-config --cflags gtk+-3.0` $(PATHS)Basics.c $(PATHS)Log.c $(PATHS)Daq.c $(PATHS)Home.c $(PATHS)TimeUtilities.c -o basics $(LIB) `pkg-config --libs gtk+-3.0 gmodule-2.0`
 
 docs:
 	sudo doxygen doxygen_config

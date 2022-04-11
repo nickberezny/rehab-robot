@@ -1,1 +1,0 @@
-int mainUI(int argc, char** argv);

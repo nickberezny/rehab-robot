@@ -1,8 +1,0 @@
-pthread setstacksize failed 
-test/TestThreads.c:32:test_initThread:FAIL: Expected TRUE Was FALSE
-pthread setstacksize failed 
-test/TestThreads.c:47:test_CreateThread:PASS
-
------------------------
-2 Tests 1 Failures 0 Ignored 
-FAIL

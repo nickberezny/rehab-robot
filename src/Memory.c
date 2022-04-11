@@ -10,9 +10,11 @@
 #include <stdbool.h>
 #include <pthread.h>
 
+#include "./include/Parameters.h"
+#include "./include/Structures.h"
 #include "./include/Memory.h"
 
-int initMutex(pthread_mutex_t * lock)
+int initMutex(struct States * s)
 {
-    return pthread_mutex_init(lock, NULL); 
+    return pthread_mutex_init(&s->lock, NULL); 
 }

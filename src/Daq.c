@@ -1,10 +1,22 @@
-#include <LabJackM.h>
+#include <stdlib.h>
 #include <stdio.h>
+#include <pthread.h>
+#include <sched.h>
 #include <stdbool.h>
+#include <limits.h>
+#include <LabJackM.h>
 
+#include "./include/Parameters.h"
+#include "./include/Structures.h"
 #include "./include/Daq.h"
 
-int initDaq()
+
+void ReadWriteDAQ(struct States * s)
+{
+    LJM_eNames(s->daq.daqHandle, 5, s->daq.aNames, s->daq.aWrites, s->daq.aNumValues, s->daq.aValues, &(s->daq.errorAddress));
+}
+
+int initDaq(struct States * s)
 {
 
 /*------------------------------------------------------------------------
@@ -35,6 +47,21 @@ int initDaq()
     LJM_eWriteName(handle, "AIN0_SETTLING_US", 0);
 
     printf("%d\n", handle);
+
+
+    double aValues[5] = {0};
+    const char * aNames[5] = {"DAC0", "AIN0","FIO0", "FIO1", "DIO2_EF_READ_A_F_AND_RESET"};
+    int aNumValues[5] = {1,1,1,1,1};
+    int aWrites[5] = {1,0,0,0,0};
+
+    memcpy(s->daq.aNames,aNames, 5*sizeof(double));
+
+    /*
+    s->daq.aValues = aValues;
+    s->daq.aNumValues = aNumValues;
+    s->daq.aWrites = aWrites;
+    s->daq.errorAddress = 0;
+    */
     return handle;
 
 }

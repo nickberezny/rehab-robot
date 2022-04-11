@@ -30,13 +30,13 @@ bool initThread(pthread_attr_t * attr, struct sched_param * param, int priority)
         printf("init pthread attributes failed \n");
         return false;
     }
-
+    /*
     // Set a specific stack size  
-    if (pthread_attr_setstacksize(attr, 15000)) { //PTHREAD_STACK_MIN
+    if (pthread_attr_setstacksize(attr, 1000)) { //PTHREAD_STACK_MIN
         printf("pthread setstacksize failed \n");
         return false;
     }
-
+    */
 
     // Set scheduler policy and priority of pthread (SCHED_FIFO, SCHED_RR, SCHED_DEADLINE)
     if (pthread_attr_setschedpolicy(attr, SCHED_FIFO)) {

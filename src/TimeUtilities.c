@@ -13,9 +13,10 @@
 #include "./include/Parameters.h"
 #include "./include/TimeUtilities.h"
 
-int timeStep(struct timespec * ts, struct timespec * tf)
+void timeStep(struct timespec * ts, struct timespec * tf, int * dt)
 {
-    return (tf->tv_sec - ts->tv_sec)*NSEC_IN_SEC + (tf->tv_nsec - ts->tv_nsec);;
+    *dt = (tf->tv_sec - ts->tv_sec)*NSEC_IN_SEC + (tf->tv_nsec - ts->tv_nsec);
+    return;
 }
 
 void getTimeToSleep(struct timespec * ts, struct timespec * tf)

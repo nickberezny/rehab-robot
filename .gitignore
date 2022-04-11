@@ -1,4 +1,8 @@
 /doc/
+/build/
+/latex/
+/log/
+/server_test/
 
 # Prerequisites
 *.d

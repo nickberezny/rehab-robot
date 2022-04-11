@@ -11,59 +11,54 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <unistd.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
-void openComm(int * fd)
+
+void openClientSocket(int *fd, struct sockaddr_in *servaddr, int *port)
 {
-    char * myfifo = "/tmp/myfifo";
+    // Creating socket file descriptor
+    if ( (*fd = socket(AF_INET, SOCK_STREAM, 0)) < 0 ) {
+        perror("socket creation failed");
+        //exit(EXIT_FAILURE);
+    }
+   
+    memset(servaddr, 0, sizeof(*servaddr));
+       
+    // Filling server information
+    servaddr->sin_family = AF_INET;
+    servaddr->sin_port = htons(*port);
+    servaddr->sin_addr.s_addr = inet_addr("192.168.0.93");
+    //inet_pton(AF_INET, "127.0.0.1",  servaddr->sin_addr.s_addr);
 
-    int temp = open(myfifo, O_RDONLY);
-    *fd = temp;
+    if (connect(*fd, servaddr, sizeof(*servaddr)) != 0) {
+        printf("connection with the server failed...\n");
+        exit(0);
+    }
+    else
+        printf("connected to the server..\n");
+    
+    
 }
 
-void initFIFO(int * fd)
+void sendMessage(int *fd, char msg[], struct sockaddr_in *servaddr)
 {
-    printf("Init FIFO\n");
-    // FIFO file path
-    int fd1;
-    char * myfifo = "/tmp/myfifo3";
-
-    mkfifo(myfifo, 0666);
-
-    printf("Init FIFO\n");
-
-    // Open FIFO for write only
-    fd1 = open(myfifo, O_WRONLY);
-
-    printf("%d\n", fd1);
-
-    write(fd1, "Hi", sizeof("Hi"));
-    close(fd1);
-
-    unlink(myfifo);
-
-    printf("Done!\n", fd1);
-    return;
+    //sendto(*fd, msg, strlen(msg), MSG_CONFIRM, servaddr, sizeof(*servaddr));
+    write(*fd, msg, sizeof(char)*strlen(msg));
 }
 
-void sendFIFO(int * fd, char * data[])
+void recvMessage(int *fd, char *buffer, int *len, struct sockaddr_in *servaddr)
 {
-    write(*fd, "Hi There", strlen("Hi There"));
-    close(*fd);
-
-    //unlink(*fd);
-
-    return;
+    //int n = recvfrom(*fd, buffer, 1024, MSG_WAITALL, servaddr, len);
+    //buffer[n] = '\0';
+    //read(*fd, buffer, sizeof(buffer));
+    recv(*fd, buffer, sizeof(buffer), MSG_WAITALL);
 }
 
-void recvFIFO(int * fd, char * buffer[])
-{
-	*fd = open(*fd,O_RDONLY);
-    char buf[100];
-    read(*fd, buf, 100);
-    printf("Received: %s\n", buf);
-    close(*fd);
 
-    return;
 
-}
+

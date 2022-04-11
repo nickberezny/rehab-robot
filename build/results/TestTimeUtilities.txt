@@ -1,6 +1,0 @@
-test/TestTimeUtilities.c:48:test_stepTime:PASS
-test/TestTimeUtilities.c:42:test_getTimeToSleep:FAIL: Expected 2 Was 3
-
------------------------
-2 Tests 1 Failures 0 Ignored 
-FAIL
