@@ -1,1 +1,0 @@
-void * pipeThread (void * d);

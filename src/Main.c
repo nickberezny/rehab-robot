@@ -34,7 +34,9 @@
 #include "./include/Threads.h"
 #include "./include/Log.h"
 #include "./include/Communication.h"
-#include "./include/PipeThread.h"
+#include "./include/Client.h"
+
+
 
 int mainController(int argc, char* argv[]);
 
@@ -69,7 +71,12 @@ int main(int argc, char* argv[])
 
     d->currentState = WAIT_STATE; //State = Set
 
-    sendMessage(&sockfd, "ROBOT", &servaddr);
+    for(int i = 0; i < BUFFER_SIZE; i++)
+    {
+        data[i].sockfd = &sockfd;
+    }
+
+    sendMessage(d->sockfd, "ROBOT");
     read(sockfd, buffer, sizeof(buffer));
 
     printf("Server : %s\n", buffer);
@@ -78,7 +85,7 @@ int main(int argc, char* argv[])
     sleep(5);
 
 
-    sendMessage(&sockfd, "UI::hi from robot", &servaddr);
+    sendMessage(&sockfd, "UI::hi from robot");
 
     /*
     bool isRunning = false;
@@ -116,46 +123,51 @@ int main(int argc, char* argv[])
         switch (d->currentState)
         {
             case WAIT_STATE:
-                WaitForMsg(&sockfd, &servaddr, &d->currentState);
+                WaitForMsg(&sockfd, &d->currentState);
                 break;
             case HOME_STATE:
-                sendMessage(&sockfd, "UI::STARTTASK", &servaddr);
+                sendMessage(&sockfd, "UI::STARTTASK");
                 //run fn
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
-                sendMessage(&sockfd, sendData, &servaddr);
+                sendMessage(&sockfd, sendData);
                 homed = true;
                 d->currentState = WAIT_STATE;
                 break;
             case CALIBRATE_STATE:
-                sendMessage(&sockfd, "UI::STARTTASK", &servaddr);
+                sendMessage(&sockfd, "UI::STARTTASK");
                 //run fn
                 sleep(2);
                 sprintf(sendData, "UI::CALIBRATE");
-                sendMessage(&sockfd, sendData, &servaddr);
+                sendMessage(&sockfd, sendData);
                 calibrated = true;
                 d->currentState = WAIT_STATE;
                 break;
             case SET_STATE:
-                sendMessage(&sockfd, "UI::STARTTASK", &servaddr);
+                sendMessage(&sockfd, "UI::STARTTASK");
                 //run fn
                 sleep(2);
                 sprintf(sendData, "UI::SET");
-                sendMessage(&sockfd, sendData, &servaddr);
+                sendMessage(&sockfd, sendData);
                 set = true;
                 d->currentState = WAIT_STATE;
                 break;
             case READY_STATE:
                 //ready to run
-                WaitForMsg(&fd_button, &d->currentState);
+                WaitForMsg(&sockfd, &d->currentState);
                 break;
             case RUN_STATE:
                 d->currentState = STOP_STATE;
                 sleep(2);
+                ReadyController(data, attr, thread,  argc, argv);
+                RunController(data, thread, attr, &sockfd);
                 break;
             case STOP_STATE:
                 //stop
                 //reset states ...
+                pthread_cancel(thread[0]);
+                //pthread_cancel(thread[1]);
+                pthread_cancel(thread[2]);
                 sleep(2); 
                 d->currentState = WAIT_STATE;
                 break; 
@@ -186,7 +198,7 @@ int main(int argc, char* argv[])
 
 
 
-void WaitForMsg(int *fd, struct sockaddr_in *servaddr, int *state)
+void WaitForMsg(int *fd, int *state)
 {
     char buf[1024];
     int * len;
@@ -302,15 +314,17 @@ void RunController(struct States *data, pthread_t *thread, pthread_attr_t *attr,
 
     printf("x test: %f\n",data[0].x);
 
-    //printf("thread: %d\n",pthread_create(&thread[0], &attr[0], controllerThread, (void *)data));
+    printf("thread: %d\n",pthread_create(&thread[0], &attr[0], controllerThread, (void *)data));
     //printf("thread: %d\n",pthread_create(&thread[1], &attr[1], logThread, (void *)data));
-    //printf("thread: %d\n",pthread_create(&thread[2], &attr[2], pipeThread, (void *)data));
+    printf("thread: %d\n",pthread_create(&thread[2], &attr[2], clientThread, (void *)data));
     //pthread_join(thread[0], NULL);
     //pthread_join(thread[1], NULL);
 
     //pthread_cancel(thread[0]);
     //pthread_cancel(thread[1]);
     //pthread_cancel(thread[2]);
+
+    WaitForMsg(data[0].sockfd, &(data[0].currentState));
 
     printf("Finished Threads...\n");
 

@@ -41,7 +41,7 @@ struct States {
 
 	double xend; //length of actuator
 
-	int fd_data;
+	int *sockfd;
 
 	int currentState; //0-Cal;1-Set;2-Ready,3-Cont;4-Pause
 

@@ -18,6 +18,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+//#define ADDR "192.168.0.93"
+#define ADDR "0.0.0.0"
 
 void openClientSocket(int *fd, struct sockaddr_in *servaddr, int *port)
 {
@@ -32,7 +34,7 @@ void openClientSocket(int *fd, struct sockaddr_in *servaddr, int *port)
     // Filling server information
     servaddr->sin_family = AF_INET;
     servaddr->sin_port = htons(*port);
-    servaddr->sin_addr.s_addr = inet_addr("192.168.0.93");
+    servaddr->sin_addr.s_addr = inet_addr(ADDR);
     //inet_pton(AF_INET, "127.0.0.1",  servaddr->sin_addr.s_addr);
 
     if (connect(*fd, servaddr, sizeof(*servaddr)) != 0) {
@@ -45,9 +47,8 @@ void openClientSocket(int *fd, struct sockaddr_in *servaddr, int *port)
     
 }
 
-void sendMessage(int *fd, char msg[], struct sockaddr_in *servaddr)
+void sendMessage(int *fd, char msg[])
 {
-    //sendto(*fd, msg, strlen(msg), MSG_CONFIRM, servaddr, sizeof(*servaddr));
     write(*fd, msg, sizeof(char)*strlen(msg));
 }
 
