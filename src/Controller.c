@@ -1,8 +1,8 @@
 /**
  * @file Controller.c
  * @author Nick Berezny
- * @date 18 Jan 2022
- * @Controller thread 
+ * @date 13 Apr 2022
+ * @brief Contains controller thread for real-time control of robot
  *
  */
 
@@ -23,6 +23,10 @@
 
 void * controllerThread (void * d)
 {
+    /**
+     * @brief ControllerThread function to be run in POSIX thread
+     * @param[in] *d : pointer to robot States structure
+     */
     
     printf("Starting control thread...\n");
     struct States *s_next; // = (struct CUICStruct*)d;
@@ -46,11 +50,11 @@ void * controllerThread (void * d)
 
 
     //while(i < BUFFER_SIZE-1)
-    while(i < BUFFER_SIZE)
+    while(true)
     {
         s = &((struct States*)d)[i];
         i = i + 1;
-        //if(i == BUFFER_SIZE) i = 0;
+        if(i == BUFFER_SIZE) i = 0;
         s_next = &((struct States*)d)[i+1];
 
         p = &(s->p);

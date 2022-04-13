@@ -1,8 +1,8 @@
 /**
  * @file Communication.c
  * @author Nick Berezny
- * @date 21 Jan 2022
- * @Communications (FIFO,...) 
+ * @date 13 Apr 2022
+ * @brief Provides methods for setting up and using TCP communication
  *
  */
 
@@ -18,12 +18,19 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-//#define ADDR "192.168.0.93"
-#define ADDR "0.0.0.0"
+#define ADDR "192.168.0.93"
+//#define ADDR "0.0.0.0"
 
 void openClientSocket(int *fd, struct sockaddr_in *servaddr, int *port)
 {
-    // Creating socket file descriptor
+
+    /**
+     * @brief sets and opens a TCP client 
+     * @param[in] *fd pointer to socket fd
+     * @param[in] *servaddr pointer to server address
+     * @param[in] *port pointer to port integer (e.g. 5000)
+     */
+
     if ( (*fd = socket(AF_INET, SOCK_STREAM, 0)) < 0 ) {
         perror("socket creation failed");
         //exit(EXIT_FAILURE);
@@ -49,14 +56,24 @@ void openClientSocket(int *fd, struct sockaddr_in *servaddr, int *port)
 
 void sendMessage(int *fd, char msg[])
 {
+
+    /**
+     * @brief send message over TCP client
+     * @param[in] *fd pointer to socket fd
+     * @param[in] msg[] message to send (in format DEV::MSG, e.g. UI::HOME)
+     */
+
     write(*fd, msg, sizeof(char)*strlen(msg));
 }
 
-void recvMessage(int *fd, char *buffer, int *len, struct sockaddr_in *servaddr)
+void recvMessage(int *fd, char *buffer)
 {
-    //int n = recvfrom(*fd, buffer, 1024, MSG_WAITALL, servaddr, len);
-    //buffer[n] = '\0';
-    //read(*fd, buffer, sizeof(buffer));
+    /**
+     * @brief recieve message from TCP server (blocking)
+     * @param[in] *fd pointer to socket fd
+     * @param[in] *buffer char buffer to contain results
+     */
+
     recv(*fd, buffer, sizeof(buffer), MSG_WAITALL);
 }
 

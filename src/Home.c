@@ -1,8 +1,8 @@
 /**
  * @file Home.c
  * @author Nick Berezny
- * @date 3 Mar 2022
- * @Homing the robot
+ * @date 13 Apr 2022
+ * @brief Functions to home robot to front and back ends
  *
  */
 
@@ -21,6 +21,11 @@
 
 void HomeToBack(struct States * s)
 {
+    /**
+     * @brief Slowly moves robot until contact with back limit switch
+     * @param[in] *s : pointer to robot States
+     */
+
     s->daq.aValues[0] = MOTOR_ZERO; 
     ReadWriteDAQ(s);
     s->h.lsb = s->daq.aValues[3];
@@ -36,6 +41,11 @@ void HomeToBack(struct States * s)
 
 void HomeToFront(struct States * s)
 {
+    /**
+     * @brief Slowly moves robot until contact with front limit switch
+     * @param[in] *s : pointer to robot States
+     */
+
     s->daq.aValues[0] = MOTOR_ZERO; 
     ReadWriteDAQ(s);
     s->h.lsf = s->daq.aValues[2];

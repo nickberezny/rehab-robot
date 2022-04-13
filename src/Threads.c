@@ -1,11 +1,11 @@
 /**
  * @file Threads.c
  * @author Nick Berezny
- * @date 17 Jan 2022
- * @brief File containing example of doxygen usage for quick reference.
+ * @date 13 Apr 2022
+ * @brief initialize posix threads
  *
- * Test test
  */
+
 
 
 #include <stdlib.h>

@@ -1,8 +1,8 @@
 /**
- * @file Home.c
+ * @file PDControl.c
  * @author Nick Berezny
- * @date 3 Mar 2022
- * @Homing the robot
+ * @date 13 Apr 2022
+ * @brief basic position PD controller
  *
  */
 

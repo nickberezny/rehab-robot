@@ -1,8 +1,8 @@
 /**
- * @file Log.c
+ * @file Client.c
  * @author Nick Berezny
- * @date 20 Jan 2022
- * @Data Logging init and thread 
+ * @date 13 Apr 2022
+ * @brief Contains client thread for sending data to TCP server during robot operation.
  *
  */
 
@@ -25,22 +25,33 @@
 
 void * clientThread (void * d)
 {
-    //sleep(0.001f);
-    struct States *s; // = (struct CUICStruct*)d;
+    /**
+     * @brief ClientThread function to be run in POSIX thread
+     * @param[in] *d : pointer to robot States structure
+     */
+
+    struct States *s; 
     int i = 0;
+    int j = 0;
     char msg[2048];
 
-    while(i < BUFFER_SIZE-1)
+    while(true)
     {
 
         s = &((struct States*)d)[i];
         printf("%d mutex: %d\n", i, pthread_mutex_lock(&s->lock));
-        sprintf(msg, "msg::%d\n", i);
-        printf("%d\n", *(s->sockfd));
-        //send(*(s->sockfd), msg, strlen(msg),0);
-        sendMessage(s->sockfd, "hi there");
+        if(i == 0)
+        {
+            j = j +1;
+            sprintf(msg, "UI::%d", j);
+            printf("%d\n", *(s->sockfd));
+            //send(*(s->sockfd), msg, strlen(msg),0);
+            sendMessage(s->sockfd, msg);
+        }
+        
         printf("%d unlock mutex: %d\n", i, pthread_mutex_unlock(&s->lock));
         i = i + 1;
+        if(i == BUFFER_SIZE) i = 0;
         
     }
     

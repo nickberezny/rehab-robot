@@ -1,10 +1,11 @@
 /**
  * @file Memory.c
  * @author Nick Berezny
- * @date 18 Jan 2022
- * @Controller thread 
+ * @date 13 Apr 2022
+ * @brief functions for memory management
  *
  */
+
 
 #include <stdio.h>
 #include <stdbool.h>

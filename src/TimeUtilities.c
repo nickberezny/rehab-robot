@@ -1,11 +1,10 @@
 /**
  * @file TimeUtilities.c
  * @author Nick Berezny
- * @date 18 Jan 2022
- * @Controller thread 
+ * @date 13 Apr 2022
+ * @brief utilities for control loop time stepping
  *
  */
-
 #include <stdio.h>
 #include <stdbool.h>
 #include <pthread.h>

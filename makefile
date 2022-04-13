@@ -39,28 +39,16 @@ LIB=-lm -lpthread -lLabJackM
 
 RESULTS = $(patsubst $(PATHT)Test%.c,$(PATHR)Test%.txt,$(SRCT) )
 
-
 PASSED = `grep -s PASS $(PATHR)*.txt`
 FAIL = `grep -s FAIL $(PATHR)*.txt`
 IGNORE = `grep -s IGNORE $(PATHR)*.txt`
 
-build2:
-	sudo $(LINK) $(wildcard $(PATHS)*.c) -o robotController $(LIB)
-	
-
-builds:
+build:
 	sudo gcc $(wildcard $(PATHS)*.c) -o robotController $(LIB)
-
-basics:
-	sudo gcc `pkg-config --cflags gtk+-3.0` $(PATHS)Basics.c $(PATHS)Log.c $(PATHS)Daq.c $(PATHS)Home.c $(PATHS)TimeUtilities.c -o basics $(LIB) `pkg-config --libs gtk+-3.0 gmodule-2.0`
 
 docs:
 	sudo doxygen doxygen_config
 	firefox doc/html/index.html
-
-ui:
-	gcc `pkg-config --cflags gtk+-3.0` -o $(PATHUI)builder $(PATHUI)builder.c  `pkg-config --libs gtk+-3.0 gmodule-2.0`
-	$(PATHUI)./builder
 
 test: $(BUILD_PATHS) $(RESULTS)
 	@echo "-----------------------\nIGNORES:\n-----------------------"

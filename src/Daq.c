@@ -1,3 +1,12 @@
+/**
+ * @file Daq.c
+ * @author Nick Berezny
+ * @date 13 Apr 2022
+ * @brief Functions for interfacing with Labjack Daq https://labjack.com/
+ *
+ */
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
@@ -13,15 +22,23 @@
 
 void ReadWriteDAQ(struct States * s)
 {
+    /**
+     * @brief simultaneously read and write to Daq
+     * @param[in] *s : pointer to robot States to store results
+     */
+    
+
     LJM_eNames(s->daq.daqHandle, 5, s->daq.aNames, s->daq.aWrites, s->daq.aNumValues, s->daq.aValues, &(s->daq.errorAddress));
 }
 
 int initDaq(struct States * s)
 {
 
-/*------------------------------------------------------------------------
-    Connect to Labjack DAQ, and set up its quadrature encoder counter 
-------------------------------------------------------------------------*/
+    /**
+     * @brief initialize Daq 
+     * @param[in] *s : pointer to robot States to store results
+     */
+
     
     int err, handle;
     handle = 0;
@@ -68,6 +85,12 @@ int initDaq(struct States * s)
 
 bool closeAllDaqs()
 {
+     /**
+     * @brief closes all connected Daqs
+
+     */
+
+
 	LJM_ERROR_RETURN err;
 	err = LJM_CloseAll();
 

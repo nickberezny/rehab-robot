@@ -1,3 +1,12 @@
+/**
+ * @file Structures.h
+ * @author Nick Berezny
+ * @date 13 Apr 2022
+ * @brief Robot state structure and sub-structures for storing data during operation
+ *
+ */
+
+
 struct Params {
 
 	double Md, Bd, Kd;

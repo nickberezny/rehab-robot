@@ -1,3 +1,11 @@
+/**
+ * @file TestCUIC.c
+ * @author Nick Berezny
+ * @date 13 Apr 2022
+ * @brief Contains client thread for sending data to TCP server during robot operation.
+ *
+ */
+
 #include "../unity/src/unity.h"
 
 #include <stdlib.h>

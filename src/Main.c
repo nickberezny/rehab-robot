@@ -2,9 +2,10 @@
  * @file Main.c
  * @author Nick Berezny
  * @date 18 Jan 2022
- * @Controller thread 
+ * @brief entry point for rehab-robot-controller
  *
  */
+
 #include "./include/Parameters.h"
 
 #include <stdlib.h>

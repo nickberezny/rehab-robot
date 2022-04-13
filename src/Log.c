@@ -1,10 +1,11 @@
 /**
  * @file Log.c
  * @author Nick Berezny
- * @date 20 Jan 2022
- * @Data Logging init and thread 
+ * @date 13 Apr 2022
+ * @brief Contains function to initialize log folder and the logging thread
  *
  */
+
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -23,7 +24,11 @@
 
 void * logThread (void * d)
 {
-    //sleep(0.001f);
+    /**
+     * @brief logThread function to be run in POSIX thread
+     * @param[in] *d : pointer to robot States structure
+     */
+
     struct States *s; // = (struct CUICStruct*)d;
     int i = 0;
 
@@ -48,6 +53,12 @@ void * logThread (void * d)
 
 void initFolder(char * filename, struct tm * timeinfo, char * folder)
 {
+    /**
+     * @brief initialize full folder path + name for log file
+     * @param[in] filename desired filenmae
+     * @param[in] timeinfo time structure to add to filename
+     * @param[in] folder desired folder path
+     */
 
     char * data_file_name;
     data_file_name = asctime(timeinfo);
@@ -73,6 +84,14 @@ void initFolder(char * filename, struct tm * timeinfo, char * folder)
 
 void initLog(char * filename, struct States * s, struct tm * timeinfo)
 {
+    /**
+     * @brief open log file and write header
+     * @param[in] filename desired filenmae
+     * @param[in] *s pointer to robot States
+     * @param[in] timeinfo time structure to add to filename
+     * 
+     */
+
     char folder[1000] = "log/";
 
     initFolder(filename, timeinfo, folder);
@@ -89,8 +108,6 @@ void initLog(char * filename, struct States * s, struct tm * timeinfo)
     fclose(s->h.fp);
 
     printf("%s\n", folder); 
-
-   
 
 }
 
