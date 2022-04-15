@@ -28,7 +28,6 @@ void VirtualTrajectory(struct States * s, struct Params * p)
      * @param[in] *p : pointer to robot Params containing impedance values
      */
     
-
     s->ddxv = (1/(p->Md))*(s->Fext - p->Bd*(s->dxv - s->dx0) - p->Kd*(s->xv - s->x0)) + s->ddx0;
     s->dxv += s->ddxv*s->dt;
     s->xv += s->dxv*s->dt;

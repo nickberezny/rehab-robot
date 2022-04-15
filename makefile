@@ -13,7 +13,7 @@ else
 	TARGET_EXTENSION=out
 endif
 
-
+.PHONY: all build clean
 .PHONY: clean
 .PHONY: test
 
@@ -42,6 +42,7 @@ RESULTS = $(patsubst $(PATHT)Test%.c,$(PATHR)Test%.txt,$(SRCT) )
 PASSED = `grep -s PASS $(PATHR)*.txt`
 FAIL = `grep -s FAIL $(PATHR)*.txt`
 IGNORE = `grep -s IGNORE $(PATHR)*.txt`
+
 
 build:
 	sudo gcc $(wildcard $(PATHS)*.c) -o robotController $(LIB)

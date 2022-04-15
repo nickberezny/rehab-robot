@@ -29,18 +29,19 @@ void * logThread (void * d)
      * @param[in] *d : pointer to robot States structure
      */
 
-    struct States *s; // = (struct CUICStruct*)d;
-    int i = 0;
+    extern struct States *s_log;    
+    extern int iter_log;
+    iter_log = 0;
 
-    while(i < BUFFER_SIZE-1)
+    while(true)
     {
 
-        s = &((struct States*)d)[i];
-        printf("%d mutex: %d\n", i, pthread_mutex_lock(&s->lock));
-        printf("Log Thread... %f \n", s->x);
+        s_log = &((struct States*)d)[iter_log];
+        printf("%d mutex: %d\n", iter_log, pthread_mutex_lock(&s_log->lock));
+        printf("Log Thread... %f \n", s_log->x);
         //fprintf ((s->h.fp), "data %f \n", s->x);
-        printf("%d unlock mutex: %d\n", i, pthread_mutex_unlock(&s->lock));
-        i = i + 1;
+        printf("%d unlock mutex: %d\n", iter_log, pthread_mutex_unlock(&s_log->lock));
+        iter_log = iter_log + 1;
         
     }
     

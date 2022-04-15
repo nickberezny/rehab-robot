@@ -15,6 +15,7 @@
 #include <stdbool.h>
 #include <limits.h>
 
+#include "./include/Parameters.h"
 #include "./include/Structures.h"
 #include "./include/CUIC.h"
 

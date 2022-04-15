@@ -30,28 +30,28 @@ void * clientThread (void * d)
      * @param[in] *d : pointer to robot States structure
      */
 
-    struct States *s; 
-    int i = 0;
-    int j = 0;
-    char msg[2048];
+    extern struct States *s_client;     
+    extern int iter_client;
+    extern char buffer[2048];
+
+    iter_client = 0;
 
     while(true)
     {
 
-        s = &((struct States*)d)[i];
-        printf("%d mutex: %d\n", i, pthread_mutex_lock(&s->lock));
-        if(i == 0)
+        s_client = &((struct States*)d)[iter_client];
+        printf("%d mutex: %d\n", iter_client, pthread_mutex_lock(&s_client->lock));
+        if(iter_client == 0)
         {
-            j = j +1;
-            sprintf(msg, "UI::%d", j);
-            printf("%d\n", *(s->sockfd));
+            sprintf(buffer, "UI::%d", iter_client);
+            printf("%d\n", *(s_client->sockfd));
             //send(*(s->sockfd), msg, strlen(msg),0);
-            sendMessage(s->sockfd, msg);
+            sendMessage(s_client->sockfd, buffer);
         }
         
-        printf("%d unlock mutex: %d\n", i, pthread_mutex_unlock(&s->lock));
-        i = i + 1;
-        if(i == BUFFER_SIZE) i = 0;
+        printf("%d unlock mutex: %d\n", iter_client, pthread_mutex_unlock(&s_client->lock));
+        iter_client = iter_client + 1;
+        if(iter_client == BUFFER_SIZE) iter_client = 0;
         
     }
     

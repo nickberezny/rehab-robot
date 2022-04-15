@@ -17,9 +17,8 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include "./include/Parameters.h"
 
-#define ADDR "192.168.0.93"
-//#define ADDR "0.0.0.0"
 
 void openClientSocket(int *fd, struct sockaddr_in *servaddr, int *port)
 {
@@ -42,14 +41,22 @@ void openClientSocket(int *fd, struct sockaddr_in *servaddr, int *port)
     servaddr->sin_family = AF_INET;
     servaddr->sin_port = htons(*port);
     servaddr->sin_addr.s_addr = inet_addr(ADDR);
-    //inet_pton(AF_INET, "127.0.0.1",  servaddr->sin_addr.s_addr);
 
-    if (connect(*fd, servaddr, sizeof(*servaddr)) != 0) {
-        printf("connection with the server failed...\n");
-        exit(0);
+
+    while(true)
+    {
+        if (connect(*fd, servaddr, sizeof(*servaddr)) != 0) 
+        {
+            printf("connection with the server failed...\n");
+            sleep(5);
+        }
+        else
+        {
+            printf("connected to the server..\n");
+            break;
+        }
     }
-    else
-        printf("connected to the server..\n");
+    
     
     
 }

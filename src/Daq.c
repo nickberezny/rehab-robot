@@ -27,7 +27,6 @@ void ReadWriteDAQ(struct States * s)
      * @param[in] *s : pointer to robot States to store results
      */
     
-
     LJM_eNames(s->daq.daqHandle, 5, s->daq.aNames, s->daq.aWrites, s->daq.aNumValues, s->daq.aValues, &(s->daq.errorAddress));
 }
 

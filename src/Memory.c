@@ -6,10 +6,10 @@
  *
  */
 
-
 #include <stdio.h>
 #include <stdbool.h>
 #include <pthread.h>
+#include <sys/mman.h>
 
 #include "./include/Parameters.h"
 #include "./include/Structures.h"
@@ -18,4 +18,12 @@
 int initMutex(struct States * s)
 {
     return pthread_mutex_init(&s->lock, NULL); 
+}
+
+void lockMemory()
+{
+    if(mlockall(MCL_CURRENT|MCL_FUTURE) == -1) {
+       printf("mlockall failed: %m\n");
+       return;
+    }
 }

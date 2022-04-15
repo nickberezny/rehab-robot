@@ -21,6 +21,8 @@
 #define STOP_STATE 6
 #define SHUTDOWN_STATE 7
 
+#define ADDR "192.168.0.93"
+
 //TODO
 #define MOTOR_ZERO 0
 #define ENC_TO_MM 0

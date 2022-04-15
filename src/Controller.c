@@ -29,39 +29,33 @@ void * controllerThread (void * d)
      */
     
     printf("Starting control thread...\n");
-    struct States *s_next; // = (struct CUICStruct*)d;
+    extern struct States *s_next; // = (struct CUICStruct*)d;
     s_next = &((struct States*)d)[0];
 
     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-
-    //pthread_mutex_init(&s_next->lock, NULL);
-    printf("x val: %f\n",s_next->x);
-
     printf("mutex cont %d\n",pthread_mutex_lock(&s_next->lock));
 
-    int i = 0;
-    
+    extern int iter_cont;
+    iter_cont = 0;
 
-    struct States *s; // = (struct CUICStruct*)d;
-    struct Params *p;
+    extern struct States *s; // = (struct CUICStruct*)d;
+
    
     struct timespec t_last;
     clock_gettime(CLOCK_MONOTONIC, &t_last);  
 
-
-    //while(i < BUFFER_SIZE-1)
     while(true)
     {
-        s = &((struct States*)d)[i];
-        i = i + 1;
-        if(i == BUFFER_SIZE) i = 0;
-        s_next = &((struct States*)d)[i+1];
 
-        p = &(s->p);
+        s = &((struct States*)d)[iter_cont];
+        iter_cont= iter_cont+ 1;
+        if(iter_cont== BUFFER_SIZE) iter_cont= 0;
+        s_next = &((struct States*)d)[iter_cont+1];
+
 
         clock_gettime(CLOCK_MONOTONIC, &s->t_start);  
         
-        printf("time: %d ; %d\n", s->t_start.tv_sec - t_last.tv_sec, s->t_start.tv_nsec - t_last.tv_nsec);
+        //printf("time: %d ; %d\n", s->t_start.tv_sec - t_last.tv_sec, s->t_start.tv_nsec - t_last.tv_nsec);
 
         //read daq 
         //ReadWriteDAQ(s);
@@ -69,10 +63,10 @@ void * controllerThread (void * d)
         //VirtualTrajectory(s,p);
         //GetCommand(s,p);    
 
-        s->x = i;
+        //s->x = i;
         
-        printf("%d mutex cont %d\n",i,pthread_mutex_lock(&s_next->lock));
-        printf("%d unlock mutex cont %d\n",i, pthread_mutex_unlock(&s->lock));
+        pthread_mutex_lock(&s_next->lock);
+        pthread_mutex_unlock(&s->lock);
         t_last = s->t_start;
         
         getTimeToSleep(&s->t_start, &s->t_end);

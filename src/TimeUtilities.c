@@ -2,7 +2,7 @@
  * @file TimeUtilities.c
  * @author Nick Berezny
  * @date 13 Apr 2022
- * @brief utilities for control loop time stepping
+ * @brief utilities for control loop time stepping 
  *
  */
 #include <stdio.h>

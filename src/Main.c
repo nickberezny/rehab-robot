@@ -38,10 +38,17 @@
 #include "./include/Client.h"
 
 
+//global variables 
+char buffer[2048];
 
-int mainController(int argc, char* argv[]);
+struct States *s_client; 
+struct States *s_log;
+struct States *s;
+struct States *s_next;
 
-
+int iter_client;
+int iter_log;
+int iter_cont;
 
 int main(int argc, char* argv[]) 
 {
@@ -61,7 +68,7 @@ int main(int argc, char* argv[])
     char sendData[1024];
 
     int sockfd;
-    char buffer[2048];
+    
     bzero(buffer, sizeof(buffer));
     struct sockaddr_in servaddr;
     int port = 5000;
@@ -79,39 +86,9 @@ int main(int argc, char* argv[])
 
     sendMessage(d->sockfd, "ROBOT");
     read(sockfd, buffer, sizeof(buffer));
-
-    printf("Server : %s\n", buffer);
-
-    printf("Hello message sent.\n");
     sleep(5);
-
-
     sendMessage(&sockfd, "UI::hi from robot");
 
-    /*
-    bool isRunning = false;
-
-    while(!isRunning)
-    {
-        bzero(buffer, sizeof(buffer));
-        read(sockfd, buffer, sizeof(buffer));
-        printf("Server : %s\n", buffer);
-
-        if(strcmp(buffer, "STOP") == 0) isRunning = true;
-        else if(strcmp(buffer, "HOME") == 0 || strcmp(buffer, "SET") == 0 || strcmp(buffer, "CALIBRATE") == 0)
-        {
-            sendMessage(&sockfd, "UI::STARTTASK", &servaddr);
-            sleep(2);
-            sprintf(sendData, "UI::");
-            strcat(sendData, buffer);
-            printf("%s, %s\n", buffer, sendData);
-            sendMessage(&sockfd, sendData, &servaddr);
-        }
-    }
-*/
-    
-
-    //RUN CAL .........
 
 
     //***********Main Loop******************//
@@ -167,7 +144,7 @@ int main(int argc, char* argv[])
                 //stop
                 //reset states ...
                 pthread_cancel(thread[0]);
-                //pthread_cancel(thread[1]);
+                pthread_cancel(thread[1]);
                 pthread_cancel(thread[2]);
                 sleep(2); 
                 d->currentState = WAIT_STATE;
@@ -201,45 +178,44 @@ int main(int argc, char* argv[])
 
 void WaitForMsg(int *fd, int *state)
 {
-    char buf[1024];
-    int * len;
+
 
     while(true)
     {
         
         /* open, read, and display the message from the FIFO */
-        //sprintf(buf,"");
-        bzero(buf, sizeof(buf));
-        read(*fd, buf, sizeof(buf));
+        //sprintf(buffer,"");
+        bzero(buffer, sizeof(buffer));
+        read(*fd, buffer, sizeof(buffer));
 
-        if(strcmp(buf, "") != 0) printf("Received (Main): %s\n", buf);
+        if(strcmp(buffer, "") != 0) printf("Received (Main): %s\n", buffer);
 
-        if(strcmp(buf, "HOME") == 0)
+        if(strcmp(buffer, "HOME") == 0)
         {
             if(*state == WAIT_STATE || *state == READY_STATE) *state = HOME_STATE;
             break;
         }
-        else if(strcmp(buf, "CALIBRATE") == 0)
+        else if(strcmp(buffer, "CALIBRATE") == 0)
         {
             if(*state == WAIT_STATE || *state == READY_STATE) *state = CALIBRATE_STATE;
             break;
         }
-        else if(strcmp(buf, "SET") == 0)
+        else if(strcmp(buffer, "SET") == 0)
         {
             if(*state == WAIT_STATE || *state == READY_STATE) *state = SET_STATE;
             break;
         }
-        else if(strcmp(buf, "RUN") == 0)
+        else if(strcmp(buffer, "RUN") == 0)
         {
             if(*state == READY_STATE) *state = RUN_STATE;
             break;
         }
-        else if(strcmp(buf, "STOP") == 0)
+        else if(strcmp(buffer, "STOP") == 0)
         {
             if(*state == RUN_STATE) *state = STOP_STATE;
             break;
         }
-        else if(strcmp(buf, "SHUTDOWN") == 0)
+        else if(strcmp(buffer, "SHUTDOWN") == 0)
         {
             printf("Shutting down...\n");
             *state = SHUTDOWN_STATE;
@@ -257,25 +233,22 @@ void WaitForMsg(int *fd, int *state)
 void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thread, int argc, char* argv[])
 {
     struct sched_param param[NUMBER_OF_THREADS];
+
+
+    //*************Initialize Data log*******************
     
     if(argc > 1 && !strcmp(argv[1], "NOLOG"))
     {
         printf("Logging Deactivated...\n");
-        
     }
     else
     {
-
         printf("Logging Activated...\n");
 
         time_t rawtime;
         struct tm * timeinfo;
-
         time ( &rawtime );
         timeinfo = localtime ( &rawtime );
-
-        //FILE * fp;
-
         initLog("/test.txt", &data[0], timeinfo);
     }
 
@@ -289,6 +262,7 @@ void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thre
 
     fclose(data[0].h.fp);
 
+    //*************Initialize threads + mutexes*******************
     
     for(int i = 0; i < NUMBER_OF_THREADS; i++)
     {
@@ -302,21 +276,17 @@ void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thre
         printf("%d mutex: %d\n", i, pthread_mutex_init(&data[i].lock, NULL));
     }
 
-    data[0].x = 4;
-    data[1].x = 4;
-    //....
+    //*************Lock Memory*******************
 
-    
+    lockMemory();
 }
 
 
 void RunController(struct States *data, pthread_t *thread, pthread_attr_t *attr, int * fd)
 {
 
-    printf("x test: %f\n",data[0].x);
-
     printf("thread: %d\n",pthread_create(&thread[0], &attr[0], controllerThread, (void *)data));
-    //printf("thread: %d\n",pthread_create(&thread[1], &attr[1], logThread, (void *)data));
+    printf("thread: %d\n",pthread_create(&thread[1], &attr[1], logThread, (void *)data));
     printf("thread: %d\n",pthread_create(&thread[2], &attr[2], clientThread, (void *)data));
     //pthread_join(thread[0], NULL);
     //pthread_join(thread[1], NULL);
