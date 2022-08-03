@@ -1,2 +1,2 @@
-void VirtualTrajectory(struct States * s, struct Params * p);
-void GetCommand(struct States * s, struct Params * p);
+void VirtualTrajectory(struct States * s, struct ControlParams * p);
+void GetCommand(struct States * s, struct ControlParams * p);

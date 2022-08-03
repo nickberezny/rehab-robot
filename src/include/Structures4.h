@@ -8,30 +8,19 @@
 
 #include "./Parameters.h"
 
-struct ControlParams {
+struct Params {
 
-	double Md, Dd, Kd;
+	double Md, Bd, Kd;
 	double kp, kv;
 	double m, c;
 	double delta, alpha;
-	double *Ad, *Bd;
-	double xend; //length of actuator
-
-	int currentState; 
-
 };
 
-struct LogData {
+struct Hardware {
 
-	
+	int lsb, lsf; //limit switches
 	FILE * fp;
 	char filepath[1000];
-
-};
-
-struct CommData {
-
-	int *sockfd;
 
 };
 
@@ -57,9 +46,21 @@ struct States {
 	double Fext;
 	double xv,dxv,ddxv;
 	double x0,dx0,ddx0;
+	double *Ad, *Bd;
+
+	double xi; //change in x from encoder
+
 	double xstar, cmd;
-	
-	int lsb, lsf; //limit switches
+
+	double xend; //length of actuator
+
+	int *sockfd;
+
+	int currentState; //0-Cal;1-Set;2-Ready,3-Cont;4-Pause
+
+	struct Params p; 
+	struct Hardware h;
+	struct DAQ daq;
 };
 
 

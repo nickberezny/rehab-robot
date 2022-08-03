@@ -46,6 +46,11 @@ struct States *s_log;
 struct States *s;
 struct States *s_next;
 
+struct ControlParams *controlParams;
+struct LogData *logData;
+struct CommData *commData;
+struct DAQ *daq;
+
 int iter_client;
 int iter_log;
 int iter_cont;
@@ -53,13 +58,15 @@ int iter_cont;
 int main(int argc, char* argv[]) 
 {
     printf("Starting Robot...\n");
-
     struct States data[BUFFER_SIZE] = {0};
     struct States *d = &data[0];
-    d->currentState = 0; 
+    controlParams->currentState = 0; 
 
     pthread_t thread[NUMBER_OF_THREADS];
+    memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
     pthread_attr_t attr[NUMBER_OF_THREADS];
+
+    printf("Starting Robot...\n");
 
     bool homed = false;
     bool calibrated = false;
@@ -74,17 +81,21 @@ int main(int argc, char* argv[])
     int port = 5000;
     int len;
 
+    printf("Starting Robot...\n");
+
     openClientSocket(&sockfd, &servaddr, &port);
 
-
-    d->currentState = WAIT_STATE; //State = Set
+    controlParams->currentState = WAIT_STATE; //State = Set
+    initDaq(*daq);
 
     for(int i = 0; i < BUFFER_SIZE; i++)
     {
-        data[i].sockfd = &sockfd;
+        commData->sockfd = &sockfd;
     }
 
-    sendMessage(d->sockfd, "ROBOT");
+    printf("Starting Robot...\n");
+
+    sendMessage(commData->sockfd, "ROBOT");
     read(sockfd, buffer, sizeof(buffer));
     sleep(5);
     sendMessage(&sockfd, "UI::hi from robot");
@@ -95,23 +106,26 @@ int main(int argc, char* argv[])
 
     while(true)
     {
-        if(d->currentState == WAIT_STATE && homed && set && calibrated) d->currentState = READY_STATE;
-        printf("Current state: %d\n", d->currentState);
+        if(controlParams->currentState == WAIT_STATE && homed && set && calibrated) controlParams->currentState = READY_STATE;
+        printf("Current state: %d\n", controlParams->currentState);
 
-        switch (d->currentState)
+        switch (controlParams->currentState)
         {
             case WAIT_STATE:
-                WaitForMsg(&sockfd, &d->currentState);
+                WaitForMsg(&sockfd, &controlParams->currentState);
                 break;
+
             case HOME_STATE:
                 sendMessage(&sockfd, "UI::STARTTASK");
-                //run fn
+                HomeToFront(controlParams);
+                HomeToBack(controlParams);
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
                 sendMessage(&sockfd, sendData);
                 homed = true;
-                d->currentState = WAIT_STATE;
+                controlParams->currentState = WAIT_STATE;
                 break;
+
             case CALIBRATE_STATE:
                 sendMessage(&sockfd, "UI::STARTTASK");
                 //run fn
@@ -119,23 +133,44 @@ int main(int argc, char* argv[])
                 sprintf(sendData, "UI::CALIBRATE");
                 sendMessage(&sockfd, sendData);
                 calibrated = true;
-                d->currentState = WAIT_STATE;
+                controlParams->currentState = WAIT_STATE;
                 break;
+
             case SET_STATE:
                 sendMessage(&sockfd, "UI::STARTTASK");
                 //run fn
+
+                controlParams->Md = MD_TEST;
+                controlParams->Dd = BD_TEST;
+                controlParams->Kd = KD_TEST;
+
+                double Atemp[2][2] = {{0.0, 1.0},{-KD_TEST/MD_TEST, -BD_TEST/MD_TEST}};
+                double A[2][2];
+                DiscretizeMatrix(Atemp,A);
+                controlParams->Ad = A;
+
+                double Btemp[2] = {0.0, 1.0};
+                double B[2];
+                DicretizeInput(A, Atemp, Btemp, B);
+
+                controlParams->Bd = B;
+
+                printf("Ad: %f, %f, %f, %f\n",A[0][0],A[0][1],A[1][0],A[1][1]);
+                printf("Bd: %f, %f\n",B[0],B[1]);
+
                 sleep(2);
                 sprintf(sendData, "UI::SET");
                 sendMessage(&sockfd, sendData);
                 set = true;
-                d->currentState = WAIT_STATE;
+                controlParams->currentState = WAIT_STATE;
                 break;
+
             case READY_STATE:
                 //ready to run
-                WaitForMsg(&sockfd, &d->currentState);
+                WaitForMsg(&sockfd, &controlParams->currentState);
                 break;
             case RUN_STATE:
-                d->currentState = STOP_STATE;
+                controlParams->currentState = STOP_STATE;
                 sleep(2);
                 ReadyController(data, attr, thread,  argc, argv);
                 RunController(data, thread, attr, &sockfd);
@@ -147,7 +182,7 @@ int main(int argc, char* argv[])
                 pthread_cancel(thread[1]);
                 pthread_cancel(thread[2]);
                 sleep(2); 
-                d->currentState = WAIT_STATE;
+                controlParams->currentState = WAIT_STATE;
                 break; 
             case SHUTDOWN_STATE:
                 sleep(0.5);
@@ -252,24 +287,27 @@ void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thre
         initLog("/test.txt", &data[0], timeinfo);
     }
 
-    printf("path: %s\n", data[0].h.filepath);
-    data[0].h.fp = fopen(data[0].h.filepath,"a");
+    printf("path: %s\n", logData->filepath);
+    logData->fp = fopen(logData->filepath,"a");
 
     for(int i = 1; i < BUFFER_SIZE; i++)
     {
-        data[i].h.fp = data[0].h.fp;
+        logData->fp = logData->fp;
     }
 
-    fclose(data[0].h.fp);
+    //fclose(data[0].h.fp);
 
     //*************Initialize threads + mutexes*******************
     
     for(int i = 0; i < NUMBER_OF_THREADS; i++)
     {
-        printf("init: %d\n",initThread(&attr[i], &param[i], 98-i));
+        printf("init: %d\n",initThread(&attr[i], &param[i], 95-i));
     }
 
     pthread_mutex_t temp_lock[BUFFER_SIZE];
+    /*pthread_mutexattr_t mutex_attr;
+    pthread_mutexattr_init(&mutex_attr);
+    pthread_mutexattr_settype(&mutex_attr, PTHREAD_MUTEX_RECURSIVE_NP);*/
 
     for(int i = 0; i < BUFFER_SIZE; i++)
     {
@@ -287,7 +325,7 @@ void RunController(struct States *data, pthread_t *thread, pthread_attr_t *attr,
 
     printf("thread: %d\n",pthread_create(&thread[0], &attr[0], controllerThread, (void *)data));
     printf("thread: %d\n",pthread_create(&thread[1], &attr[1], logThread, (void *)data));
-    printf("thread: %d\n",pthread_create(&thread[2], &attr[2], clientThread, (void *)data));
+    //printf("thread: %d\n",pthread_create(&thread[2], &attr[2], clientThread, (void *)data));
     //pthread_join(thread[0], NULL);
     //pthread_join(thread[1], NULL);
 
@@ -295,7 +333,7 @@ void RunController(struct States *data, pthread_t *thread, pthread_attr_t *attr,
     //pthread_cancel(thread[1]);
     //pthread_cancel(thread[2]);
 
-    WaitForMsg(data[0].sockfd, &(data[0].currentState));
+    //WaitForMsg(data[0].sockfd, &(data[0].currentState));
 
     printf("Finished Threads...\n");
 

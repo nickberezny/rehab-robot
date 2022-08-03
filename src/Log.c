@@ -28,21 +28,22 @@ void * logThread (void * d)
      * @brief logThread function to be run in POSIX thread
      * @param[in] *d : pointer to robot States structure
      */
-
     extern struct States *s_log;    
     extern int iter_log;
+    extern struct LogData *logData;
     iter_log = 0;
 
     while(true)
     {
-
         s_log = &((struct States*)d)[iter_log];
-        printf("%d mutex: %d\n", iter_log, pthread_mutex_lock(&s_log->lock));
-        printf("Log Thread... %f \n", s_log->x);
-        //fprintf ((s->h.fp), "data %f \n", s->x);
-        printf("%d unlock mutex: %d\n", iter_log, pthread_mutex_unlock(&s_log->lock));
-        iter_log = iter_log + 1;
-        
+        printf("mutex lock %d\n",pthread_mutex_lock(&s_log->lock));
+        iter_log= iter_log + 1;
+        if(iter_log== BUFFER_SIZE) iter_log= 0;
+
+        fprintf (logData->fp,"%f,%f,%f \n", s_log->x,s_log->dx,s_log->Fext);
+
+
+        printf("mutex unlock %d\n",pthread_mutex_unlock(&s_log->lock));
     }
     
     printf("Done Log...\n");
@@ -83,7 +84,7 @@ void initFolder(char * filename, struct tm * timeinfo, char * folder)
 }
 
 
-void initLog(char * filename, struct States * s, struct tm * timeinfo)
+void initLog(char * filename, struct States * s, struct LogData *logData, struct tm * timeinfo)
 {
     /**
      * @brief open log file and write header
@@ -100,13 +101,13 @@ void initLog(char * filename, struct States * s, struct tm * timeinfo)
     strcat(folder, filename);
     
 
-    strcpy(s->h.filepath, folder);
-    s->h.fp = fopen(folder,"w");
+    strcpy(logData->filepath, folder);
+    logData->fp = fopen(folder,"w");
 
     //file header
-    fprintf(s->h.fp, "Rehab Robot Log File\n");
-    fprintf(s->h.fp, "%s\n", asctime(timeinfo));
-    fclose(s->h.fp);
+    fprintf(logData->fp, "Rehab Robot Log File\n");
+    fprintf(logData->fp, "%s\n", asctime(timeinfo));
+    fclose(logData->fp);
 
     printf("%s\n", folder); 
 

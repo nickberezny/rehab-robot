@@ -19,46 +19,53 @@
 #include "./include/Home.h"
 #include "./include/Daq.h"
 
-void HomeToBack(struct States * s)
+void HomeToBack(struct States * s, struct DAQ * daq)
 {
+    extern struct ControlParams *controlParams;
     /**
      * @brief Slowly moves robot until contact with back limit switch
      * @param[in] *s : pointer to robot States
      */
 
-    s->daq.aValues[0] = MOTOR_ZERO; 
-    ReadWriteDAQ(s);
-    s->h.lsb = s->daq.aValues[3];
+    daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
+    ReadWriteDAQ(s, daq);
+    s->lsb = daq->aValues[3];
+    s->x = 0;
+    s->dx = 0;
+    daq->aValues[0] = CMD_GAIN*(0.25) + CMD_OFFSET;
 
-    s->daq.aValues[0] = MOTOR_SLOW_BWD; 
-
-    while(s->h.lsb == 0)
+    while(s->lsb == 0)
     {
-        ReadWriteDAQ(s);
-        s->h.lsb = s->daq.aValues[3];
+        s->x -= s->dx;
+        ReadWriteDAQ(s,daq);
+        s->lsb = daq->aValues[3];
     }
+
+    daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
+    controlParams->xend = s->x;
+    printf("xend: %f\n",controlParams->xend);
 }
 
-void HomeToFront(struct States * s)
+void HomeToFront(struct States * s, struct DAQ * daq)
 {
     /**
      * @brief Slowly moves robot until contact with front limit switch
      * @param[in] *s : pointer to robot States
      */
 
-    s->daq.aValues[0] = MOTOR_ZERO; 
-    ReadWriteDAQ(s);
-    s->h.lsf = s->daq.aValues[2];
-    s->x = 0;
+    daq->aValues[0] = CMD_GAIN*(0) + CMD_OFFSET;
+    ReadWriteDAQ(s,daq);
+    s->lsf = daq->aValues[2];
+    
 
-    s->daq.aValues[0] = MOTOR_SLOW_FWD; 
+    daq->aValues[0] = CMD_GAIN*(-0.35) + CMD_OFFSET;
 
-    while(s->h.lsf == 0)
+    while(s->lsf == 0)
     {
-        s->x += ENC_TO_MM * (double)s->daq.aValues[4];
-        ReadWriteDAQ(s);
-        s->h.lsf = s->daq.aValues[2];
+        ReadWriteDAQ(s,daq);
+        s->lsf = daq->aValues[2];
     }
 
-   s->xend = s->x;
+    daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
+
 }

@@ -20,17 +20,20 @@
 #include "./include/Daq.h"
 
 
-void ReadWriteDAQ(struct States * s)
+void ReadWriteDAQ(struct States * s, struct DAQ * daq)
 {
     /**
      * @brief simultaneously read and write to Daq
      * @param[in] *s : pointer to robot States to store results
      */
     
-    LJM_eNames(s->daq.daqHandle, 5, s->daq.aNames, s->daq.aWrites, s->daq.aNumValues, s->daq.aValues, &(s->daq.errorAddress));
+    LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
+    s->dx = (1.0 - 2.0*(double)daq->aValues[4])*((double)daq->aValues[5])*ENC_TO_M;
+    s->Fext = FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g;
+
 }
 
-int initDaq(struct States * s)
+int initDaq(struct DAQ daq)
 {
 
     /**
@@ -39,7 +42,7 @@ int initDaq(struct States * s)
      */
 
     
-    int err, handle;
+    int err, handle; 
     handle = 0;
     // Open first found LabJack
     err = LJM_Open(LJM_dtANY, LJM_ctANY, "LJM_idANY", &handle);
@@ -48,29 +51,49 @@ int initDaq(struct States * s)
     LJM_eStreamStop(handle); //stop any previous streams
     //LJM_eWriteName(handle, "DAC0", MOTOR_ZERO); //set motor to zero
     
+    
     //start Quadrature counter on DIO2 and DIO3
-    LJM_eWriteName(handle, "DIO2_EF_ENABLE", 0);
-    LJM_eWriteName(handle, "DIO3_EF_ENABLE", 0);
+    /*
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO2_EF_ENABLE", 0));
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 0));
 
-    LJM_eWriteName(handle, "DIO2_EF_INDEX", 10);
-    LJM_eWriteName(handle, "DIO3_EF_INDEX", 10);
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO2_EF_INDEX", 10));
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_INDEX", 10));
 
-    LJM_eWriteName(handle, "DIO2_EF_ENABLE", 1);
-    LJM_eWriteName(handle, "DIO3_EF_ENABLE", 1);
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO2_EF_ENABLE", 1));
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 1));
+*/
+
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 0));
+ 
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_INDEX", 8));
+
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 1));
+   
 
     //set Analog in resolution
     LJM_eWriteName(handle, "AIN0_RESOLUTION_INDEX", 1);
     LJM_eWriteName(handle, "AIN0_SETTLING_US", 0);
+    LJM_eWriteName(handle, "AIN_ALL_NEGATIVE_CH", 199);
 
-    printf("%d\n", handle);
+    printf("DAQ Handle: %d\n", handle);
 
 
-    double aValues[5] = {0};
-    const char * aNames[5] = {"DAC0", "AIN0","FIO0", "FIO1", "DIO2_EF_READ_A_F_AND_RESET"};
-    int aNumValues[5] = {1,1,1,1,1};
-    int aWrites[5] = {1,0,0,0,0};
+    double aValues[6] = {0};
+    const char * aNames[6] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; //
+    int aNumValues[6] = {1,1,1,1,1,1};
+    int aWrites[6] = {1,0,0,0,0,0};
 
-    memcpy(s->daq.aNames,aNames, 5*sizeof(double));
+
+    for(int i = 0; i < BUFFER_SIZE; i++)
+    {
+        memcpy(&(daq.aNames),aNames, 600*sizeof(char));
+        memcpy(&(daq.aValues),aValues, 6*sizeof(double));
+        memcpy(&(daq.aNumValues),aNumValues, 6*sizeof(int));
+        memcpy(&(daq.aWrites),aWrites, 6*sizeof(int));
+        memcpy(&(daq.daqHandle),&handle,sizeof(int));
+    }
+    
 
     /*
     s->daq.aValues = aValues;

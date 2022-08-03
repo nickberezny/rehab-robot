@@ -17,7 +17,10 @@
 
 int initMutex(struct States * s)
 {
-    return pthread_mutex_init(&s->lock, NULL); 
+    pthread_mutexattr_t *attr;
+    pthread_mutexattr_settype(attr, PTHREAD_MUTEX_RECURSIVE_NP);
+    return pthread_mutex_init(&s->lock, attr); 
+
 }
 
 void lockMemory()
