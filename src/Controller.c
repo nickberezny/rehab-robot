@@ -39,7 +39,7 @@ void * controllerThread (void * d)
     iter_cont = 0;
 
     extern struct States *s; // = (struct CUICStruct*)d;
-    extern struct ControlParams *controlParams;
+    extern struct ControlParams *ctlParams;
     extern struct DAQ *daq;
     sleep(1);
    
@@ -60,6 +60,8 @@ void * controllerThread (void * d)
 
 
         clock_gettime(CLOCK_MONOTONIC, &s->t_start);  
+
+        //***************************************************************************************************************
         
         //printf("time: %d ; %d\n", s->t_start.tv_sec - t_last.tv_sec, s->t_start.tv_nsec - t_last.tv_nsec);
         if(daq->aValues[2] || daq->aValues[3]) cmd = 0;
@@ -77,10 +79,7 @@ void * controllerThread (void * d)
 
         printf("Pos: %f",pos);
 
-        //VirtualTrajectory(s,p);
-        //GetCommand(s,p);    
-
-        //s->x = i;
+        //***************************************************************************************************************
         
         printf("mutex cont lock %d\n",pthread_mutex_lock(&s_next->lock));
         printf("mutex cont unlock %d\n",pthread_mutex_unlock(&s->lock));

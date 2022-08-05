@@ -40,7 +40,7 @@ void * logThread (void * d)
         iter_log= iter_log + 1;
         if(iter_log== BUFFER_SIZE) iter_log= 0;
 
-        fprintf (logData->fp,"%f,%f,%f \n", s_log->x,s_log->dx,s_log->Fext);
+        fprintf (logData->fp,"%.4f, %.4f, %.4f,%.4f,%.4f,%.4f\n", s_log->t_start.tv_sec, s_log->t_start.tv_nsec, s_log->x, s_log->dx, s_log->cmd, s_log->Fext);
 
 
         printf("mutex unlock %d\n",pthread_mutex_unlock(&s_log->lock));
@@ -107,6 +107,7 @@ void initLog(char * filename, struct States * s, struct LogData *logData, struct
     //file header
     fprintf(logData->fp, "Rehab Robot Log File\n");
     fprintf(logData->fp, "%s\n", asctime(timeinfo));
+    fprintf(logData->fp,"t(s),t(nsec),x,dx,cmd,Fext\n");
     fclose(logData->fp);
 
     printf("%s\n", folder); 

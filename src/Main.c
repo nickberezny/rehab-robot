@@ -60,13 +60,15 @@ int main(int argc, char* argv[])
     printf("Starting Robot...\n");
     struct States data[BUFFER_SIZE] = {0};
     struct States *d = &data[0];
-    controlParams->currentState = 0; 
+    struct ControlParams *controlParams;
+    struct LogData *logData;
+    struct CommData *commData;
 
     pthread_t thread[NUMBER_OF_THREADS];
     memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
     pthread_attr_t attr[NUMBER_OF_THREADS];
 
-    printf("Starting Robot...\n");
+    
 
     bool homed = false;
     bool calibrated = false;
@@ -81,12 +83,17 @@ int main(int argc, char* argv[])
     int port = 5000;
     int len;
 
-    printf("Starting Robot...\n");
+    
 
     openClientSocket(&sockfd, &servaddr, &port);
 
+    printf("Starting Robot...\n");
+
     controlParams->currentState = WAIT_STATE; //State = Set
-    initDaq(*daq);
+
+    printf("Starting Robot...\n");
+
+    //initDaq(*daq);
 
     for(int i = 0; i < BUFFER_SIZE; i++)
     {
