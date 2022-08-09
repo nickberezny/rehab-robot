@@ -131,7 +131,7 @@ void DicretizeInput(double Ad[2][2], double A[2][2], double B[2], double Bd[2])
 	double Ainv[2][2] = {0.0};
 	double temp[2][2] = {0.0};
 
-	printf("a to invert 1: %.2f,%.2f,%.2f,%.2f\n", A[0][0], A[0][1], A[1][0], A[1][1]);
+	//printf("a to invert 1: %.2f,%.2f,%.2f,%.2f\n", A[0][0], A[0][1], A[1][0], A[1][1]);
 
 	InvertMatrix(A, Ainv);
 
@@ -140,7 +140,7 @@ void DicretizeInput(double Ad[2][2], double A[2][2], double B[2], double Bd[2])
 	temp[1][0] = Ainv[1][0]*(Ad[0][0] - 1.0) + Ainv[1][1]*(Ad[1][0]);
 	temp[1][1] = Ainv[1][0]*Ad[0][1] + Ainv[1][1]*(Ad[1][1] - 1.0);
 
-	 printf("temp: %.4f, %.4f, %.4f, %.4f\n", temp[0][0], temp[0][1], temp[1][0], temp[1][1]);
+	 //printf("temp: %.4f, %.4f, %.4f, %.4f\n", temp[0][0], temp[0][1], temp[1][0], temp[1][1]);
 
 	Bd[0] = temp[0][0]*B[0] + temp[0][1]*B[1];
 	Bd[1] = temp[1][0]*B[0] + temp[1][1]*B[1];

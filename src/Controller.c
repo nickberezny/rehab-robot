@@ -65,7 +65,7 @@ void * controllerThread (void * d)
 
         //***************************************************************************************************************
         
-        GetSineTrajectory(,0.005,0.1,0.25);
+        //GetSineTrajectory(,0.005,0.1,0.25,&xnext);
 
         //printf("time: %d ; %d\n", s->t_start.tv_sec - t_last.tv_sec, s->t_start.tv_nsec - t_last.tv_nsec);
         if(daq->aValues[2] || daq->aValues[3]) cmd = 0;

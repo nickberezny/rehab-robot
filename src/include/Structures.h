@@ -56,12 +56,21 @@ struct States {
 	double x, dx, ddx;
 	double Fext;
 	double xv,dxv,ddxv;
+	double xv_prev, dxv_prev, ddxv_prev;
 	double x0,dx0,ddx0;
 	double xstar, cmd;
 	
 	int lsb, lsf; //limit switches
 };
 
-
+struct regexMatch {
+	char *Md;
+	char *Dd;
+	char *Kd;
+    char *xstart;
+    char *xend;
+    char *x0;
+    char *dx0;
+};
 
 

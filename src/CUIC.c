@@ -28,9 +28,10 @@ void VirtualTrajectory(struct States * s, struct ControlParams * p)
      * @param[in] *p : pointer to robot Params containing impedance values
      */
     
-    s->ddxv = (1/(p->Md))*(s->Fext - (p->Dd)*(s->dxv - s->dx0) - (p->Kd)*(s->xv - s->x0)) + s->ddx0;
-    s->dxv += s->ddxv*s->dt;
-    s->xv += s->dxv*s->dt;
+    s->xv = p->Ad[1]*s->xv_prev + p->Ad[2]*s->dxv_prev + p->Bd[1]*s->Fext;
+    s->dxv = p->Ad[3]*s->xv_prev + p->Ad[4]*s->dxv_prev + p->Bd[2]*s->Fext;
+    s->ddxv = s->Fext - (p->Dd)/(p->Md)*(s->dxv - s->dx0) - (p->Kd)/(p->Md)*(s->xv - s->x0);
+
 }
 
 void GetCommand(struct States * s, struct ControlParams * p)
@@ -41,6 +42,6 @@ void GetCommand(struct States * s, struct ControlParams * p)
      * @param[in] *p : pointer to robot Params containing impedance values
      */
     
-    s->xstar = s->ddxv + ((p->alpha)*p->kv + (1-p->alpha)*(p->Dd/p->Md))*(s->dxv - s->dx) + ((p->alpha)*p->kp + (1-p->alpha)*(p->Kd/p->Md))*(s->xv - s->x);
+    s->xstar = s->ddxv + ((p->alpha)*p->kv + (1.0-p->alpha)*(p->Dd/p->Md))*(s->dxv - s->dx) + ((p->alpha)*p->kp + (1.0-p->alpha)*(p->Kd/p->Md))*(s->xv - s->x);
     s->cmd = p->m*s->xstar + p->c*s->dx - s->Fext;
 }

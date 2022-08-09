@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <sys/resource.h>
+#include <regex.h>
 
 #include "./include/Parameters.h"
 #include "./include/Structures.h"
@@ -55,8 +56,24 @@ int iter_client;
 int iter_log;
 int iter_cont;
 
+struct regexMatch regex =
+{
+    .Md = "Md([0-9]*.[0-9]*),",
+    .Dd = "Bd([0-9]*.[0-9]*),",
+    .Kd = "Kd([0-9]*.[0-9]*),",
+    .xstart = "x_start([0-9]*.[0-9]*),",
+    .xend = "x_end([0-9]*.[0-9]*),",
+    .x0 = "x0([0-9]*.[0-9]*),",
+    .dx0 = "dx0([0-9]*.[0-9]*),"
+} ; //regex matches
+
+regex_t compiled;
+regmatch_t matches[2];
+char matchBuffer[100];
+
 int main(int argc, char* argv[]) 
 {
+
     printf("Starting Robot...\n");
     struct States data[BUFFER_SIZE] = {0};
     struct States *d = &data[0];
@@ -141,12 +158,8 @@ int main(int argc, char* argv[])
             case SET_STATE:
                 sendMessage(&sockfd, "UI::STARTTASK");
                 //run fn
-
-                controlParams->Md = MD_TEST;
-                controlParams->Dd = BD_TEST;
-                controlParams->Kd = KD_TEST;
-
-                double Atemp[2][2] = {{0.0, 1.0},{-KD_TEST/MD_TEST, -BD_TEST/MD_TEST}};
+                WaitForParamMsg(&sockfd);
+                double Atemp[2][2] = {{0.0, 1.0},{-controlParams->Kd/-controlParams->Md, --controlParams->Dd/-controlParams->Md}};
                 double A[2][2];
                 DiscretizeMatrix(Atemp,A);
                 controlParams->Ad = A;
@@ -209,6 +222,51 @@ int main(int argc, char* argv[])
 
 }
 
+
+void WaitForParamMsg(int *fd)
+{
+
+
+    while(true)
+    {
+        
+        /* open, read, and display the message from the FIFO */
+        //sprintf(buffer,"");
+        bzero(buffer, sizeof(buffer));
+        read(*fd, buffer, sizeof(buffer));
+
+        if(strcmp(buffer, "") != 0) printf("Received (Main): %s\n", buffer);
+
+        regcomp(&compiled, regex.Md, REG_EXTENDED);
+        if(regexec(&compiled, buffer, 2, matches, 0)==0){
+            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
+            sscanf(matchBuffer, "%lf", &(controlParams->Md));
+            printf("Md %f\n",controlParams->Md);
+        }
+
+        regcomp(&compiled, regex.Dd, REG_EXTENDED);
+        if(regexec(&compiled, buffer, 2, matches, 0)==0){
+            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
+            sscanf(matchBuffer, "%lf", &(controlParams->Dd));
+            printf("Dd %f\n",controlParams->Dd);
+        }
+
+        regcomp(&compiled, regex.Kd, REG_EXTENDED);
+        if(regexec(&compiled, buffer, 2, matches, 0)==0){
+            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
+            sscanf(matchBuffer, "%lf", &(controlParams->Kd));
+            printf("Kd %f\n",controlParams->Kd);
+        }
+
+
+        goto MsgRec;
+        break;
+
+    }
+
+    MsgRec: ;
+    return;
+}
 
 
 void WaitForMsg(int *fd, int *state)
