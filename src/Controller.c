@@ -19,6 +19,7 @@
 #include "./include/Controller.h"
 #include "./include/CUIC.h"
 #include "./include/Daq.h"
+#include "./include/GetModelData.h"
 
 
 void * controllerThread (void * d)
@@ -43,12 +44,13 @@ void * controllerThread (void * d)
     extern struct DAQ *daq;
     sleep(1);
    
-    struct timespec t_last;
-    clock_gettime(CLOCK_MONOTONIC, &t_last);  
+    struct timespec t_first;
+    clock_gettime(CLOCK_MONOTONIC, &t_first);  
 
     double pos = 0;
     double vel = 0;
     double cmd = 0.2;
+    double xnext = 0;
 
     while(true)
     {
@@ -63,6 +65,8 @@ void * controllerThread (void * d)
 
         //***************************************************************************************************************
         
+        GetSineTrajectory(,0.005,0.1,0.25);
+
         //printf("time: %d ; %d\n", s->t_start.tv_sec - t_last.tv_sec, s->t_start.tv_nsec - t_last.tv_nsec);
         if(daq->aValues[2] || daq->aValues[3]) cmd = 0;
         //read daq 
@@ -71,19 +75,20 @@ void * controllerThread (void * d)
         if(daq->aValues[0] < 1.5) daq->aValues[0] = 1.5;
 
         ReadWriteDAQ(s, daq);
-        printf("CMD: %f, FT: %f, LS: %f, %f, Enc: %f, %f\n", daq->aValues[0], daq->aValues[1], daq->aValues[2], daq->aValues[3], daq->aValues[4], daq->aValues[5]);
+        //printf("CMD: %f, FT: %f, LS: %f, %ft_last, Enc: %f, %f\n", daq->aValues[0], daq->aValues[1], daq->aValues[2], daq->aValues[3], daq->aValues[4], daq->aValues[5]);
 
         //vel = (double)s->daq.aValues[4]*s->daqENC_TO_MM;
         pos += s->dx;
         s->x = pos;
 
-        printf("Pos: %f",pos);
+        //printf ("%d, %d, %.4f,%.4f,%.4f,%.4f\n", s->t_start.tv_sec, s->t_start.tv_nsec, s->x, s->dx, s->cmd, s->Fext);
+        //printf("Pos: %f",pos);
 
         //***************************************************************************************************************
         
         printf("mutex cont lock %d\n",pthread_mutex_lock(&s_next->lock));
         printf("mutex cont unlock %d\n",pthread_mutex_unlock(&s->lock));
-        t_last = s->t_start;
+        //t_last = s->t_start;
         
         getTimeToSleep(&s->t_start, &s->t_end);
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &s->t_end, NULL);

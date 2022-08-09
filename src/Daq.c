@@ -28,12 +28,12 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
      */
     
     LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
-    s->dx = (1.0 - 2.0*(double)daq->aValues[4])*((double)daq->aValues[5])*ENC_TO_M;
-    s->Fext = FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g;
+    s->dx = (1.0 - 2.0*(double)daq->aValues[4])*((double)daq->aValues[5])*ENC_TO_M; //in m/dt
+    s->Fext = 0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g); //in kg
 
 }
 
-int initDaq(struct DAQ daq)
+int initDaq(struct DAQ *daq)
 {
 
     /**
@@ -87,11 +87,11 @@ int initDaq(struct DAQ daq)
 
     for(int i = 0; i < BUFFER_SIZE; i++)
     {
-        memcpy(&(daq.aNames),aNames, 600*sizeof(char));
-        memcpy(&(daq.aValues),aValues, 6*sizeof(double));
-        memcpy(&(daq.aNumValues),aNumValues, 6*sizeof(int));
-        memcpy(&(daq.aWrites),aWrites, 6*sizeof(int));
-        memcpy(&(daq.daqHandle),&handle,sizeof(int));
+        memcpy(&(daq->aNames),aNames, 600*sizeof(char));
+        memcpy(&(daq->aValues),aValues, 6*sizeof(double));
+        memcpy(&(daq->aNumValues),aNumValues, 6*sizeof(int));
+        memcpy(&(daq->aWrites),aWrites, 6*sizeof(int));
+        memcpy(&(daq->daqHandle),&handle,sizeof(int));
     }
     
 

@@ -60,15 +60,15 @@ int main(int argc, char* argv[])
     printf("Starting Robot...\n");
     struct States data[BUFFER_SIZE] = {0};
     struct States *d = &data[0];
-    struct ControlParams *controlParams;
-    struct LogData *logData;
-    struct CommData *commData;
+
+    controlParams = malloc(sizeof *controlParams);
+    logData = malloc(sizeof *logData);
+    commData = malloc(sizeof *commData);
+    daq = malloc(sizeof *daq);
 
     pthread_t thread[NUMBER_OF_THREADS];
     memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
     pthread_attr_t attr[NUMBER_OF_THREADS];
-
-    
 
     bool homed = false;
     bool calibrated = false;
@@ -83,24 +83,15 @@ int main(int argc, char* argv[])
     int port = 5000;
     int len;
 
-    
-
     openClientSocket(&sockfd, &servaddr, &port);
-
-    printf("Starting Robot...\n");
-
     controlParams->currentState = WAIT_STATE; //State = Set
-
     printf("Starting Robot...\n");
-
-    //initDaq(*daq);
+    initDaq(daq);
 
     for(int i = 0; i < BUFFER_SIZE; i++)
     {
         commData->sockfd = &sockfd;
     }
-
-    printf("Starting Robot...\n");
 
     sendMessage(commData->sockfd, "ROBOT");
     read(sockfd, buffer, sizeof(buffer));
@@ -123,12 +114,16 @@ int main(int argc, char* argv[])
                 break;
 
             case HOME_STATE:
+                printf("Starting Robot...\n");
                 sendMessage(&sockfd, "UI::STARTTASK");
-                HomeToFront(controlParams);
-                HomeToBack(controlParams);
+                printf("Starting Robot...\n");
+                HomeToFront(d,daq);
+                HomeToBack(d,daq);
+                printf("Starting Robot...\n");
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
                 sendMessage(&sockfd, sendData);
+                
                 homed = true;
                 controlParams->currentState = WAIT_STATE;
                 break;
@@ -203,8 +198,6 @@ int main(int argc, char* argv[])
                 break;
         }
 
-
-
     }
     
     EndWhile: ;
@@ -276,7 +269,6 @@ void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thre
 {
     struct sched_param param[NUMBER_OF_THREADS];
 
-
     //*************Initialize Data log*******************
     
     if(argc > 1 && !strcmp(argv[1], "NOLOG"))
@@ -291,16 +283,13 @@ void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thre
         struct tm * timeinfo;
         time ( &rawtime );
         timeinfo = localtime ( &rawtime );
-        initLog("/test.txt", &data[0], timeinfo);
+        initLog("/test.txt", logData, timeinfo);
     }
 
     printf("path: %s\n", logData->filepath);
     logData->fp = fopen(logData->filepath,"a");
 
-    for(int i = 1; i < BUFFER_SIZE; i++)
-    {
-        logData->fp = logData->fp;
-    }
+
 
     //fclose(data[0].h.fp);
 
@@ -340,7 +329,7 @@ void RunController(struct States *data, pthread_t *thread, pthread_attr_t *attr,
     //pthread_cancel(thread[1]);
     //pthread_cancel(thread[2]);
 
-    //WaitForMsg(data[0].sockfd, &(data[0].currentState));
+    WaitForMsg(commData->sockfd, &(controlParams->currentState));
 
     printf("Finished Threads...\n");
 

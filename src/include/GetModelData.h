@@ -1,0 +1,1 @@
+void GetSineTrajectory(double * time, double * freq, double * xstart, double * xend, double * nextPos);

@@ -30,4 +30,17 @@ void getTimeToSleep(struct timespec * ts, struct timespec * tf)
     }
 }
 
+void getElapsedTime(struct timespec * ts, struct timespec * t, struct timespec * dt)
+{
+    dt->tv_sec = t->tv_sec - ts->tv_sec;
+    dt->tv_nsec = t->tv_nsec - ts->tv_nsec;
+
+
+    while(dt->tv_nsec < 0)
+    {
+        dt->tv_nsec += NSEC_IN_SEC;
+        dt->tv_sec -= 1;
+    }
+}
+
 

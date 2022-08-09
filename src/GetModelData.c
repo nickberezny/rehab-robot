@@ -20,10 +20,10 @@
 #include "./include/CUIC.h"
 #include "./include/TimeUtilities.h"
 
-void GetSineTrajectory(double * time, double * freq, double * xend, double * nextPos)
+void GetSineTrajectory(double * time, double * freq, double * xstart, double * xend, double * nextPos)
 {
 
-	*nextPos = (*xend)*sin((*freq)*(*time));
+	*nextPos = (*xend)*(sin((*freq)*(*time))+1.0) + (*xstart);
 
 }
 
