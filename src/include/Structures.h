@@ -16,6 +16,8 @@ struct ControlParams {
 	double delta, alpha;
 	double *Ad, *Bd;
 	double xend; //length of actuator
+	double x0, dx0, ddx0;
+	double xstart;
 
 	int currentState; 
 
@@ -71,6 +73,7 @@ struct regexMatch {
     char *xend;
     char *x0;
     char *dx0;
+    char *alpha;
 };
 
 

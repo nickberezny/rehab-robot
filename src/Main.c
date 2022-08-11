@@ -40,7 +40,7 @@
 
 
 //global variables 
-char buffer[2048];
+char buffer[4096];
 
 struct States *s_client; 
 struct States *s_log;
@@ -64,7 +64,8 @@ struct regexMatch regex =
     .xstart = "x_start([0-9]*.[0-9]*),",
     .xend = "x_end([0-9]*.[0-9]*),",
     .x0 = "x0([0-9]*.[0-9]*),",
-    .dx0 = "dx0([0-9]*.[0-9]*),"
+    .dx0 = "dx0([0-9]*.[0-9]*),",
+    .alpha = "alpha([0-9]*.[0-9]*)"
 } ; //regex matches
 
 regex_t compiled;
@@ -256,6 +257,27 @@ void WaitForParamMsg(int *fd)
             sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
             sscanf(matchBuffer, "%lf", &(controlParams->Kd));
             printf("Kd %f\n",controlParams->Kd);
+        }
+
+        regcomp(&compiled, regex.xstart, REG_EXTENDED);
+        if(regexec(&compiled, buffer, 2, matches, 0)==0){
+            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
+            sscanf(matchBuffer, "%lf", &(controlParams->xstart));
+            printf("xstart %f\n",controlParams->xstart);
+        }
+
+        regcomp(&compiled, regex.xend, REG_EXTENDED);
+        if(regexec(&compiled, buffer, 2, matches, 0)==0){
+            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
+            sscanf(matchBuffer, "%lf", &(controlParams->x0));
+            printf("x0 %f\n",controlParams->x0);
+        }
+
+        regcomp(&compiled, regex.alpha, REG_EXTENDED);
+        if(regexec(&compiled, buffer, 2, matches, 0)==0){
+            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
+            sscanf(matchBuffer, "%lf", &(controlParams->alpha));
+            printf("alpha %f\n",controlParams->alpha);
         }
 
 
