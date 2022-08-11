@@ -135,8 +135,8 @@ int main(int argc, char* argv[])
                 printf("Starting Robot...\n");
                 sendMessage(&sockfd, "UI::STARTTASK");
                 printf("Starting Robot...\n");
-                HomeToFront(d,daq);
-                HomeToBack(d,daq);
+                //HomeToFront(d,daq);
+                //HomeToBack(d,daq);
                 printf("Starting Robot...\n");
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
@@ -401,7 +401,7 @@ void RunController(struct States *data, pthread_t *thread, pthread_attr_t *attr,
 
     printf("thread: %d\n",pthread_create(&thread[0], &attr[0], controllerThread, (void *)data));
     printf("thread: %d\n",pthread_create(&thread[1], &attr[1], logThread, (void *)data));
-    //printf("thread: %d\n",pthread_create(&thread[2], &attr[2], clientThread, (void *)data));
+    printf("thread: %d\n",pthread_create(&thread[2], &attr[2], clientThread, (void *)data));
     //pthread_join(thread[0], NULL);
     //pthread_join(thread[1], NULL);
 
