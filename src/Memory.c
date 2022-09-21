@@ -30,3 +30,11 @@ void lockMemory()
        return;
     }
 }
+
+void unlockMemory()
+{
+    if(munlockall()) {
+       printf("munlockall failed: %m\n");
+       return;
+    }
+}

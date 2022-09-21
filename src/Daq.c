@@ -28,8 +28,8 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
      */
     
     LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
-    s->dx = (1.0 - 2.0*(double)daq->aValues[4])*((double)daq->aValues[5])*ENC_TO_M; //in m/dt
-    s->Fext = 0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g); //in kg
+    s->dx = (1.0 - 2.0*(double)daq->aValues[4])*((double)daq->aValues[5])*ENC_TO_M/(STEP_SIZE_MS/1000.0); //in m/dt
+    s->Fext = 0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
 
 }
 
@@ -42,7 +42,7 @@ int initDaq(struct DAQ *daq)
      */
 
     
-    int err, handle; 
+    int err, handle, errAdress;
     handle = 0;
     // Open first found LabJack
     err = LJM_Open(LJM_dtANY, LJM_ctANY, "LJM_idANY", &handle);
@@ -76,11 +76,12 @@ int initDaq(struct DAQ *daq)
     LJM_eWriteName(handle, "AIN0_SETTLING_US", 0);
     LJM_eWriteName(handle, "AIN_ALL_NEGATIVE_CH", 199);
 
-    printf("DAQ Handle: %d\n", handle);
+    
 
 
     double aValues[6] = {0};
     const char * aNames[6] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; //
+    //const char * aNames[6] = {"DAC0", "AIN0","AIN1", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; //
     int aNumValues[6] = {1,1,1,1,1,1};
     int aWrites[6] = {1,0,0,0,0,0};
 
@@ -92,7 +93,10 @@ int initDaq(struct DAQ *daq)
         memcpy(&(daq->aNumValues),aNumValues, 6*sizeof(int));
         memcpy(&(daq->aWrites),aWrites, 6*sizeof(int));
         memcpy(&(daq->daqHandle),&handle,sizeof(int));
+        memcpy(&(daq->errorAddress),&errAdress,sizeof(int));
     }
+
+    printf("DAQ Handle: %d\n", daq->daqHandle);
     
 
     /*

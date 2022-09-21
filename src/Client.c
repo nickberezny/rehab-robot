@@ -41,16 +41,16 @@ void * clientThread (void * d)
     {
 
         s_client = &((struct States*)d)[iter_client];
-        printf("%d comm mutex: %d\n", iter_client, pthread_mutex_lock(&s_client->lock));
+        pthread_mutex_lock(&s_client->lock);
         if(iter_client == 3)
         {
-            sprintf(buffer, "PLOT::%.3f::%.1f", s_client->x, s_client->Fext);
-            printf("%d\n", *(commData->sockfd));
+            sprintf(buffer, "PLOT::%.3f::%.3f", s_client->x, s_client->cmd);
+            //printf("%d\n", *(commData->sockfd));
             //send(*(s->sockfd), msg, strlen(msg),0);
             sendMessage(commData->sockfd, buffer);
         }
         
-        printf("%d comm unlock mutex: %d\n", iter_client, pthread_mutex_unlock(&s_client->lock));
+        pthread_mutex_unlock(&s_client->lock);
         iter_client = iter_client + 1;
         if(iter_client == BUFFER_SIZE) iter_client = 0;
         

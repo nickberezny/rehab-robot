@@ -28,10 +28,49 @@ void VirtualTrajectory(struct States * s, struct ControlParams * p)
      * @param[in] *p : pointer to robot Params containing impedance values
      */
     
-    s->xv = p->Ad[1]*s->xv_prev + p->Ad[2]*s->dxv_prev + p->Bd[1]*s->Fext;
-    s->dxv = p->Ad[3]*s->xv_prev + p->Ad[4]*s->dxv_prev + p->Bd[2]*s->Fext;
-    s->ddxv = s->Fext - (p->Dd)/(p->Md)*(s->dxv - s->dx0) - (p->Kd)/(p->Md)*(s->xv - s->x0);
+    s->xv = p->Ad[0]*(s->xv_prev-s->x0) + p->Ad[1]*s->dxv_prev + p->Bd[0]*s->Fext + s->x0 ;
+    s->dxv = p->Ad[2]*(s->xv_prev-s->x0) + p->Ad[3]*s->dxv_prev + p->Bd[1]*s->Fext;
+    s->ddxv = (s->Fext/p->Md - (p->Dd)/(p->Md)*(s->dxv) - (p->Kd)/(p->Md)*(s->xv - s->x0));///(STEP_SIZE_MS*1000.0); 
 
+}
+
+void BasicPD(struct States * s, struct ControlParams * p)
+{
+
+    if(s->xv > p->xend) {                                                                         
+        s->cmd = p->kv*(-s->dx) + p->kp*(p->xend - s->x);
+    }
+    else if(s->xv < 0.0) {
+        s->cmd = p->kv*(-s->dx) + p->kp*(0.0 - s->x);
+    } else {
+        s->cmd = s->ddxv + p->kv*(s->dxv - s->dx) + p->kp*(s->xv - s->x);
+    }
+}
+
+void ComputedTorque(struct States * s, struct ControlParams * p)
+{
+    //BasicPD(s,p);PeriodicReset
+
+    s->cmd = p->m*(s->ddxv + 5000.0*(s->dxv - s->dx) + 8000.0*(s->xv - s->x)) + s->Fext/431.0 + 2.5;
+    
+    //s->cmd = p->m*(-p->Dd*s->dx-p->Kd*(s->x - s->x0)+s->Fext)/p->Md  + p->c*s->dx + s->Fext/431.0 + 2.5;
+    
+    //printf("Imp: %f, Adm: %f\n",(-p->Dd*s->dx-p->Kd*(s->x - s->x0)+s->Fext)/p->Md, s->ddxv + 2.0*(s->dxv - s->dx) + 4.0*(s->xv - s->x));
+    /*
+    if((s->cmd >= 2.5) - (s->cmd < 2.5) + (s->dx > 0.0) - (s->dx < 0.0) != 0)
+    {
+        s->cmd += (double)((s->cmd >= 2.5) - (s->cmd < 2.5))*0.5*(1.0/(1.0 + pow(fabs(s->dx),0.01)) - 0.5);
+        //printf("Extra: %f\n", (double)((s->cmd >= 2.5) - (s->cmd < 2.5)));
+        
+    }
+
+    */
+}
+
+void PeriodicReset(struct States * s)
+{
+    s->xv_prev = s->x;
+    s->dxv_prev = s->dx;
 }
 
 void GetCommand(struct States * s, struct ControlParams * p)

@@ -23,7 +23,28 @@
 void GetSineTrajectory(double * time, double * freq, double * xstart, double * xend, double * nextPos)
 {
 
-	*nextPos = (*xend)*(sin((*freq)*(*time))+1.0) + (*xstart);
+	*nextPos = (*xend/2.0)*(-cos((*freq)*(*time))+1.0) + (*xstart);
 
+}
+
+void GetSineCommand(double *time, double * freq, double *amplitude, double * command)
+{
+
+    *command = (*amplitude)*sin((*freq)*(*time)) + 2.5;
+
+}
+
+void RunCommandSteps(struct States * s, double *highBound, double *lowBound, double *offset, double *offset_iter, double *dir)
+{
+    if(s->x > *highBound && *dir == 1.0) 
+    {
+        *dir = -1.0; 
+
+    }
+    if(s->x < *lowBound && *dir == -1.0)
+    {
+        *dir = 1.0; 
+        *offset += *offset_iter;
+    }
 }
 

@@ -26,21 +26,21 @@ void HomeToBack(struct States * s, struct DAQ * daq)
      * @brief Slowly moves robot until contact with back limit switch
      * @param[in] *s : pointer to robot States
      */
-
+    printf("Check1\n");
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
     ReadWriteDAQ(s, daq);
     s->lsb = daq->aValues[3];
     s->x = 0;
     s->dx = 0;
-    daq->aValues[0] = CMD_GAIN*(0.25) + CMD_OFFSET;
-
+    daq->aValues[0] = CMD_GAIN*(-0.35) + CMD_OFFSET;
+    printf("Check2\n");
     while(s->lsb == 0)
     {
-        s->x -= s->dx;
+        s->x -= s->dx*(STEP_SIZE_MS/1000.0);
         ReadWriteDAQ(s,daq);
         s->lsb = daq->aValues[3];
     }
-
+    printf("Check3\n");
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
     controlParams->xend = s->x;
     printf("xend: %f\n",controlParams->xend);
@@ -52,20 +52,22 @@ void HomeToFront(struct States * s, struct DAQ * daq)
      * @brief Slowly moves robot until contact with front limit switch
      * @param[in] *s : pointer to robot States
      */
-
-    daq->aValues[0] = CMD_GAIN*(0) + CMD_OFFSET;
-    ReadWriteDAQ(s,daq);
+    printf("daqhandle %d\n", daq->daqHandle);
+    daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
+    printf("Check2\n");
+    LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
+    printf("Check3\n");
     s->lsf = daq->aValues[2];
     
 
-    daq->aValues[0] = CMD_GAIN*(-0.35) + CMD_OFFSET;
-
+    daq->aValues[0] = CMD_GAIN*(0.45) + CMD_OFFSET;
+    
     while(s->lsf == 0)
     {
-        ReadWriteDAQ(s,daq);
+        LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
         s->lsf = daq->aValues[2];
     }
-
+    
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
 
 }

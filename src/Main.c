@@ -56,6 +56,8 @@ int iter_client;
 int iter_log;
 int iter_cont;
 
+bool loggingActivated = true; 
+
 struct regexMatch regex =
 {
     .Md = "Md([0-9]*.[0-9]*),",
@@ -65,7 +67,12 @@ struct regexMatch regex =
     .xend = "x_end([0-9]*.[0-9]*),",
     .x0 = "x0([0-9]*.[0-9]*),",
     .dx0 = "dx0([0-9]*.[0-9]*),",
-    .alpha = "alpha([0-9]*.[0-9]*)"
+    .alpha = "alpha([0-9]*.[0-9]*)",
+    .delta = "delta([0-9])",
+    .kv = "kv([0-9]*.[0-9]*)",
+    .kp = "kp([0-9]*.[0-9]*)",
+    .kp = "kp([0-9]*.[0-9]*)",
+    .filename = "filename(*.txt)"
 } ; //regex matches
 
 regex_t compiled;
@@ -79,10 +86,10 @@ int main(int argc, char* argv[])
     struct States data[BUFFER_SIZE] = {0};
     struct States *d = &data[0];
 
-    controlParams = malloc(sizeof *controlParams);
-    logData = malloc(sizeof *logData);
-    commData = malloc(sizeof *commData);
-    daq = malloc(sizeof *daq);
+    controlParams = calloc(17, sizeof *controlParams);
+    logData = calloc(2, sizeof *logData);
+    commData = calloc(1, sizeof *commData);
+    daq = calloc(6,sizeof *daq);
 
     pthread_t thread[NUMBER_OF_THREADS];
     memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
@@ -132,12 +139,12 @@ int main(int argc, char* argv[])
                 break;
 
             case HOME_STATE:
-                printf("Starting Robot...\n");
+                
                 sendMessage(&sockfd, "UI::STARTTASK");
-                printf("Starting Robot...\n");
+                
                 //HomeToFront(d,daq);
-                //HomeToBack(d,daq);
-                printf("Starting Robot...\n");
+                HomeToBack(d,daq);
+                
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
                 sendMessage(&sockfd, sendData);
@@ -149,7 +156,7 @@ int main(int argc, char* argv[])
             case CALIBRATE_STATE:
                 sendMessage(&sockfd, "UI::STARTTASK");
                 //run fn
-                sleep(2);
+                CalibrateForceOffset(d,daq);
                 sprintf(sendData, "UI::CALIBRATE");
                 sendMessage(&sockfd, sendData);
                 calibrated = true;
@@ -160,12 +167,12 @@ int main(int argc, char* argv[])
                 sendMessage(&sockfd, "UI::STARTTASK");
                 //run fn
                 WaitForParamMsg(&sockfd);
-                double Atemp[2][2] = {{0.0, 1.0},{-controlParams->Kd/-controlParams->Md, --controlParams->Dd/-controlParams->Md}};
+                double Atemp[2][2] = {{0.0, 1.0},{-controlParams->Kd/controlParams->Md, -controlParams->Dd/controlParams->Md}};
                 double A[2][2];
                 DiscretizeMatrix(Atemp,A);
                 controlParams->Ad = A;
 
-                double Btemp[2] = {0.0, 1.0};
+                double Btemp[2] = {0.0, 1.0/controlParams->Md};
                 double B[2];
                 DicretizeInput(A, Atemp, Btemp, B);
 
@@ -173,6 +180,12 @@ int main(int argc, char* argv[])
 
                 printf("Ad: %f, %f, %f, %f\n",A[0][0],A[0][1],A[1][0],A[1][1]);
                 printf("Bd: %f, %f\n",B[0],B[1]);
+
+                controlParams->kv = 15;
+                controlParams->kp = 30;
+                controlParams->dx_bound = 0.01;
+                controlParams->m = -1.0;//(1.0/0.8041);
+                controlParams->c = -1.0;//(1.096/0.8041);
 
                 sleep(2);
                 sprintf(sendData, "UI::SET");
@@ -354,6 +367,7 @@ void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thre
     if(argc > 1 && !strcmp(argv[1], "NOLOG"))
     {
         printf("Logging Deactivated...\n");
+        loggingActivated = false;
     }
     else
     {
@@ -400,7 +414,7 @@ void RunController(struct States *data, pthread_t *thread, pthread_attr_t *attr,
 {
 
     printf("thread: %d\n",pthread_create(&thread[0], &attr[0], controllerThread, (void *)data));
-    printf("thread: %d\n",pthread_create(&thread[1], &attr[1], logThread, (void *)data));
+    if(loggingActivated) printf("thread: %d\n",pthread_create(&thread[1], &attr[1], logThread, (void *)data));
     printf("thread: %d\n",pthread_create(&thread[2], &attr[2], clientThread, (void *)data));
     //pthread_join(thread[0], NULL);
     //pthread_join(thread[1], NULL);

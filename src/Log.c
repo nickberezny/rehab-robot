@@ -36,14 +36,14 @@ void * logThread (void * d)
     while(true)
     {
         s_log = &((struct States*)d)[iter_log];
-        printf("mutex lock %d\n",pthread_mutex_lock(&s_log->lock));
+        pthread_mutex_lock(&s_log->lock);
         iter_log= iter_log + 1;
         if(iter_log== BUFFER_SIZE) iter_log= 0;
 
-        fprintf (logData->fp,"%d, %d, %.8f,%.8f,%.6f,%.6f\n", s_log->t_start.tv_sec, s_log->t_start.tv_nsec, s_log->x, s_log->dx, s_log->cmd, s_log->Fext);
+        fprintf (logData->fp,"%d, %d, %.8f,%.8f, %.8f,%.8f, %.8f,%.6f,%.6f\n", s_log->t_start.tv_sec, s_log->t_start.tv_nsec, s_log->x, s_log->dx, s_log->xv, s_log->dxv, s_log->ddxv, s_log->cmd, s_log->Fext);
 
 
-        printf("mutex unlock %d\n",pthread_mutex_unlock(&s_log->lock));
+        pthread_mutex_unlock(&s_log->lock);
     }
     
     printf("Done Log...\n");
@@ -107,7 +107,7 @@ void initLog(char * filename, struct LogData *logData, struct tm * timeinfo)
     //file header
     fprintf(logData->fp, "Rehab Robot Log File\n");
     fprintf(logData->fp, "%s\n", asctime(timeinfo));
-    fprintf(logData->fp,"t(s),t(nsec),x,dx,cmd,Fext\n");
+    fprintf(logData->fp,"t(s),t(nsec),x,dx,xv,dxv,ddxv,cmd,Fext\n");
     fclose(logData->fp);
 
     printf("%s\n", folder); 
