@@ -53,11 +53,10 @@ void * logThread (void * d)
 
 
 
-void initFolder(char * filename, struct tm * timeinfo, char * folder)
+void initFolder(struct tm * timeinfo, char * folder)
 {
     /**
      * @brief initialize full folder path + name for log file
-     * @param[in] filename desired filenmae
      * @param[in] timeinfo time structure to add to filename
      * @param[in] folder desired folder path
      */
@@ -84,7 +83,7 @@ void initFolder(char * filename, struct tm * timeinfo, char * folder)
 }
 
 
-void initLog(char * filename, struct LogData *logData, struct tm * timeinfo)
+void initLog(char * filename, struct LogData *logData, char * folder)
 {
     /**
      * @brief open log file and write header
@@ -93,20 +92,14 @@ void initLog(char * filename, struct LogData *logData, struct tm * timeinfo)
      * @param[in] timeinfo time structure to add to filename
      * 
      */
-
-    char folder[1000] = "log/";
-
-    initFolder(filename, timeinfo, folder);
     
     strcat(folder, filename);
-    
+    printf("%s\n", folder);
 
     strcpy(logData->filepath, folder);
     logData->fp = fopen(folder,"w");
 
     //file header
-    fprintf(logData->fp, "Rehab Robot Log File\n");
-    fprintf(logData->fp, "%s\n", asctime(timeinfo));
     fprintf(logData->fp,"t(s),t(nsec),x,dx,xv,dxv,ddxv,cmd,Fext\n");
     fclose(logData->fp);
 

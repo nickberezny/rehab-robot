@@ -41,6 +41,7 @@
 
 //global variables 
 char buffer[4096];
+char buffer_small[10];
 
 struct States *s_client; 
 struct States *s_log;
@@ -78,6 +79,8 @@ struct regexMatch regex =
 regex_t compiled;
 regmatch_t matches[2];
 char matchBuffer[100];
+char folder[1000] = "log/";
+int fileIteration = 0;
 
 int main(int argc, char* argv[]) 
 {
@@ -107,6 +110,15 @@ int main(int argc, char* argv[])
     struct sockaddr_in servaddr;
     int port = 5000;
     int len;
+
+    //initialize folder 
+    
+    time_t rawtime;
+    struct tm * timeinfo;
+    time ( &rawtime );
+    timeinfo = localtime ( &rawtime );
+    
+    initFolder(timeinfo,folder);
 
     openClientSocket(&sockfd, &servaddr, &port);
     controlParams->currentState = WAIT_STATE; //State = Set
@@ -143,7 +155,7 @@ int main(int argc, char* argv[])
                 sendMessage(&sockfd, "UI::STARTTASK");
                 
                 //HomeToFront(d,daq);
-                HomeToBack(d,daq);
+                //HomeToBack(d,daq);
                 
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
@@ -207,11 +219,22 @@ int main(int argc, char* argv[])
             case STOP_STATE:
                 //stop
                 //reset states ...
+                //unlock memory? 
+                printf("Check1\n");
                 pthread_cancel(thread[0]);
                 pthread_cancel(thread[1]);
                 pthread_cancel(thread[2]);
+                printf("Check2\n");
+                ResetController();
+                printf("Check3\n");
+                homed = false;
+                calibrated = false;
+                set = false;
+                sendMessage(commData->sockfd, "UI::STOP");
+                printf("Check4\n");
                 sleep(2); 
                 controlParams->currentState = WAIT_STATE;
+
                 break; 
             case SHUTDOWN_STATE:
                 sleep(0.5);
@@ -316,6 +339,8 @@ void WaitForMsg(int *fd, int *state)
         bzero(buffer, sizeof(buffer));
         read(*fd, buffer, sizeof(buffer));
 
+        strncpy(buffer_small, buffer, 4);
+
         if(strcmp(buffer, "") != 0) printf("Received (Main): %s\n", buffer);
 
         if(strcmp(buffer, "HOME") == 0)
@@ -338,8 +363,9 @@ void WaitForMsg(int *fd, int *state)
             if(*state == READY_STATE) *state = RUN_STATE;
             break;
         }
-        else if(strcmp(buffer, "STOP") == 0)
+        else if(strcmp(buffer_small, "STOP") == 0)
         {
+            printf("STOP!\n");
             if(*state == RUN_STATE) *state = STOP_STATE;
             break;
         }
@@ -372,12 +398,12 @@ void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thre
     else
     {
         printf("Logging Activated...\n");
-
-        time_t rawtime;
-        struct tm * timeinfo;
-        time ( &rawtime );
-        timeinfo = localtime ( &rawtime );
-        initLog("/test.txt", logData, timeinfo);
+        fileIteration += 1;
+        char filename[20] = "";
+        sprintf(filename, "/run%d.txt",fileIteration);
+        char foldercpy[1000] = ""; 
+        strcpy(foldercpy, folder);
+        initLog(filename, logData, foldercpy);
     }
 
     printf("path: %s\n", logData->filepath);
@@ -419,13 +445,20 @@ void RunController(struct States *data, pthread_t *thread, pthread_attr_t *attr,
     //pthread_join(thread[0], NULL);
     //pthread_join(thread[1], NULL);
 
-    //pthread_cancel(thread[0]);
-    //pthread_cancel(thread[1]);
-    //pthread_cancel(thread[2]);
-
     WaitForMsg(commData->sockfd, &(controlParams->currentState));
 
     printf("Finished Threads...\n");
 
     return;
+}
+
+void ResetController()
+{
+
+    munlockall();
+    memset(controlParams, 0, sizeof(*controlParams));
+    //memset(logData, 0, sizeof(*logData));
+    //memset(daq, 0, sizeof(*daq));
+
+
 }
