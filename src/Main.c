@@ -220,18 +220,14 @@ int main(int argc, char* argv[])
                 //stop
                 //reset states ...
                 //unlock memory? 
-                printf("Check1\n");
                 pthread_cancel(thread[0]);
                 pthread_cancel(thread[1]);
                 pthread_cancel(thread[2]);
-                printf("Check2\n");
                 ResetController();
-                printf("Check3\n");
                 homed = false;
                 calibrated = false;
                 set = false;
                 sendMessage(commData->sockfd, "UI::STOP");
-                printf("Check4\n");
                 sleep(2); 
                 controlParams->currentState = WAIT_STATE;
 
@@ -409,12 +405,18 @@ void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thre
     printf("path: %s\n", logData->filepath);
     logData->fp = fopen(logData->filepath,"a");
 
-
+    iter_client = 0;
+    iter_log = 0;
+    iter_cont = 0;
 
     //fclose(data[0].h.fp);
 
     //*************Initialize threads + mutexes*******************
     
+    memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
+    pthread_t empty_thread[NUMBER_OF_THREADS];
+    thread = empty_thread;
+
     for(int i = 0; i < NUMBER_OF_THREADS; i++)
     {
         printf("init: %d\n",initThread(&attr[i], &param[i], 95-i));
@@ -428,6 +430,7 @@ void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thre
     for(int i = 0; i < BUFFER_SIZE; i++)
     {
         printf("%d mutex: %d\n", i, pthread_mutex_init(&data[i].lock, NULL));
+        pthread_mutex_unlock(&data[i].lock);
     }
 
     //*************Lock Memory*******************
@@ -440,7 +443,7 @@ void RunController(struct States *data, pthread_t *thread, pthread_attr_t *attr,
 {
 
     printf("thread: %d\n",pthread_create(&thread[0], &attr[0], controllerThread, (void *)data));
-    if(loggingActivated) printf("thread: %d\n",pthread_create(&thread[1], &attr[1], logThread, (void *)data));
+    //if(loggingActivated) printf("thread: %d\n",pthread_create(&thread[1], &attr[1], logThread, (void *)data));
     printf("thread: %d\n",pthread_create(&thread[2], &attr[2], clientThread, (void *)data));
     //pthread_join(thread[0], NULL);
     //pthread_join(thread[1], NULL);

@@ -68,6 +68,8 @@ void * controllerThread (void * d)
     //double CmdArray[10 + 1] = {2.5};
     //int CmdOrder = 10;
 
+    bool firstRun = true;
+
 
     s_next->xv = 0.0;
     s_next->xv_prev = 0.0;
@@ -77,10 +79,14 @@ void * controllerThread (void * d)
 
         s = &((struct States*)d)[iter_cont];
         iter_cont= iter_cont + 1;
-        if(iter_cont== BUFFER_SIZE) iter_cont= 0;
+        if(iter_cont== BUFFER_SIZE)
+        {
+            firstRun = false;
+            iter_cont = 0;
+        } 
         s_next = &((struct States*)d)[iter_cont];
 
-
+        printf("Controller1...\n");
         clock_gettime(CLOCK_MONOTONIC, &s->t_start);  
 
         //***************************************************************************************************************
@@ -91,7 +97,7 @@ void * controllerThread (void * d)
         //daq->aValues[0] = 2.5 - offset*dir;
         
         s->x0 = 0.15;
-        
+        printf("Controller2...\n");
         
         if(iter_cont == 0 || iter_cont == 5)
         {
@@ -116,7 +122,7 @@ void * controllerThread (void * d)
         }
         */
 
-
+        printf("Controller3...\n");
         daq->aValues[0] = s->cmd;
         
         //daq->aValues[0] = CMD_GAIN*s->cmd + CMD_OFFSET;
@@ -148,9 +154,10 @@ void * controllerThread (void * d)
         s_next->dxv_prev = s->dxv;
 
         //***************************************************************************************************************
-        
-        pthread_mutex_lock(&s_next->lock);
-        pthread_mutex_unlock(&s->lock);
+        printf("Controller4...\n");
+        if(firstRun) printf("mutex next unlock %d\n",pthread_mutex_unlock(&s_next->lock));
+        printf("mutex lock %d:%d\n",pthread_mutex_lock(&s_next->lock),iter_cont);
+        printf("mutex unlock %d\n",pthread_mutex_unlock(&s->lock));
         //t_last = s->t_start;
         
         getTimeToSleep(&s->t_start, &s->t_end);
