@@ -29,16 +29,16 @@ void HomeToBack(struct States * s, struct DAQ * daq)
     printf("Check1\n");
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
     ReadWriteDAQ(s, daq);
-    s->lsb = daq->aValues[3];
+    s->lsb = daq->aValues[2];
     s->x = 0;
     s->dx = 0;
-    daq->aValues[0] = CMD_GAIN*(-0.35) + CMD_OFFSET;
+    daq->aValues[0] = CMD_GAIN*(0.35) + CMD_OFFSET;
     printf("Check2\n");
     while(s->lsb == 0)
     {
         s->x -= s->dx*(STEP_SIZE_MS/1000.0);
         ReadWriteDAQ(s,daq);
-        s->lsb = daq->aValues[3];
+        s->lsb = daq->aValues[2];
     }
     printf("Check3\n");
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
@@ -57,7 +57,7 @@ void HomeToFront(struct States * s, struct DAQ * daq)
     printf("Check2\n");
     LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
     printf("Check3\n");
-    s->lsf = daq->aValues[2];
+    s->lsf = daq->aValues[3];
     
 
     daq->aValues[0] = CMD_GAIN*(0.45) + CMD_OFFSET;
@@ -65,7 +65,7 @@ void HomeToFront(struct States * s, struct DAQ * daq)
     while(s->lsf == 0)
     {
         LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
-        s->lsf = daq->aValues[2];
+        s->lsf = daq->aValues[3];
     }
     
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;

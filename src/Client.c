@@ -34,25 +34,25 @@ void * clientThread (void * d)
     extern struct CommData *commData;
     extern int iter_client;
     extern char buffer[2048];
+    extern quitThreads;
 
     printf("Starting client thread...\n");
 
     iter_client = 0;
 
-    while(true)
+    while(!quitThreads)
     {
         s_client = &((struct States*)d)[iter_client];
-        printf("lock client, %d, iter %d\n",pthread_mutex_lock(&s_client->lock),iter_client);
+        pthread_mutex_lock(&s_client->lock);
         if(iter_client == 3)
         {
             sprintf(buffer, "PLOT::%.3f::%.3f", s_client->x, s_client->cmd);
-            printf("msg: %s\n",buffer);
             //printf("%d\n", *(commData->sockfd));
             //send(*(s->sockfd), msg, strlen(msg),0);
             sendMessage(commData->sockfd, buffer);
         }
         
-        printf("unlock client, %d, iter %d\n",pthread_mutex_unlock(&s_client->lock),iter_client);
+        pthread_mutex_unlock(&s_client->lock);
         iter_client = iter_client + 1;
         if(iter_client == BUFFER_SIZE) iter_client = 0;
         

@@ -28,12 +28,16 @@ void * logThread (void * d)
      * @brief logThread function to be run in POSIX thread
      * @param[in] *d : pointer to robot States structure
      */
+
+    printf("Starting Log...\n");
+
     extern struct States *s_log;    
     extern int iter_log;
     extern struct LogData *logData;
+    extern quitThreads;
     iter_log = 0;
 
-    while(true)
+    while(!quitThreads)
     {
         s_log = &((struct States*)d)[iter_log];
         pthread_mutex_lock(&s_log->lock);

@@ -7,6 +7,7 @@
  */
 
 #include "./Parameters.h"
+#include <stdbool.h>
 
 struct ControlParams {
 
@@ -20,6 +21,9 @@ struct ControlParams {
 	double xstart;
 	double Fext_offset;
 	double dx_bound;
+	double tf;
+	struct timespec t_first;
+	bool firstRun;
 
 	int currentState; 
 
@@ -80,6 +84,9 @@ struct regexMatch {
     char *kv;
     char *kp;
     char *filename;
+    char *Home;
+    char *mass;
+    char *damp;
 };
 
 

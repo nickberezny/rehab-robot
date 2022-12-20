@@ -51,7 +51,7 @@ void ComputedTorque(struct States * s, struct ControlParams * p)
 {
     //BasicPD(s,p);PeriodicReset
 
-    s->cmd = p->m*(s->ddxv + 5000.0*(s->dxv - s->dx) + 8000.0*(s->xv - s->x)) + s->Fext/431.0 + 2.5;
+    s->cmd = p->m*(s->ddxv + (p->kv)*(s->dxv - s->dx) + (p->kp)*(s->xv - s->x)) + p->c*s->dx + s->Fext/431.0 + 2.5;
     
     //s->cmd = p->m*(-p->Dd*s->dx-p->Kd*(s->x - s->x0)+s->Fext)/p->Md  + p->c*s->dx + s->Fext/431.0 + 2.5;
     
