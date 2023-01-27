@@ -80,7 +80,7 @@ int initDaq(struct DAQ *daq)
 
 
     double aValues[6] = {0};
-    const char * aNames[6] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; //
+    const char * aNames[6] = {"DAC0", "AIN10","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; //
     //const char * aNames[6] = {"DAC0", "AIN0","AIN1", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; //
     int aNumValues[6] = {1,1,1,1,1,1};
     int aWrites[6] = {1,0,0,0,0,0};
