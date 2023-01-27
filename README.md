@@ -5,3 +5,4 @@ Requires Linux w/ Preempt-RT Kernel Patch
 
 Build the executable with `make build` and run it with `./robotcontroller` (may require sudo)
 
+Build and run Doxygen documentation with `make docs`
