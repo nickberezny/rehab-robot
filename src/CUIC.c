@@ -49,22 +49,12 @@ void BasicPD(struct States * s, struct ControlParams * p)
 
 void ComputedTorque(struct States * s, struct ControlParams * p)
 {
-    //BasicPD(s,p);PeriodicReset
-
     s->cmd = p->m*(s->ddxv + (p->kv)*(s->dxv - s->dx) + (p->kp)*(s->xv - s->x)) + p->c*s->dx + s->Fext/431.0 + 2.5;
-    
-    //s->cmd = p->m*(-p->Dd*s->dx-p->Kd*(s->x - s->x0)+s->Fext)/p->Md  + p->c*s->dx + s->Fext/431.0 + 2.5;
-    
-    //printf("Imp: %f, Adm: %f\n",(-p->Dd*s->dx-p->Kd*(s->x - s->x0)+s->Fext)/p->Md, s->ddxv + 2.0*(s->dxv - s->dx) + 4.0*(s->xv - s->x));
-    /*
-    if((s->cmd >= 2.5) - (s->cmd < 2.5) + (s->dx > 0.0) - (s->dx < 0.0) != 0)
-    {
-        s->cmd += (double)((s->cmd >= 2.5) - (s->cmd < 2.5))*0.5*(1.0/(1.0 + pow(fabs(s->dx),0.01)) - 0.5);
-        //printf("Extra: %f\n", (double)((s->cmd >= 2.5) - (s->cmd < 2.5)));
-        
-    }
+}
 
-    */
+void ComputedTorqueImp(struct States * s, struct ControlParams * p)
+{
+    s->cmd = (p->m/p->Md)*(p->Md*s->ddx0 + p->Dd*(s->dx-s->dx0)+p->Kd*(s->x-s->x0)-s->Fext) + p->c*s->dx + s->Fext/431.0 + 2.5;
 }
 
 void PeriodicReset(struct States * s)

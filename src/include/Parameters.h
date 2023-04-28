@@ -10,7 +10,7 @@
 #define NSEC_IN_SEC 1000000000.0
 #define BUFFER_SIZE 10
 #define STEP_SIZE_MS 1.0
-#define DAQ_NUM_OF_CH 6
+#define DAQ_NUM_OF_CH 10
 #define MAT_EXP_ITERATIONS 50
 
 #define WAIT_STATE 0
@@ -22,12 +22,18 @@
 #define STOP_STATE 6
 #define SHUTDOWN_STATE 7
 
+#define PD_MODE 0
+#define IMP_MODE 1
+#define ADM_MODE 2
+#define UIC_MODE 3
+#define STOCHASTIC_MODE 4
+
 #define ADDR "127.0.0.1" //"192.168.0.93"
 
 #define FT_GAIN_g -16017.6
 #define FT_OFFSET_g 98.17
 
-#define CMD_GAIN -0.2516
+#define CMD_GAIN 0.2516
 #define CMD_OFFSET 2.51
 #define MOTOR_KT 38.5 //mNm 
 

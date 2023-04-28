@@ -43,13 +43,18 @@ PASSED = `grep -s PASS $(PATHR)*.txt`
 FAIL = `grep -s FAIL $(PATHR)*.txt`
 IGNORE = `grep -s IGNORE $(PATHR)*.txt`
 
+FILES = $(wildcard $(PATHS)*.c)
+FILES := $(filter-out %TestDaq.c, $(FILES))
 
 build:
-	sudo gcc $(wildcard $(PATHS)*.c) -o robotController $(LIB)
+	sudo gcc $(FILES)  -o robotController $(LIB)
 
 docs:
 	sudo doxygen doxygen_config
 	firefox doc/html/index.html
+
+daq: 
+	sudo gcc $(PATHS)TestDaq.c $(PATHS)Daq.c $(PATHS)TimeUtilities.c -o testDaq $(LIB)
 
 test: $(BUILD_PATHS) $(RESULTS)
 	@echo "-----------------------\nIGNORES:\n-----------------------"

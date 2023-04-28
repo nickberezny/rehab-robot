@@ -81,8 +81,10 @@ struct regexMatch regex =
     .filename = "filename(*.txt)",
     .Home = "Home([0-9]*)",
     .mass = "mass([0-9]*.[0-9]*),",
-    .damp = "damp([0-9]*.[0-9]*),"
-
+    .damp = "damp([0-9]*.[0-9]*),",
+    .controlMode = "controlMode([0-9]),",
+    .trajectoryMode = "trajMode([0-9]),",
+    .Fmax = "Fmax([0-9]*.[0-9]*),",
 } ; //regex matches
 
 regex_t compiled;
@@ -94,6 +96,9 @@ int fileIteration = 0;
 int main(int argc, char* argv[]) 
 {
 
+   time_t t;
+   srand((unsigned) time(&t));
+ 
     printf("Starting Robot...\n");
     struct States data[BUFFER_SIZE] = {0};
     struct States *d = &data[0];
@@ -211,8 +216,8 @@ int main(int argc, char* argv[])
                 printf("Bd: %f, %f\n",B[0],B[1]);
 
                 controlParams->dx_bound = 0.01;
-                controlParams->m = -controlParams->m;//(1.0/0.8041);
-                controlParams->c = -controlParams->c;//(1.096/0.8041);
+                controlParams->m = controlParams->m;//(1.0/0.8041);
+                controlParams->c = controlParams->c;//(1.096/0.8041);
 
                 controlParams->kv = controlParams->alpha*controlParams->kv + (1.0-controlParams->alpha)*(controlParams->Dd/controlParams->Md);
                 controlParams->kp = controlParams->alpha*controlParams->kp + (1.0-controlParams->alpha)*(controlParams->Kd/controlParams->Md);
@@ -318,11 +323,10 @@ void WaitForParamMsg(int *fd)
             printf("xstart %f\n",controlParams->xstart);
         }
 
-        regcomp(&compiled, regex.xend, REG_EXTENDED);
+        regcomp(&compiled, regex.x0, REG_EXTENDED);
         if(regexec(&compiled, buffer, 2, matches, 0)==0){
             sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
             sscanf(matchBuffer, "%lf", &(controlParams->x0));
-            controlParams->x0 = -controlParams->x0;
             printf("x0 %f\n",controlParams->x0);
         }
 
@@ -330,7 +334,7 @@ void WaitForParamMsg(int *fd)
         if(regexec(&compiled, buffer, 2, matches, 0)==0){
             sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
             sscanf(matchBuffer, "%lf", &(controlParams->alpha));
-            printf("alpha %f\n",controlParams->alpha);
+            printf("alpha %f\n",controlParams->alpha); 
         }
 
         regcomp(&compiled, regex.delta, REG_EXTENDED);
@@ -373,6 +377,27 @@ void WaitForParamMsg(int *fd)
             sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
             sscanf(matchBuffer, "%lf", &(controlParams->c));
             printf("c %f\n",controlParams->c);
+        }
+
+        regcomp(&compiled, regex.controlMode, REG_EXTENDED);
+        if(regexec(&compiled, buffer, 2, matches, 0)==0){
+            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
+            sscanf(matchBuffer, "%d", &(controlParams->controlMode));
+            printf("controlMode %d\n",controlParams->controlMode);
+        }
+
+        regcomp(&compiled, regex.trajectoryMode, REG_EXTENDED);
+        if(regexec(&compiled, buffer, 2, matches, 0)==0){
+            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
+            sscanf(matchBuffer, "%d", &(controlParams->trajectoryMode));
+            printf("trajectoryMode %d\n",controlParams->trajectoryMode);
+        }
+
+        regcomp(&compiled, regex.Fmax, REG_EXTENDED);
+        if(regexec(&compiled, buffer, 2, matches, 0)==0){
+            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
+            sscanf(matchBuffer, "%lf", &(controlParams->Fmax));
+            printf("Fmax %f\n",controlParams->Fmax);
         }
 
         goto MsgRec;

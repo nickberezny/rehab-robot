@@ -26,23 +26,23 @@ void HomeToBack(struct States * s, struct DAQ * daq)
      * @brief Slowly moves robot until contact with back limit switch
      * @param[in] *s : pointer to robot States
      */
-    printf("Check1\n");
+    
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
     ReadWriteDAQ(s, daq);
     s->lsb = daq->aValues[2];
     s->x = 0;
     s->dx = 0;
-    daq->aValues[0] = CMD_GAIN*(0.35) + CMD_OFFSET;
-    printf("Check2\n");
+    daq->aValues[0] = CMD_GAIN*(-0.35) + CMD_OFFSET;
+    
     while(s->lsb == 0)
     {
         s->x -= s->dx*(STEP_SIZE_MS/1000.0);
         ReadWriteDAQ(s,daq);
         s->lsb = daq->aValues[2];
     }
-    printf("Check3\n");
+    
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
-    controlParams->xend = s->x;
+    controlParams->xend = 1.5;//s->x;
     printf("xend: %f\n",controlParams->xend);
 }
 

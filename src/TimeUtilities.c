@@ -35,7 +35,7 @@ void getElapsedTime(struct timespec * ts, struct timespec * t, double * dt)
 
     *dt = NSEC_IN_SEC*(t->tv_sec - ts->tv_sec);
     *dt += t->tv_nsec - ts->tv_nsec;
-    *dt = *dt/1000.0; //in  msec
+    *dt = *dt/NSEC_IN_SEC; //in  msec
 
 
 }

@@ -20,6 +20,7 @@
 #include "./include/CUIC.h"
 #include "./include/Daq.h"
 #include "./include/GetModelData.h"
+#include "./include/ControlModes.h"
 
 
 void * controllerThread (void * d)
@@ -46,7 +47,7 @@ void * controllerThread (void * d)
     extern struct DAQ *daq;
     extern quitThreads;
     sleep(1);
-    
+
     clock_gettime(CLOCK_MONOTONIC, &controlParams->t_first);  
 
     iter_reset = 0;
@@ -78,38 +79,77 @@ void * controllerThread (void * d)
 
         //***************************************************************************************************************
         
-        getElapsedTime(&controlParams->t_first, &s->t_start, &s->dt);
+        getElapsedTime(&controlParams->t_first, &s->t_start, &s->t);
+        printf("t:%f\n",s->t);
 
         s->x0 = controlParams->x0;
         
-        if(iter_cont == iter_reset && controlParams->delta !=0 )
+        //ctl*****************
+        switch(controlParams->controlMode)
         {
-            PeriodicReset(s);
-            printf("iter_reset:%d\n",iter_reset);
+            case PD_MODE:
+                PositionMode(s, controlParams);
+                break; 
+            case IMP_MODE:
+                ImpedanceMode(s, controlParams);
+                break; 
+            case ADM_MODE:
+                AdmittanceMode(s, controlParams);
+                break; 
+            case UIC_MODE:
+                if(iter_cont == iter_reset && controlParams->delta !=0 )
+                {
+                    PeriodicReset(s);
+                    iter_reset += controlParams->delta;
 
-            iter_reset += controlParams->delta;
+                    if(iter_reset>BUFFER_SIZE-1)
+                    {
+                        iter_reset = iter_reset-BUFFER_SIZE;
+                    }
 
-            if(iter_reset>BUFFER_SIZE-1)
-            {
-                iter_reset = iter_reset-BUFFER_SIZE;
-            }
-
+                }
+                UICMode(s, controlParams);
+                break; 
+            case STOCHASTIC_MODE:
+                
+                if(controlParams->stochasticState == 0)
+                {
+                    AdmittanceMode(s, controlParams); //go to x0
+                    if(fabs(s->x-s->x0)<0.01)
+                    {
+                        controlParams->t_start_phase = s->t;
+                        controlParams->stochasticState = 1;
+                    }
+                }
+                else
+                {
+                     StochasticForceMode(s, controlParams); //apply forces
+                     if(s->t-controlParams->t_start_phase>10.0) //TODO change
+                        quitThreads = 1;
+                }
+               
+                break; 
         }
 
-        VirtualTrajectory(s,controlParams);
-        ComputedTorque(s,controlParams);
+        //ctl***************
 
         daq->aValues[0] = s->cmd;
         
-        //daq->aValues[0] = CMD_GAIN*s->cmd + CMD_OFFSET;
+       // daq->aValues[0] = CMD_GAIN*s->cmd + CMD_OFFSET;
         
-        if(daq->aValues[0] > 3.5) daq->aValues[0] = 3.5;
-        if(daq->aValues[0] < 1.5) daq->aValues[0] = 1.5;
+        if(daq->aValues[0] > 4.0) daq->aValues[0] = 4.0;
+        if(daq->aValues[0] < 1.0) daq->aValues[0] = 1.0;
         
-        //daq->aValues[0] = 2.5;
         s->cmd = daq->aValues[0];
+
         ReadWriteDAQ(s_next, daq);
         s_next->Fext -= controlParams->Fext_offset;
+
+        s->emg1 = daq->aValues[6];
+        s->emg2 = daq->aValues[7];
+        s->emg3 = daq->aValues[8];
+        s->emg4 = daq->aValues[9];
+
         checkVelocity(s,s_next);
 
         FIR_FILTER(FextArray, &s_next->Fext, &FextOrder);

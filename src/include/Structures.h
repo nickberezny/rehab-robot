@@ -22,10 +22,16 @@ struct ControlParams {
 	double Fext_offset;
 	double dx_bound;
 	double tf;
+	double t_start_phase;
+	double Fmax; //for stochastic force generation
 	struct timespec t_first;
 	bool firstRun;
+	bool recordEmg;
 
 	int currentState; 
+	int controlMode; //0 = PD, 1 = Adm, 2 = Imp, 3 = UIC, 4 = Stoch. Force
+	int trajectoryMode; //0 = Static pos, 1 = back and forth, 2 = static range (for stoch.force)
+	int stochasticState; //0 go to x0, 1 apply forces
 
 };
 
@@ -60,6 +66,7 @@ struct States {
 	struct timespec t_start;
 	struct timespec t_end;
 	double dt;
+	double t;
 
 	double x, dx, ddx;
 	double Fext;
@@ -67,6 +74,7 @@ struct States {
 	double xv_prev, dxv_prev, ddxv_prev;
 	double x0,dx0,ddx0;
 	double xstar, cmd;
+	double emg1,emg2,emg3,emg4;
 	
 	int lsb, lsf; //limit switches
 };
@@ -87,6 +95,9 @@ struct regexMatch {
     char *Home;
     char *mass;
     char *damp;
+    char *Fmax;
+    char *controlMode;
+    char *trajectoryMode;
 };
 
 
