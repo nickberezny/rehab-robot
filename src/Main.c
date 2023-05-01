@@ -85,6 +85,7 @@ struct regexMatch regex =
     .controlMode = "controlMode([0-9]),",
     .trajectoryMode = "trajMode([0-9]),",
     .Fmax = "Fmax([0-9]*.[0-9]*),",
+    .recordEMG = "recordEMG([0-9])",
 } ; //regex matches
 
 regex_t compiled;
@@ -92,6 +93,9 @@ regmatch_t matches[2];
 char matchBuffer[100];
 char folder[1000] = "log/";
 int fileIteration = 0;
+
+void GetParameterFloat(char *regex, float *param);
+void GetParameterInt(char *regex, int *param);
 
 int main(int argc, char* argv[]) 
 {
@@ -116,7 +120,6 @@ int main(int argc, char* argv[])
     bool calibrated = false;
     bool set = false;
 
-
     char sendData[1024];
 
     int sockfd;
@@ -138,7 +141,7 @@ int main(int argc, char* argv[])
     openClientSocket(&sockfd, &servaddr, &port);
     controlParams->currentState = WAIT_STATE; //State = Set
     printf("Starting Robot...\n");
-    initDaq(daq);
+    
 
     for(int i = 0; i < BUFFER_SIZE; i++)
     {
@@ -295,111 +298,28 @@ void WaitForParamMsg(int *fd)
 
         if(strcmp(buffer, "") != 0) printf("Received (Main): %s\n", buffer);
 
-        regcomp(&compiled, regex.Md, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%lf", &(controlParams->Md));
-            printf("Md %f\n",controlParams->Md);
-        }
+        GetParameterFloat(regex.Md, &(controlParams->Md));
+        GetParameterFloat(regex.Dd, &(controlParams->Dd));
+        GetParameterFloat(regex.Kd, &(controlParams->Kd));
 
-        regcomp(&compiled, regex.Dd, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%lf", &(controlParams->Dd));
-            printf("Dd %f\n",controlParams->Dd);
-        }
+        GetParameterFloat(regex.xstart, &(controlParams->xstart));
+        GetParameterFloat(regex.x0, &(controlParams->x0));
 
-        regcomp(&compiled, regex.Kd, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%lf", &(controlParams->Kd));
-            printf("Kd %f\n",controlParams->Kd);
-        }
+        GetParameterFloat(regex.alpha, &(controlParams->alpha));
+        GetParameterFloat(regex.delta, &(controlParams->delta));
 
-        regcomp(&compiled, regex.xstart, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%lf", &(controlParams->xstart));
-            printf("xstart %f\n",controlParams->xstart);
-        }
+        GetParameterFloat(regex.kp, &(controlParams->kp));
+        GetParameterFloat(regex.kv, &(controlParams->kv));
 
-        regcomp(&compiled, regex.x0, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%lf", &(controlParams->x0));
-            printf("x0 %f\n",controlParams->x0);
-        }
+        GetParameterFloat(regex.mass, &(controlParams->m));
+        GetParameterFloat(regex.damp, &(controlParams->c));
 
-        regcomp(&compiled, regex.alpha, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%lf", &(controlParams->alpha));
-            printf("alpha %f\n",controlParams->alpha); 
-        }
+        GetParameterFloat(regex.Fmax, &(controlParams->Fmax));
 
-        regcomp(&compiled, regex.delta, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%lf", &(controlParams->delta));
-            printf("delta %f\n",controlParams->delta);
-        }
-
-        regcomp(&compiled, regex.kp, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%lf", &(controlParams->kp));
-            printf("kp %f\n",controlParams->kp);
-        }
-
-        regcomp(&compiled, regex.kv, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%lf", &(controlParams->kv));
-            printf("kv %f\n",controlParams->kv);
-        }
-
-        regcomp(&compiled, regex.Home, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%lf", &homeToBack);
-            printf("Home to back %f\n",homeToBack);
-        }
-
-        regcomp(&compiled, regex.mass, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%lf", &(controlParams->m));
-            printf("m %f\n",controlParams->m);
-        }
-
-        regcomp(&compiled, regex.damp, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%lf", &(controlParams->c));
-            printf("c %f\n",controlParams->c);
-        }
-
-        regcomp(&compiled, regex.controlMode, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%d", &(controlParams->controlMode));
-            printf("controlMode %d\n",controlParams->controlMode);
-        }
-
-        regcomp(&compiled, regex.trajectoryMode, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%d", &(controlParams->trajectoryMode));
-            printf("trajectoryMode %d\n",controlParams->trajectoryMode);
-        }
-
-        regcomp(&compiled, regex.Fmax, REG_EXTENDED);
-        if(regexec(&compiled, buffer, 2, matches, 0)==0){
-            sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
-            sscanf(matchBuffer, "%lf", &(controlParams->Fmax));
-            printf("Fmax %f\n",controlParams->Fmax);
-        }
-
+        GetParameterFloat(regex.Home, &(homeToBack));
+        GetParameterInt(regex.controlMode, &(controlParams->controlMode));
+        GetParameterInt(regex.trajectoryMode, &(controlParams->trajectoryMode));
+        GetParameterInt(regex.recordEMG, &(controlParams->recordEMG));
         goto MsgRec;
         break;
 
@@ -412,8 +332,6 @@ void WaitForParamMsg(int *fd)
 
 void WaitForMsg(int *fd, int *state)
 {
-
-
     while(true)
     {
         
@@ -470,6 +388,12 @@ void WaitForMsg(int *fd, int *state)
 void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thread, int argc, char* argv[])
 {
     struct sched_param param[NUMBER_OF_THREADS];
+
+    //*************Initialize Daq*******************
+    if(controlParams->recordEMG)
+        initDaq(daq,10);
+    else
+        initDaq(daq,6);
 
     //*************Initialize Data log*******************
     
@@ -551,4 +475,24 @@ void ResetController()
     //memset(daq, 0, sizeof(*daq));
 
 
+}
+
+void GetParameterFloat(char *regex, float *param)
+{
+    regcomp(&compiled, regex, REG_EXTENDED);
+    if(regexec(&compiled, buffer, 2, matches, 0)==0){
+        sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
+        sscanf(matchBuffer, "%lf", param);
+        printf("%s %f\n", regex, *param);
+    }
+}
+
+void GetParameterInt(char *regex, int *param)
+{
+    regcomp(&compiled, regex, REG_EXTENDED);
+    if(regexec(&compiled, buffer, 2, matches, 0)==0){
+        sprintf(matchBuffer, "%.*s\n", matches[1].rm_eo-matches[1].rm_so,  buffer+matches[1].rm_so );
+        sscanf(matchBuffer, "%d", param);
+        printf("%s %d\n", regex, *param);
+    }
 }

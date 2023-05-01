@@ -26,8 +26,8 @@ struct ControlParams {
 	double Fmax; //for stochastic force generation
 	struct timespec t_first;
 	bool firstRun;
-	bool recordEmg;
-
+	
+	int recordEMG;
 	int currentState; 
 	int controlMode; //0 = PD, 1 = Adm, 2 = Imp, 3 = UIC, 4 = Stoch. Force
 	int trajectoryMode; //0 = Static pos, 1 = back and forth, 2 = static range (for stoch.force)
@@ -98,6 +98,7 @@ struct regexMatch {
     char *Fmax;
     char *controlMode;
     char *trajectoryMode;
+    char *recordEMG;
 };
 
 

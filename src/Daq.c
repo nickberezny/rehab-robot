@@ -34,7 +34,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     s->lsf = daq->aValues[3];
 }
 
-int initDaq(struct DAQ *daq)
+int initDaq(struct DAQ *daq, int numChannels)
 {
 
     /**
@@ -51,24 +51,9 @@ int initDaq(struct DAQ *daq)
 
     LJM_eStreamStop(handle); //stop any previous streams
     //LJM_eWriteName(handle, "DAC0", MOTOR_ZERO); //set motor to zero
-    
-    
-    //start Quadrature counter on DIO2 and DIO3
-    /*
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO2_EF_ENABLE", 0));
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 0));
-
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO2_EF_INDEX", 10));
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_INDEX", 10));
-
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO2_EF_ENABLE", 1));
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 1));
-*/
 
     printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 0));
- 
     printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_INDEX", 8));
-
     printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 1));
    
 
@@ -84,23 +69,28 @@ int initDaq(struct DAQ *daq)
 
 
 
-    double aValues[DAQ_NUM_OF_CH] = {0};
-    const char * aNames[DAQ_NUM_OF_CH];
-    int aNumValues[DAQ_NUM_OF_CH];
-    int aWrites[DAQ_NUM_OF_CH];
+    double aValues[numChannels];
+    memset( aValues, 0, numChannels*sizeof(double) );
+    const char * aNames[numChannels];
+    int aNumValues[numChannels];
+    int aWrites[numChannels];
 
-    if(DAQ_NUM_OF_CH==6)
+    if(numChannels==6)
     {
-        const char * aNames[DAQ_NUM_OF_CH] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; //
+        const char * aNames[6] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; //
         //const char * aNames[6] = {"DAC0", "AIN0","AIN1", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; //
-        int aNumValues[DAQ_NUM_OF_CH] = {1,1,1,1,1,1};
-        int aWrites[DAQ_NUM_OF_CH] = {1,0,0,0,0,0};
+        int aNumValues[6] = {1,1,1,1,1,1};
+        int aWrites[6] = {1,0,0,0,0,0};
     }
-    else if(DAQ_NUM_OF_CH==10)
+    else if(numChannels==10)
     {
-        const char * aNames[DAQ_NUM_OF_CH] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET","AIN1","AIN2","AIN3","AIN4"}; //
-        int aNumValues[DAQ_NUM_OF_CH] = {1,1,1,1,1,1,1,1,1,1};
-        int aWrites[DAQ_NUM_OF_CH] = {1,0,0,0,0,0,0,0,0,0};
+        const char * aNames[10] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET","AIN1","AIN2","AIN3","AIN4"}; //
+        int aNumValues[10] = {1,1,1,1,1,1,1,1,1,1};
+        int aWrites[10] = {1,0,0,0,0,0,0,0,0,0};
+    }
+    else
+    {
+        printf("Incorrect number of Daq Channels: %d\n", numChannels);
     }
 
 
