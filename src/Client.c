@@ -46,7 +46,8 @@ void * clientThread (void * d)
         pthread_mutex_lock(&s_client->lock);
         if(iter_client == 3)
         {
-            sprintf(buffer, "PLOT::%.3f::%.3f", s_client->emg1, s_client->cmd);
+
+            sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f", s_client->x, s_client->x0,s_client->Fext,s_client->cmd,s_client->emg1,s_client->emg2,s_client->emg3,s_client->emg4);
             //printf("%d\n", *(commData->sockfd));
             //send(*(s->sockfd), msg, strlen(msg),0);
             sendMessage(commData->sockfd, buffer);

@@ -82,21 +82,27 @@ void * controllerThread (void * d)
         getElapsedTime(&controlParams->t_first, &s->t_start, &s->t);
         printf("t:%f\n",s->t);
 
+        //set trajectory
+
         s->x0 = controlParams->x0;
         
         //ctl*****************
         switch(controlParams->controlMode)
         {
             case PD_MODE:
+                //Position control to x0
                 PositionMode(s, controlParams);
                 break; 
             case IMP_MODE:
+                //Impedance Control with Computed Torque
                 ImpedanceMode(s, controlParams);
                 break; 
             case ADM_MODE:
+                //Admittance Control
                 AdmittanceMode(s, controlParams);
                 break; 
             case UIC_MODE:
+                //Unified Interaction Control
                 if(iter_cont == iter_reset && controlParams->delta !=0 )
                 {
                     PeriodicReset(s);
@@ -111,23 +117,27 @@ void * controllerThread (void * d)
                 UICMode(s, controlParams);
                 break; 
             case STOCHASTIC_MODE:
-                
-                if(controlParams->stochasticState == 0)
+                //Stochastic forces in static positions for Limb Imp Estimation
+                switch(controlParams->stochasticState)
                 {
-                    AdmittanceMode(s, controlParams); //go to x0
-                    if(fabs(s->x-s->x0)<0.01)
-                    {
-                        controlParams->t_start_phase = s->t;
-                        controlParams->stochasticState = 1;
-                    }
+                    case 0:
+                        AdmittanceMode(s, controlParams);
+                        controlParams->tf = s->t;
+                        break;
+                    case 1:
+                        StochasticForceMode(s, controlParams);
+                        if(s->t-controlParams->tf>controlParams->phaseTime) //TODO change
+                            controlParams->stochasticState = 2;
+                        break;
+                    case 2: 
+                        if(controlParams->x0 == controlParams->xend)
+                            quitThreads = 1;
+                        else
+                            controlParams->x0 += controlParams->xend/(double)controlParams->numPositions;
+                            controlParams->stochasticState = 0;
+                        break;
+           
                 }
-                else
-                {
-                     StochasticForceMode(s, controlParams); //apply forces
-                     if(s->t-controlParams->t_start_phase>10.0) //TODO change
-                        quitThreads = 1;
-                }
-               
                 break; 
         }
 
@@ -145,11 +155,14 @@ void * controllerThread (void * d)
         ReadWriteDAQ(s_next, daq);
         s_next->Fext -= controlParams->Fext_offset;
 
-        s->emg1 = daq->aValues[6];
-        s->emg2 = daq->aValues[7];
-        s->emg3 = daq->aValues[8];
-        s->emg4 = daq->aValues[9];
-
+        if(controlParams->recordEMG)
+        {
+            s->emg1 = daq->aValues[6];
+            s->emg2 = daq->aValues[7];
+            s->emg3 = daq->aValues[8];
+            s->emg4 = daq->aValues[9];
+        }
+        
         checkVelocity(s,s_next);
 
         FIR_FILTER(FextArray, &s_next->Fext, &FextOrder);

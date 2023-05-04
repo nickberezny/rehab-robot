@@ -86,6 +86,8 @@ struct regexMatch regex =
     .trajectoryMode = "trajMode([0-9]),",
     .Fmax = "Fmax([0-9]*.[0-9]*),",
     .recordEMG = "recordEMG([0-9])",
+    .phaseTime = "PhaseTime([0-9]*.[0-9]*)",
+    .numPositions = "NumPositions([0-9])",
 } ; //regex matches
 
 regex_t compiled;
@@ -94,7 +96,7 @@ char matchBuffer[100];
 char folder[1000] = "log/";
 int fileIteration = 0;
 
-void GetParameterFloat(char *regex, float *param);
+void GetParameterFloat(char *regex, double *param);
 void GetParameterInt(char *regex, int *param);
 
 int main(int argc, char* argv[]) 
@@ -315,6 +317,8 @@ void WaitForParamMsg(int *fd)
         GetParameterFloat(regex.damp, &(controlParams->c));
 
         GetParameterFloat(regex.Fmax, &(controlParams->Fmax));
+        GetParameterFloat(regex.phaseTime, &(controlParams->phaseTime));
+        GetParameterInt(regex.numPositions, &(controlParams->numPositions));
 
         GetParameterFloat(regex.Home, &(homeToBack));
         GetParameterInt(regex.controlMode, &(controlParams->controlMode));
@@ -376,6 +380,14 @@ void WaitForMsg(int *fd, int *state)
             *state = SHUTDOWN_STATE;
             goto MsgRec;
             break;
+        }
+        else if(strcmp(buffer, "NEXT") == 0)
+        {
+            printf("Next stochastic force run\n");
+            if(controlParams->stochasticState==0)
+                controlParams->stochasticState = 1;
+            else
+                printf("Error, already running\n");
         }
     }
 
@@ -477,7 +489,7 @@ void ResetController()
 
 }
 
-void GetParameterFloat(char *regex, float *param)
+void GetParameterFloat(char *regex, double *param)
 {
     regcomp(&compiled, regex, REG_EXTENDED);
     if(regexec(&compiled, buffer, 2, matches, 0)==0){

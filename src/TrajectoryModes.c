@@ -16,60 +16,27 @@
  *   You should have received a copy of the GNU Lesser General Public       *
  *   License along with Box.  If not, see <http://www.gnu.org/licenses/>.   *
  ****************************************************************************/
-
 /**
- * @file ControlModes.c
+ * @file Example.c
  * @author Nick Berezny
- * @date 26 Apr 2023
- * @
+ * @date 04 May 2023
+ * @Exaaaaample
  *
  * Test test
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <pthread.h>
-#include <sched.h>
-#include <stdbool.h>
-#include <limits.h>
-
 #include "./include/Parameters.h"
 #include "./include/Structures.h"
-#include "./include/ControlModes.h"
-#include "./include/CUIC.h"
 
-void PositionMode(struct States * s, struct ControlParams * p)
+#include "./include/TrajectoryModes.h"
+
+void BackAndForth(struct States * s, struct ControlParams * p)
 {
-
-    BasicPD(s,p);
-    return;
+	//get c
 }
 
-void AdmittanceMode(struct States * s, struct ControlParams * p)
+void RandomStaticPosition(struct States * s, struct ControlParams * p)
 {
-
-    VirtualTrajectory(s,p);
-    ComputedTorque(s,p);
-    return;
-}
-
-void ImpedanceMode(struct States * s, struct ControlParams * p)
-{
-    //TODO: Test
-    ComputedTorqueImp(s,p);
-    return;
-}
-
-void UICMode(struct States * s, struct ControlParams * p)
-{
-      
-    VirtualTrajectory(s,p);
-    ComputedTorque(s,p);
-    return;
-}
-
-void StochasticForceMode(struct States * s, struct ControlParams * p)
-{
-    s->cmd = (double)(rand()/(double)RAND_MAX)*10.0; //random number 0 to 9.99
-    return;
+	//
+	ControlParams->x0 = (double)(rand()/(double)RAND_MAX)*10.0;
 }
