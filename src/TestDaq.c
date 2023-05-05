@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 	controlParams = calloc(17, sizeof *controlParams);
 	struct States s[BUFFER_SIZE] = {0};
 
-	initDaq(daq);
+	initDaq(daq,6);
 	printf("Time, Force, x, LSF, LSB\n");
 	clock_gettime(CLOCK_MONOTONIC, &controlParams->t_first);  
 

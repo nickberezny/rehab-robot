@@ -177,6 +177,7 @@ int main(int argc, char* argv[])
                 if(homeToBack == 0)
                 {
                     HomeToFront(d,daq);
+                    HomeToBack(d,daq);
                 }
                 else if(homeToBack == 1)
                 {
@@ -224,16 +225,28 @@ int main(int argc, char* argv[])
                 controlParams->m = controlParams->m;//(1.0/0.8041);
                 controlParams->c = controlParams->c;//(1.096/0.8041);
 
-                controlParams->kv = controlParams->alpha*controlParams->kv + (1.0-controlParams->alpha)*(controlParams->Dd/controlParams->Md);
-                controlParams->kp = controlParams->alpha*controlParams->kp + (1.0-controlParams->alpha)*(controlParams->Kd/controlParams->Md);
+                if(controlParams->controlMode == UIC_MODE)
+                {
+                    controlParams->kv = controlParams->alpha*controlParams->kv + (1.0-controlParams->alpha)*(controlParams->Dd/controlParams->Md);
+                    controlParams->kp = controlParams->alpha*controlParams->kp + (1.0-controlParams->alpha)*(controlParams->Kd/controlParams->Md);
+                }
 
                 printf("Gains: %f, %f\n", controlParams->kv,controlParams->kp);
+
+                //*************Initialize Daq*******************
+            
+                if(controlParams->recordEMG)
+                    initDaq(daq,10);
+                else
+                    initDaq(daq,6);
 
                 sleep(2);
                 sprintf(sendData, "UI::SET");
                 sendMessage(&sockfd, sendData);
+
                 set = true;
                 controlParams->currentState = WAIT_STATE;
+
                 break;
 
             case READY_STATE:
@@ -401,11 +414,7 @@ void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thre
 {
     struct sched_param param[NUMBER_OF_THREADS];
 
-    //*************Initialize Daq*******************
-    if(controlParams->recordEMG)
-        initDaq(daq,10);
-    else
-        initDaq(daq,6);
+    
 
     //*************Initialize Data log*******************
     

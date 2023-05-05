@@ -24,6 +24,12 @@
  *
  * Test test
  */
+#include <stdlib.h>
+#include <stdio.h>
+#include <pthread.h>
+#include <sched.h>
+#include <stdbool.h>
+#include <limits.h>
 
 #include "./include/Parameters.h"
 #include "./include/Structures.h"
@@ -38,5 +44,5 @@ void BackAndForth(struct States * s, struct ControlParams * p)
 void RandomStaticPosition(struct States * s, struct ControlParams * p)
 {
 	//
-	ControlParams->x0 = (double)(rand()/(double)RAND_MAX)*10.0;
+	p->x0 = (double)(rand()/(double)RAND_MAX)*10.0;
 }

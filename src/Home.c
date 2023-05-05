@@ -42,7 +42,7 @@ void HomeToBack(struct States * s, struct DAQ * daq)
     }
     
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
-    controlParams->xend = 1.5;//s->x;
+    controlParams->xend = s->x;
     printf("xend: %f\n",controlParams->xend);
 }
 
@@ -54,12 +54,9 @@ void HomeToFront(struct States * s, struct DAQ * daq)
      */
     printf("daqhandle %d\n", daq->daqHandle);
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
-    printf("Check2\n");
     LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
-    printf("Check3\n");
     s->lsf = daq->aValues[3];
     
-
     daq->aValues[0] = CMD_GAIN*(0.45) + CMD_OFFSET;
     
     while(s->lsf == 0)

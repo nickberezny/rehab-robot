@@ -49,7 +49,7 @@ void AdmittanceMode(struct States * s, struct ControlParams * p)
 {
 
     VirtualTrajectory(s,p);
-    ComputedTorque(s,p);
+    BasicPD(s,p);
     return;
 }
 
@@ -70,6 +70,6 @@ void UICMode(struct States * s, struct ControlParams * p)
 
 void StochasticForceMode(struct States * s, struct ControlParams * p)
 {
-    s->cmd = (double)(rand()/(double)RAND_MAX)*10.0; //random number 0 to 9.99
+    s->cmd = 2.5; //(double)(rand()/(double)RAND_MAX)*10.0; //random number 0 to 9.99
     return;
 }

@@ -27,7 +27,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
      * @param[in] *s : pointer to robot States to store results
      */
     
-    LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
+    int err = LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
     s->dx = (1.0 - 2.0*(double)daq->aValues[4])*((double)daq->aValues[5])*ENC_TO_M/(STEP_SIZE_MS/1000.0); //in m/dt
     s->Fext = 0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
     s->lsb = daq->aValues[2];
@@ -71,36 +71,32 @@ int initDaq(struct DAQ *daq, int numChannels)
 
     double aValues[numChannels];
     memset( aValues, 0, numChannels*sizeof(double) );
-    const char * aNames[numChannels];
     int aNumValues[numChannels];
+    memset( aNumValues, 0, numChannels*sizeof(int) );
     int aWrites[numChannels];
+    memset( aWrites, 0, numChannels*sizeof(int) );
 
-    if(numChannels==6)
-    {
-        const char * aNames[6] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; //
-        //const char * aNames[6] = {"DAC0", "AIN0","AIN1", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; //
-        int aNumValues[6] = {1,1,1,1,1,1};
-        int aWrites[6] = {1,0,0,0,0,0};
-    }
-    else if(numChannels==10)
-    {
-        const char * aNames[10] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET","AIN1","AIN2","AIN3","AIN4"}; //
-        int aNumValues[10] = {1,1,1,1,1,1,1,1,1,1};
-        int aWrites[10] = {1,0,0,0,0,0,0,0,0,0};
-    }
-    else
-    {
-        printf("Incorrect number of Daq Channels: %d\n", numChannels);
-    }
+    aWrites[0] = 1;
 
+    for(int i = 0; i <numChannels;i++)
+        aNumValues[i] = 1;
+
+    const char * aNamesTmp6[6] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; 
+    const char * aNamesTmp10[10] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET","AIN1","AIN2","AIN3","AIN4"}; 
 
 
     for(int i = 0; i < BUFFER_SIZE; i++)
     {
-        memcpy(&(daq->aNames),aNames, 100*DAQ_NUM_OF_CH*sizeof(char));
-        memcpy(&(daq->aValues),aValues, DAQ_NUM_OF_CH*sizeof(double));
-        memcpy(&(daq->aNumValues),aNumValues, DAQ_NUM_OF_CH*sizeof(int));
-        memcpy(&(daq->aWrites),aWrites, DAQ_NUM_OF_CH*sizeof(int));
+        if(numChannels==6)
+            memcpy(&(daq->aNames),aNamesTmp6, 100*numChannels*sizeof(char));
+        else if(numChannels==10)
+            memcpy(&(daq->aNames),aNamesTmp10, 100*numChannels*sizeof(char));
+        else
+            printf("Incorrect number of channels: %d\n",numChannels);
+
+        memcpy(&(daq->aValues),aValues, numChannels*sizeof(double));
+        memcpy(&(daq->aNumValues),aNumValues, numChannels*sizeof(int));
+        memcpy(&(daq->aWrites),aWrites, numChannels*sizeof(int));
         memcpy(&(daq->daqHandle),&handle,sizeof(int));
         memcpy(&(daq->errorAddress),&errAdress,sizeof(int));
     }

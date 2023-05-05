@@ -80,7 +80,7 @@ void * controllerThread (void * d)
         //***************************************************************************************************************
         
         getElapsedTime(&controlParams->t_first, &s->t_start, &s->t);
-        printf("t:%f\n",s->t);
+        //printf("t:%f\n",s->t);
 
         //set trajectory
 
@@ -147,8 +147,8 @@ void * controllerThread (void * d)
         
        // daq->aValues[0] = CMD_GAIN*s->cmd + CMD_OFFSET;
         
-        if(daq->aValues[0] > 4.0) daq->aValues[0] = 4.0;
-        if(daq->aValues[0] < 1.0) daq->aValues[0] = 1.0;
+        if(daq->aValues[0] > 3.5) daq->aValues[0] = 3.5;
+        if(daq->aValues[0] < 1.5) daq->aValues[0] = 1.5;
         
         s->cmd = daq->aValues[0];
 
