@@ -12,12 +12,11 @@
 #include <sched.h>
 #include <stdbool.h>
 #include <limits.h>
-#include <LabJackM.h>
 
 #include "./include/Parameters.h"
 #include "./include/Structures.h"
 #include "./include/Calibration.h"
-#include "./include/Daq.h"
+#include "./include/Interface.h"
 
 void CalibrateForceOffset(struct States * s, struct DAQ * daq)
 {

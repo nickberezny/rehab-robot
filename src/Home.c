@@ -12,12 +12,11 @@
 #include <sched.h>
 #include <stdbool.h>
 #include <limits.h>
-#include <LabJackM.h>
 
 #include "./include/Parameters.h"
 #include "./include/Structures.h"
 #include "./include/Home.h"
-#include "./include/Daq.h"
+#include "./include/Interface.h"
 
 void HomeToBack(struct States * s, struct DAQ * daq)
 {
@@ -28,7 +27,7 @@ void HomeToBack(struct States * s, struct DAQ * daq)
      */
     
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
-    ReadWriteDAQ(s, daq);
+    ReadWrite();
     s->lsb = daq->aValues[2];
     s->x = 0;
     s->dx = 0;
@@ -37,7 +36,7 @@ void HomeToBack(struct States * s, struct DAQ * daq)
     while(s->lsb == 0)
     {
         s->x -= s->dx*(STEP_SIZE_MS/1000.0);
-        ReadWriteDAQ(s,daq);
+        ReadWrite();
         s->lsb = daq->aValues[2];
     }
     
@@ -54,14 +53,14 @@ void HomeToFront(struct States * s, struct DAQ * daq)
      */
     printf("daqhandle %d\n", daq->daqHandle);
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
-    LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
+    ReadWrite();
     s->lsf = daq->aValues[3];
     
     daq->aValues[0] = CMD_GAIN*(0.45) + CMD_OFFSET;
     
     while(s->lsf == 0)
     {
-        LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
+        ReadWrite();
         s->lsf = daq->aValues[3];
     }
     

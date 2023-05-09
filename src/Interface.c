@@ -12,5 +12,10 @@ void initADC()
 
 void ADC_Test()
 {
-	rc_adc_read_volt(i)
+	rc_adc_read_volt(0);
+}
+
+void ReadWrite()
+{
+	return;
 }
