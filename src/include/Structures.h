@@ -8,6 +8,8 @@
 
 #include "./Parameters.h"
 #include <stdbool.h>
+#include <linux/can.h>
+#include <linux/can/raw.h>
 
 struct ControlParams {
 
@@ -62,6 +64,11 @@ struct DAQ {
 	int errorAddress;
 	int daqHandle;
 };
+
+struct CANBUS {
+	int conn;
+	struct can_frame frame;
+}
 
 struct States {
 
