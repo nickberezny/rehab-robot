@@ -44,7 +44,7 @@ FAIL = `grep -s FAIL $(PATHR)*.txt`
 IGNORE = `grep -s IGNORE $(PATHR)*.txt`
 
 FILES = $(wildcard $(PATHS)*.c)
-FILES := $(filter-out %TestDaq.c, $(FILES))
+FILES := $(filter-out %Daq.c, $(FILES))
 
 build:
 	sudo gcc $(FILES)  -o robotController $(LIB)
