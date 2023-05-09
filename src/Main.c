@@ -235,10 +235,7 @@ int main(int argc, char* argv[])
 
                 //*************Initialize Daq*******************
             
-                if(controlParams->recordEMG)
-                    initDaq(daq,10);
-                else
-                    initDaq(daq,6);
+
 
                 sleep(2);
                 sprintf(sendData, "UI::SET");

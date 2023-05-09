@@ -1,6 +1,5 @@
 #include <stdio.h>
-#include <rc/adc.h>
-#include <rc/time.h>
+#include <robotcontrol.h>
 
 void initADC()
 {

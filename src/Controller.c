@@ -18,7 +18,7 @@
 #include "./include/TimeUtilities.h"
 #include "./include/Controller.h"
 #include "./include/CUIC.h"
-#include "./include/Daq.h"
+#include "./include/Interface.h"
 #include "./include/GetModelData.h"
 #include "./include/ControlModes.h"
 
@@ -152,7 +152,7 @@ void * controllerThread (void * d)
         
         s->cmd = daq->aValues[0];
 
-        ReadWriteDAQ(s_next, daq);
+        ReadWrite();
         s_next->Fext -= controlParams->Fext_offset;
 
         if(controlParams->recordEMG)
