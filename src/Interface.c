@@ -13,6 +13,8 @@
 
 #include <robotcontrol.h>
 
+#include "./include/Structures.h"
+
 void initADC()
 {
 	if(rc_adc_init()){

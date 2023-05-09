@@ -68,7 +68,7 @@ struct DAQ {
 struct CANBUS {
 	int conn;
 	struct can_frame frame;
-}
+};
 
 struct States {
 
