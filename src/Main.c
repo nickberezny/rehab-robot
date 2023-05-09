@@ -103,6 +103,7 @@ int main(int argc, char* argv[])
 {
 
     struct CANBUS * canBus;
+    canBus = calloc(1, sizeof *CANBUS);
     initCAN(canBus);
 
    time_t t;
