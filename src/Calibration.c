@@ -28,7 +28,7 @@ void CalibrateForceOffset(struct States * s, struct DAQ * daq)
     for(int i = 0; i < samples; i++)
     {
         daq->aValues[0] = 2.5;
-        ReadWriteDAQ(s,daq);
+        ReadWrite();
         force += s->Fext;
         usleep(1000);
     }   

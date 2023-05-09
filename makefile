@@ -35,7 +35,7 @@ COMPILE=gcc -c
 LINK=gcc
 DEPEND=gcc -MM -MG -MF 
 CFLAGS=-I. -I$(PATHU) -I$(PATHS) -DTEST 
-LIB=-lm -lpthread -lLabJackM
+LIB=-lm -lpthread 
 
 RESULTS = $(patsubst $(PATHT)Test%.c,$(PATHR)Test%.txt,$(SRCT) )
 
