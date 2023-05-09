@@ -31,7 +31,7 @@
 #include "./include/Structures.h"
 
 #include "./include/Controller.h"
-#include "./include/Daq.h"
+#include "./include/Interface.h"
 #include "./include/Memory.h"
 #include "./include/Threads.h"
 #include "./include/Log.h"
@@ -101,6 +101,9 @@ void GetParameterInt(char *regex, int *param);
 
 int main(int argc, char* argv[]) 
 {
+
+    struct CANBUS * canBus = {};
+    initCan(canBus);
 
    time_t t;
    srand((unsigned) time(&t));
