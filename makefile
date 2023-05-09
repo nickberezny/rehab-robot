@@ -35,7 +35,7 @@ COMPILE=gcc -c
 LINK=gcc
 DEPEND=gcc -MM -MG -MF 
 CFLAGS=-I. -I$(PATHU) -I$(PATHS) -DTEST 
-LIB=-lm -lpthread 
+LIB=-lm -lpthread -l:librobotcontrol.so.1
 
 RESULTS = $(patsubst $(PATHT)Test%.c,$(PATHR)Test%.txt,$(SRCT) )
 
