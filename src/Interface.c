@@ -69,9 +69,9 @@ void CANTest(struct CANBUS * c)
 	c->frame.data[0] = 0x11;
 	c->frame.data[1] = 0x22;
 
-	nbytes = write(c->conn, &(c->frame), sizeof(struct can_frame));
+	write(c->conn, &(c->frame), sizeof(struct can_frame));
 
-	printf("Wrote %d bytes\n", nbytes);
+	//printf("Wrote %d bytes\n", nbytes);
 	
 	return 0;
 }
