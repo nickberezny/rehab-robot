@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
 {
 
     struct CANBUS * canBus;
-    initCan(canBus);
+    initCAN(canBus);
 
    time_t t;
    srand((unsigned) time(&t));
