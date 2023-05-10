@@ -48,7 +48,7 @@ void * clientThread (void * d)
         {
 
             sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f", s_client->t, s_client->x0, s_client->Fext, s_client->emg1);
-            printf("sent: %s", buffer);
+            printf("sent: %s\n", buffer);
             //send(*(s->sockfd), msg, strlen(msg),0);
             sendMessage(commData->sockfd, buffer);
         }
