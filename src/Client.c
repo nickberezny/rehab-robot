@@ -47,7 +47,7 @@ void * clientThread (void * d)
         if(iter_client == 3)
         {
 
-            sprintf(buffer, "PLOT::%.2f::%.2f", s_client->x, s_client->x0);
+            sprintf(buffer, "PLOT::%.2f::%.2f", s_client->t, s_client->x0);
             //send(*(s->sockfd), msg, strlen(msg),0);
             sendMessage(commData->sockfd, buffer);
         }

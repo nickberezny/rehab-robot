@@ -122,8 +122,8 @@ int main(int argc, char* argv[])
     memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
     pthread_attr_t attr[NUMBER_OF_THREADS];
 
-    bool homed = false;
-    bool calibrated = false;
+    bool homed = true; //!!!!!!!!!!!!!!!!!!!
+    bool calibrated = true; //!!!!!!!!!!!!!!
     bool set = false;
 
     char sendData[1024];
