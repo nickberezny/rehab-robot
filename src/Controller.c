@@ -143,14 +143,15 @@ void * controllerThread (void * d)
 
         //ctl***************
 
+        s->cmd += 2.5; 
+
+        if(s->cmd > 3.5) s->cmd = 3.5;
+        if(s->cmd < 1.5) s->cmd = 1.5;
+
+        if(s->lsb & s->cmd > 2.5) s->cmd = 2.5;
+        if(s->lsf & s->cmd < 2.5) s->cmd = 2.5;
+
         daq->aValues[0] = s->cmd;
-        
-       // daq->aValues[0] = CMD_GAIN*s->cmd + CMD_OFFSET;
-        
-        if(daq->aValues[0] > 3.5) daq->aValues[0] = 3.5;
-        if(daq->aValues[0] < 1.5) daq->aValues[0] = 1.5;
-        
-        s->cmd = daq->aValues[0];
 
         ReadWriteDAQ(s_next, daq);
         s_next->Fext -= controlParams->Fext_offset;
