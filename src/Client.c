@@ -33,7 +33,7 @@ void * clientThread (void * d)
     extern struct States *s_client; 
     extern struct CommData *commData;
     extern int iter_client;
-    extern char buffer[2048];
+    extern char buffer[4096];
     extern quitThreads;
 
     printf("Starting client thread...\n");
