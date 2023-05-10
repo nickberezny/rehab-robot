@@ -180,12 +180,12 @@ int main(int argc, char* argv[])
                 
                 if(homeToBack == 0)
                 {
-                    HomeToFront(d,daq);
-                    HomeToBack(d,daq);
+                    //HomeToFront(d,daq);
+                    //HomeToBack(d,daq);
                 }
                 else if(homeToBack == 1)
                 {
-                    HomeToBack(d,daq);
+                    //HomeToBack(d,daq);
                 }
                 
                 
@@ -200,7 +200,7 @@ int main(int argc, char* argv[])
             case CALIBRATE_STATE:
                 sendMessage(&sockfd, "UI::STARTTASK");
                 //run fn
-                CalibrateForceOffset(d,daq);
+                //CalibrateForceOffset(d,daq);
                 sprintf(sendData, "UI::CALIBRATE");
                 sendMessage(&sockfd, sendData);
                 calibrated = true;
