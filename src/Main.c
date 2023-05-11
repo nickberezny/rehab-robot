@@ -89,6 +89,7 @@ struct regexMatch regex =
     .phaseTime = "PhaseTime([0-9]*.[0-9]*)",
     .numPositions = "NumPositions([0-9])",
     .stochasticStepTime = "StochasticStepTime([0-9]*.[0-9]*)",
+    .randomRate = "Rate([0-9]*.[0-9]*)",
 } ; //regex matches
 
 regex_t compiled;
@@ -336,6 +337,7 @@ void WaitForParamMsg(int *fd)
         GetParameterFloat(regex.phaseTime, &(controlParams->phaseTime));
         GetParameterInt(regex.numPositions, &(controlParams->numPositions));
         GetParameterFloat(regex.stochasticStepTime, &(controlParams->stochasticStepTime));
+        GetParameterFloat(regex.randomRate, &(controlParams->randomRate));
 
         GetParameterFloat(regex.Home, &(homeToBack));
         GetParameterInt(regex.controlMode, &(controlParams->controlMode));

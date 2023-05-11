@@ -31,6 +31,8 @@ struct ControlParams {
 	double Fmax; //for stochastic force generation
 	double phaseTime;
     int numPositions;
+
+    double randomRate;
 	
 	int recordEMG;
 	int currentState; 
@@ -107,6 +109,7 @@ struct regexMatch {
     char *trajectoryMode;
     char *recordEMG;
     char *stochasticStepTime;
+    char *randomRate;
 };
 
 

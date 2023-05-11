@@ -44,5 +44,5 @@ void BackAndForth(struct States * s, struct ControlParams * p)
 void RandomStaticPosition(struct States * s, struct ControlParams * p)
 {
 	//
-	p->x0 = (double)(rand()/(double)RAND_MAX)*10.0;
+	p->x0 = ((double)rand()/(double)RAND_MAX)*p->xend;
 }

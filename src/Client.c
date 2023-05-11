@@ -32,6 +32,7 @@ void * clientThread (void * d)
 
     extern struct States *s_client; 
     extern struct CommData *commData;
+    extern struct ControlParams *controlParams;
     extern int iter_client;
     extern char buffer[2048];
     extern quitThreads;
@@ -48,7 +49,7 @@ void * clientThread (void * d)
         {
 
             //sprintf(buffer, "PLOT::%.2f::%.2f", s_client->x, s_client->x0);
-            sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::", s_client->x, s_client->x0,s_client->Fext,s_client->emg1);
+            sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::", s_client->x/controlParams->xend, s_client->x0/controlParams->xend,s_client->Fext,s_client->emg1);
             sendMessage(commData->sockfd, buffer);
         }
         

@@ -21,6 +21,7 @@
 #include "./include/Daq.h"
 #include "./include/GetModelData.h"
 #include "./include/ControlModes.h"
+#include "./include/TrajectoryModes.h"
 
 
 void * controllerThread (void * d)
@@ -83,8 +84,25 @@ void * controllerThread (void * d)
 
         //set trajectory
 
-        s->x0 = controlParams->x0;
         
+
+        switch(controlParams->trajectoryMode)
+        {
+            case STATIC_MODE:
+                //do nothing?
+                break;
+            case TRAJECTORY_MODE:
+                //
+                break;
+            case RANDOM_STATIC_MODE:
+                RandomStaticPosition(s, controlParams);
+                break;
+
+        }
+        
+
+        s->x0 = controlParams->x0;
+
         //ctl*****************
         switch(controlParams->controlMode)
         {
