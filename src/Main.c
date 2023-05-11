@@ -71,8 +71,8 @@ struct regexMatch regex =
     .Kd = "Kd([0-9]*.[0-9]*),",
     .xstart = "x_start([0-9]*.[0-9]*),",
     .xend = "x_end([0-9]*.[0-9]*),",
-    .x0 = "x0([0-9]*.[0-9]*),",
-    .dx0 = "dx0([0-9]*.[0-9]*),",
+    .x0 = "x0_([0-9]*.[0-9]*),",
+    .dx0 = "dx0_([0-9]*.[0-9]*),",
     .alpha = "alpha([0-9]*.[0-9]*)",
     .delta = "delta([0-9]*)",
     .kv = "kv([0-9]*.[0-9]*)",
@@ -88,6 +88,7 @@ struct regexMatch regex =
     .recordEMG = "recordEMG([0-9])",
     .phaseTime = "PhaseTime([0-9]*.[0-9]*)",
     .numPositions = "NumPositions([0-9])",
+    .stochasticStepTime = "StochasticStepTime([0-9]*.[0-9]*)",
 } ; //regex matches
 
 regex_t compiled;
@@ -172,7 +173,7 @@ int main(int argc, char* argv[])
 
             case HOME_STATE:
                 
-                sendMessage(&sockfd, "UI::STARTTASK");
+                sendMessage(&sockfd, "UI::STARTTASK::");
                 
                 if(homeToBack == 0)
                 {
@@ -194,9 +195,11 @@ int main(int argc, char* argv[])
                 break;
 
             case CALIBRATE_STATE:
-                sendMessage(&sockfd, "UI::STARTTASK");
+                sendMessage(&sockfd, "UI::STARTTASK::");
                 //run fn
                 CalibrateForceOffset(d,daq);
+
+                sleep(1);
                 sprintf(sendData, "UI::CALIBRATE");
                 sendMessage(&sockfd, sendData);
                 calibrated = true;
@@ -204,7 +207,7 @@ int main(int argc, char* argv[])
                 break;
 
             case SET_STATE:
-                sendMessage(&sockfd, "UI::STARTTASK");
+                sendMessage(&sockfd, "UI::STARTTASK::");
                 //run fn
                 WaitForParamMsg(&sockfd);
                 double Atemp[2][2] = {{0.0, 1.0},{-controlParams->Kd/controlParams->Md, -controlParams->Dd/controlParams->Md}};
@@ -332,6 +335,7 @@ void WaitForParamMsg(int *fd)
         GetParameterFloat(regex.Fmax, &(controlParams->Fmax));
         GetParameterFloat(regex.phaseTime, &(controlParams->phaseTime));
         GetParameterInt(regex.numPositions, &(controlParams->numPositions));
+        GetParameterFloat(regex.stochasticStepTime, &(controlParams->stochasticStepTime));
 
         GetParameterFloat(regex.Home, &(homeToBack));
         GetParameterInt(regex.controlMode, &(controlParams->controlMode));

@@ -55,7 +55,6 @@ void * controllerThread (void * d)
     int FextOrder = FEXT_FIR_SIZE;
     double VelArray[VEL_FIR_SIZE + 1] = {0};
     int VelOrder = VEL_FIR_SIZE;
-    
 
     controlParams->firstRun = true;
     s_next->x = 0.0;
@@ -118,15 +117,22 @@ void * controllerThread (void * d)
                 break; 
             case STOCHASTIC_MODE:
                 //Stochastic forces in static positions for Limb Imp Estimation
+                //if(iter_cont==1) printf("time, dt, stoch state: %.2f, %.2f, %d\n",s->t, (s->t-controlParams->tf-controlParams->phaseTime), controlParams->stochasticState);
                 switch(controlParams->stochasticState)
                 {
                     case 0:
-                        AdmittanceMode(s, controlParams);
+                        PositionMode(s, controlParams);
                         controlParams->tf = s->t;
+                        controlParams->t_last = s->t;
                         break;
                     case 1:
-                        StochasticForceMode(s, controlParams);
-                        if(s->t-controlParams->tf>controlParams->phaseTime) //TODO change
+                        if(s->t >= controlParams->t_last + controlParams->stochasticStepTime)
+                        {
+                            StochasticForceMode(s, controlParams);
+                            controlParams->t_last = s->t;
+                        }
+                        s_next->cmd = s->cmd;
+                        if((s->t-controlParams->tf)>controlParams->phaseTime) //TODO change
                             controlParams->stochasticState = 2;
                         break;
                     case 2: 
@@ -148,8 +154,8 @@ void * controllerThread (void * d)
         if(s->cmd > 3.5) s->cmd = 3.5;
         if(s->cmd < 1.5) s->cmd = 1.5;
 
-        if(s->lsb & s->cmd > 2.5) s->cmd = 2.5;
-        if(s->lsf & s->cmd < 2.5) s->cmd = 2.5;
+        if(s->lsb & s->cmd < 2.5) s->cmd = 2.5;
+        if(s->lsf & s->cmd > 2.5) s->cmd = 2.5;
 
         daq->aValues[0] = s->cmd;
 

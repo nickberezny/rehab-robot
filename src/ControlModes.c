@@ -70,6 +70,8 @@ void UICMode(struct States * s, struct ControlParams * p)
 
 void StochasticForceMode(struct States * s, struct ControlParams * p)
 {
-    s->cmd = 2.5; //(double)(rand()/(double)RAND_MAX)*10.0; //random number 0 to 9.99
+    //s->cmd = 0.0; 
+    s->cmd = (((double)rand()/(double)RAND_MAX)-0.5)*2.0*p->Fmax;
+    //printf("stoch cmd: %.2f\n", (((double)rand()/(double)RAND_MAX)-0.5)*2.0*p->Fmax);
     return;
 }

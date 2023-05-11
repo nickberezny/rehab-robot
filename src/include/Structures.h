@@ -22,12 +22,14 @@ struct ControlParams {
 	double Fext_offset;
 	double dx_bound;
 	double tf;
+	double stochasticStepTime;
+	double t_last;
 	
 	struct timespec t_first;
 	bool firstRun;
 
 	double Fmax; //for stochastic force generation
-	float phaseTime;
+	double phaseTime;
     int numPositions;
 	
 	int recordEMG;
@@ -104,6 +106,7 @@ struct regexMatch {
     char *controlMode;
     char *trajectoryMode;
     char *recordEMG;
+    char *stochasticStepTime;
 };
 
 

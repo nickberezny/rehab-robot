@@ -34,6 +34,12 @@ void VirtualTrajectory(struct States * s, struct ControlParams * p)
 
 }
 
+void PeriodicReset(struct States * s)
+{
+    s->xv_prev = s->x;
+    s->dxv_prev = s->dx;
+}
+
 void BasicPD(struct States * s, struct ControlParams * p)
 {
 

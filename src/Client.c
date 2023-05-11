@@ -48,7 +48,7 @@ void * clientThread (void * d)
         {
 
             //sprintf(buffer, "PLOT::%.2f::%.2f", s_client->x, s_client->x0);
-            sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f", s_client->x, s_client->x0,s_client->Fext,s_client->emg1);
+            sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::", s_client->x, s_client->x0,s_client->Fext,s_client->emg1);
             sendMessage(commData->sockfd, buffer);
         }
         
