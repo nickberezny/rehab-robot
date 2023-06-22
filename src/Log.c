@@ -104,7 +104,7 @@ void initLog(char * filename, struct LogData *logData, char * folder)
     logData->fp = fopen(folder,"w");
 
     //file header
-    fprintf(logData->fp,"t(s),t(nsec),x,dx,xv,dxv,ddxv,cmd,Fext, emg1, emg2, emg3, emg4\n");
+    fprintf(logData->fp,"t(s),t(nsec),x,dx,xv,dxv,ddxv,x0,cmd,Fext,emg1,emg2,emg3,emg4\n");
     fclose(logData->fp);
 
     printf("%s\n", folder); 

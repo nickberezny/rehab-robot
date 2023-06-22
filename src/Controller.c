@@ -135,11 +135,11 @@ void * controllerThread (void * d)
                 break; 
             case STOCHASTIC_MODE:
                 //Stochastic forces in static positions for Limb Imp Estimation
-                //if(iter_cont==1) printf("time, dt, stoch state: %.2f, %.2f, %d\n",s->t, (s->t-controlParams->tf-controlParams->phaseTime), controlParams->stochasticState);
                 switch(controlParams->stochasticState)
                 {
                     case 0:
-                        PositionMode(s, controlParams);
+                        //PositionMode(s, controlParams);
+                        s->cmd = 0.0;
                         controlParams->tf = s->t;
                         controlParams->t_last = s->t;
                         break;
@@ -149,9 +149,24 @@ void * controllerThread (void * d)
                             StochasticForceMode(s, controlParams);
                             controlParams->t_last = s->t;
                         }
-                        s_next->cmd = s->cmd;
+                        
+                        if(s->t <= controlParams->t_last + controlParams->stochasticStepTime / 4.0) 
+                        {
+                            //pulse width is 1/4 phase time
+                            s_next->cmd = s->cmd;
+                        }
+                        else
+                        {
+                            s_next->cmd = 0.0; 
+                        }
+
+                        
+
                         if((s->t-controlParams->tf)>controlParams->phaseTime) //TODO change
+                        {
                             controlParams->stochasticState = 2;
+                            printf("Next state : 2\n");
+                        }
                         break;
                     case 2: 
                         if(controlParams->x0 == controlParams->xend)
@@ -159,6 +174,7 @@ void * controllerThread (void * d)
                         else
                             controlParams->x0 += controlParams->xend/(double)controlParams->numPositions;
                             controlParams->stochasticState = 0;
+                            printf("x0: %f, Next state : 0\n", controlParams->x0);
                         break;
            
                 }
