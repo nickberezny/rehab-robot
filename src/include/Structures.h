@@ -8,6 +8,9 @@
 
 #include "./Parameters.h"
 #include <stdbool.h>
+#include "tensorflow/c/c_api.h"
+
+
 
 struct ControlParams {
 
@@ -112,6 +115,17 @@ struct regexMatch {
     char *recordEMG;
     char *stochasticStepTime;
     char *randomRate;
+};
+
+struct tensorFlowVars {
+	TF_Session* Session;
+	TF_Status* Status;
+	TF_Output* Input;
+	TF_Output* Output;
+	TF_Tensor** InputValues;
+	TF_Tensor** OutputValues;
+	int NumInputs;
+	int NumOutputs;
 };
 
 
