@@ -37,6 +37,8 @@
 #include "./include/Log.h"
 #include "./include/Communication.h"
 #include "./include/Client.h"
+#include "./include/Tensorflow.h"
+
 
 
 //global variables 
@@ -52,6 +54,8 @@ struct ControlParams *controlParams;
 struct LogData *logData;
 struct CommData *commData;
 struct DAQ *daq;
+struct tensorFlowVars *tensorflow;
+
 
 int iter_client;
 int iter_log;
@@ -107,10 +111,12 @@ int main(int argc, char* argv[])
    time_t t;
    srand((unsigned) time(&t));
  
-    printf("Starting Robot...\n");
+    printf("Booting Robot...\n");
     struct States data[BUFFER_SIZE] = {0};
     struct States *d = &data[0];
 
+    
+    
     controlParams = calloc(17, sizeof *controlParams);
     logData = calloc(2, sizeof *logData);
     commData = calloc(1, sizeof *commData);
@@ -146,11 +152,16 @@ int main(int argc, char* argv[])
     controlParams->currentState = WAIT_STATE; //State = Set
     printf("Starting Robot...\n");
     
+    //*************Initialize Tensorflow Neural Net*******************
+
+
 
     for(int i = 0; i < BUFFER_SIZE; i++)
     {
         commData->sockfd = &sockfd;
     }
+
+
 
     sendMessage(commData->sockfd, "ROBOT");
     read(sockfd, buffer, sizeof(buffer));
@@ -455,6 +466,10 @@ void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thre
     iter_cont = 0;
 
     //fclose(data[0].h.fp);
+    initModel(tensorflow);
+    //runModel(tensorflow);
+    
+
 
     //*************Initialize threads + mutexes*******************
     
