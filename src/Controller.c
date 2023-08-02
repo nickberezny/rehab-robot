@@ -47,6 +47,11 @@ void * controllerThread (void * d)
     extern struct ControlParams *controlParams;
     extern struct DAQ *daq;
     extern quitThreads;
+
+    if(controlParams->controlMode == UIC_MODE)
+    {
+        controlParams->x0 = 0.05*controlParams->xend;
+    }
     sleep(1);
 
     clock_gettime(CLOCK_MONOTONIC, &controlParams->t_first);  
@@ -172,7 +177,8 @@ void * controllerThread (void * d)
                         if(controlParams->x0 == controlParams->xend)
                             quitThreads = 1;
                         else
-                            controlParams->x0 += controlParams->xend/(double)controlParams->numPositions;
+                            //avoid 5% of length on either end
+                            controlParams->x0 += 0.9*controlParams->xend/(double)controlParams->numPositions;
                             controlParams->stochasticState = 0;
                             printf("x0: %f, Next state : 0\n", controlParams->x0);
                         break;
