@@ -32,6 +32,15 @@ void VirtualTrajectory(struct States * s, struct ControlParams * p)
     s->dxv = p->Ad[2]*(s->xv_prev-s->x0) + p->Ad[3]*s->dxv_prev + p->Bd[1]*s->Fext;
     s->ddxv = (s->Fext/p->Md - (p->Dd)/(p->Md)*(s->dxv) - (p->Kd)/(p->Md)*(s->xv - s->x0));///(STEP_SIZE_MS*1000.0); 
 
+    if(p->xend >= 0.0 && x->xv > p->xend)
+    {
+       x->xv = p->xend;
+    }
+    if(x->xv < 0.0)
+    {
+        x->xv = 0.0;
+    }
+
 }
 
 void BasicPD(struct States * s, struct ControlParams * p)
@@ -46,7 +55,8 @@ void BasicPD(struct States * s, struct ControlParams * p)
         s->cmd = s->ddxv + p->kv*(s->dxv - s->dx) + p->kp*(s->xv - s->x);
     }
     */
-    s->cmd = 2.5; //(p->kp*(s->x0-s->x) - p->kv*s->dx) + 2.5;
+    s->cmd = p->kv*(s->dxv - s->dx) + p->kp*(s->xv - s->x);
+    //s->cmd = 2.5; //(p->kp*(s->x0-s->x) - p->kv*s->dx) + 2.5;
 }
 
 void ComputedTorque(struct States * s, struct ControlParams * p)
