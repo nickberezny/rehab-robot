@@ -195,6 +195,7 @@ int main(int argc, char* argv[])
                 else if(homeToBack == 1)
                 {
                     HomeToBack(d,daq);
+                    controlParams->xend = 0.4;
                 }
                 
                 
@@ -466,7 +467,7 @@ void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thre
     iter_cont = 0;
 
     //fclose(data[0].h.fp);
-    initModel(tensorflow);
+    //initModel(tensorflow);
     //runModel(tensorflow);
     
 

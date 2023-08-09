@@ -47,7 +47,7 @@ void * controllerThread (void * d)
     extern struct ControlParams *controlParams;
     extern struct DAQ *daq;
     extern quitThreads;
-
+    //what?
     if(controlParams->controlMode == UIC_MODE)
     {
         controlParams->x0 = 0.05*controlParams->xend;
