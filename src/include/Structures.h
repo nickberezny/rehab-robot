@@ -24,6 +24,7 @@ struct ControlParams {
 	double Fext_offset;
 	double dx_bound;
 	double tf;
+	double vmax;
 	
 	struct timespec t_first;
 	bool firstRun;
