@@ -63,3 +63,28 @@ void SineWave(struct States * s, struct ControlParams * p, double A, double w)
 	p->x0 = A*(p->xend/2.0)*sin(w*s->t) + (p->xend/2.0) ;
 	p->dx0 = w*A*(p->xend/2.0)*cos(w*s->t);
 }
+
+void MultipleSineWave(struct States * s, struct ControlParams * p, int n, double *A, double *w)
+{
+	//A: amplitude (percent of xend)
+	//w: freq
+	if(A < 0 || A > 1) 
+	{
+		printf("Amplitude out of range: %f\n", A);
+		A = 0;
+	}
+
+	p->x0 = 0;
+	p->dx0 = 0;
+
+	double scale = (p->xend/(2.0*(double)n));
+
+	for(int i = 0; i < n; i++)
+	{
+		p->x0 += A[i]*scale*sin(w[i]*s->t);
+		p->dx0 += w[i]*A[i]*scale*cos(w[i]*s->t);
+	}
+
+	p->x0 += (p->xend/2.0);
+	
+}

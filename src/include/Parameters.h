@@ -28,6 +28,8 @@
 #define UIC_MODE 3
 #define STOCHASTIC_MODE 4
 
+#define SINE_MODE 0;
+
 #define ADDR "192.168.0.100"//"127.0.0.1" //"192.168.0.93"
 
 #define FT_GAIN_g -16017.6

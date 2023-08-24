@@ -85,6 +85,12 @@ void * controllerThread (void * d)
         //set trajectory
 
         s->x0 = controlParams->x0;
+
+        switch(controlParams->trajectoryMode)
+        {
+            case SINE_MODE:
+                break;
+        }
         
         //ctl*****************
         switch(controlParams->controlMode)
