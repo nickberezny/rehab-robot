@@ -17,29 +17,21 @@
 
 void NoOpDeallocator(void* data, size_t a, void* b) {}
 
-void runModel(struct tensorFlowVars * tf)
+void runModel(struct tensorFlowVars * tf, double * inputVals)
 {
-    clock_t start, end;
-    double execution_time;
+ 
 
-    start = clock();
-
-    float data[1*10] = {0.0};
-  
-    data[0]=3.0; 
-    data[1]=1.5;
-    data[2]=10000.0;
-    data[3]=2.0;
-    data[4]=0.0;
-    data[5]=0.0;
-    data[6]=1.0;
-    data[7]=20000.0;
-    data[8]=1979.0;
-    data[9]=1999.0;
+    float data[1*tf->NumInputs] = {0.0};
+    
+    for(int i = 0; i < tf->NumInputs; i++)
+    {
+        data[i] = inputVals[i];
+    }
+       
 
     int ndims = 2;
-    int64_t dims[] = {1,10};
-    int ndata = sizeof(float)*1*10 ;
+    int64_t dims[] = {1,tf->NumInputs};
+    int ndata = sizeof(float)*1*tf->NumInputs ;
 
     TF_Tensor* int_tensor = TF_NewTensor(TF_FLOAT, dims, ndims, data, ndata, &NoOpDeallocator, 0);
     tf->InputValues[0] = int_tensor;
@@ -48,13 +40,7 @@ void runModel(struct tensorFlowVars * tf)
     TF_SessionRun(tf->Session, NULL, tf->Input, tf->InputValues, tf->NumInputs, tf->Output, tf->OutputValues, tf->NumOutputs, NULL, 0,NULL , tf->Status);
 
     void* buff = TF_TensorData(tf->OutputValues[0]);
-    float* offsets = (float*)buff;
-
-    end = clock();
-    execution_time = ((double)(end - start))/CLOCKS_PER_SEC;
-    printf("Execution time (s) %f\n",execution_time);
-
-    printf("%f\n",offsets[0]);
+    tf->outputVals = (double*)buff;
 
 }
 
@@ -111,10 +97,10 @@ void initModel(struct tensorFlowVars * tf)
     tf->OutputValues = (TF_Tensor**)malloc(sizeof(TF_Tensor*)*tf->NumOutputs);
 
     int ndims = 2;
-    int64_t dims[] = {1,10};
-    float data[1*10] = {0.0};
+    int64_t dims[] = {1,NumInputs};
+    float data[1*tf->NumInputs] = {0.0};
 
-    int ndata = sizeof(float)*1*10 ;// This is tricky, it number of bytes not number of element
+    int ndata = sizeof(float)*1*NumInputs ;// This is tricky, it number of bytes not number of element
 
     TF_Tensor* int_tensor = TF_NewTensor(TF_FLOAT, dims, ndims, data, ndata, &NoOpDeallocator, 0);
     if (int_tensor != NULL)

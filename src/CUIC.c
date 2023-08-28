@@ -19,6 +19,7 @@
 #include "./include/Structures.h"
 #include "./include/CUIC.h"
 #include "./include/TimeUtilities.h"
+#include "./include/Tensorflow.h"
 
 void VirtualTrajectory(struct States * s, struct ControlParams * p)
 {
@@ -49,9 +50,22 @@ void BasicPD(struct States * s, struct ControlParams * p)
 void ComputedTorque(struct States * s, struct ControlParams * p)
 {
     s->cmd = p->m*(s->ddxv + (p->kv)*(s->dxv - s->dx) + (p->kp)*(s->xv - s->x)) + p->c*s->dx + s->Fext/431.0;
+    if(p->useFriction) GetFriction(s, p);
 }
 
 void ComputedTorqueImp(struct States * s, struct ControlParams * p)
 {
     s->cmd = (p->m/p->Md)*(p->Md*s->ddx0 + p->Dd*(s->dx-s->dx0)+p->Kd*(s->x-s->x0)-s->Fext) + p->c*s->dx + s->Fext/431.;
+    if(p->useFriction) GetFriction(s, p);
+}
+
+void GetFriction(struct States * s, struct ControlParams * p)
+{
+    p->tensorflow->inputVals[0] = s->x;
+    p->tensorflow->inputVals[1] = s->dx;
+    p->tensorflow->inputVals[2] = s->Fext;
+
+    runModel(p->tensorflow);
+    s->cmd = s->cmd + p->tensorflow->outputVals[0];
+
 }

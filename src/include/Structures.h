@@ -10,6 +10,19 @@
 #include <stdbool.h>
 #include "tensorflow/c/c_api.h"
 
+struct tensorFlowVars {
+	TF_Session* Session;
+	TF_Status* Status;
+	TF_Output* Input;
+	TF_Output* Output;
+	TF_Tensor** InputValues;
+	TF_Tensor** OutputValues;
+	int NumInputs;
+	int NumOutputs;
+	double * inputVals;
+	double * outputVals;
+};
+
 
 
 struct ControlParams {
@@ -47,6 +60,9 @@ struct ControlParams {
 	double amplitude;
 	double frequency;
 	double offset;
+
+	int useFriction;
+	struct tensorFlowVars * tf;
 
 };
 
@@ -123,17 +139,7 @@ struct regexMatch {
     char *amplitude;
   	char *frequency;
   	char *offset;
-};
-
-struct tensorFlowVars {
-	TF_Session* Session;
-	TF_Status* Status;
-	TF_Output* Input;
-	TF_Output* Output;
-	TF_Tensor** InputValues;
-	TF_Tensor** OutputValues;
-	int NumInputs;
-	int NumOutputs;
+  	char *useFriction;
 };
 
 

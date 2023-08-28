@@ -54,8 +54,6 @@ struct ControlParams *controlParams;
 struct LogData *logData;
 struct CommData *commData;
 struct DAQ *daq;
-struct tensorFlowVars *tensorflow;
-
 
 int iter_client;
 int iter_log;
@@ -97,6 +95,7 @@ struct regexMatch regex =
     .amplitude = "Amplitude([0-9]*.[0-9]*)",
     .frequency = "Frequency([0-9]*.[0-9]*)",
     .offset = "Offset([0-9]*.[0-9]*)",
+    .useFriction = "useFriction([0-9]*)",
 } ; //regex matches
 
 regex_t compiled;
@@ -264,6 +263,13 @@ int main(int argc, char* argv[])
                     daq->numChannels = 6;
                     initDaq(daq);
                 }
+
+                if(controlParams->useFriction)
+                {
+                    controlParams->tensorflow->NumInputs = 3;
+                    controlParams->tensorflow->NumOutputs = 1;
+                    initModel(controlParams->tensorflow);
+                }
                     
 
                 sleep(2);
@@ -369,6 +375,8 @@ void WaitForParamMsg(int *fd)
         GetParameterFloat(regex.frequency, &(controlParams->frequency));
         GetParameterFloat(regex.amplitude, &(controlParams->amplitude));
         GetParameterFloat(regex.offset, &(controlParams->offset));
+
+        GetParameterInt(regex.useFriction, &(controlParams->useFriction));
         goto MsgRec;
         break;
 
