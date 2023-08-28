@@ -31,6 +31,7 @@
 #define STATIC_MODE 0
 #define TRAJECTORY_MODE 1
 #define RANDOM_STATIC_MODE 2
+#define SINE_WAVE 3
 
 #define ADDR "127.0.0.1" //"192.168.0.93"
 

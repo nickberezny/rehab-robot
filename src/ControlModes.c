@@ -68,6 +68,7 @@ void UICMode(struct States * s, struct ControlParams * p)
     return;
 }
 
+
 void StochasticForceMode(struct States * s, struct ControlParams * p)
 {
     //s->cmd = 0.0; 

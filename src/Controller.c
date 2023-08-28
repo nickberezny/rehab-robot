@@ -102,6 +102,22 @@ void * controllerThread (void * d)
             case RANDOM_STATIC_MODE:
                 RandomStaticPosition(s, controlParams);
                 break;
+            case SINE_WAVE:
+                
+                if(controlParams->stochasticState == 0)
+                {
+                    //phase 1: go to offset
+                    GoTo(s, controlParams, controlParams->offset, 0.01);
+                    if(abs(s->x - controlParams->offset) < 0.01) controlParams->stochasticState = 1;
+                }
+                else
+                {
+                    //phase 2: begin sine wave
+                    SineWave(s, controlParams);
+                }
+                
+               
+                break
 
         }
         
@@ -138,6 +154,27 @@ void * controllerThread (void * d)
                 }
                 UICMode(s, controlParams);
                 break; 
+            case UIAC_MODE:
+                //Unified Impedance and Admittance Control
+                if(controlParams->cont_iteration < controlParams->delta*controlParams->alpha/2)
+                {
+                    ImpedanceMope(s,controlParams);
+                    PeriodicReset(s);
+                    controlParams->cont_iteration + 1;
+                }
+                else
+                {
+                    AdmittanceMode(s,controlParams);
+                    controlParams->cont_iteration + 1;
+                }
+
+                if(controlParams->cont_iteration > controlParams->delta)
+                {
+                    controlParams->cont_iteration = 0;
+                }
+                //run imp for delta
+                //run adm for delta (reset)
+                break;
             case STOCHASTIC_MODE:
                 //Stochastic forces in static positions for Limb Imp Estimation
                 switch(controlParams->stochasticState)

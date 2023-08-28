@@ -94,6 +94,9 @@ struct regexMatch regex =
     .numPositions = "NumPositions([0-9])",
     .stochasticStepTime = "StochasticStepTime([0-9]*.[0-9]*)",
     .randomRate = "Rate([0-9]*.[0-9]*)",
+    .amplitude = "Amplitude([0-9]*.[0-9]*)",
+    .frequency = "Frequency([0-9]*.[0-9]*)",
+    .offset = "Offset([0-9]*.[0-9]*)",
 } ; //regex matches
 
 regex_t compiled;
@@ -362,6 +365,10 @@ void WaitForParamMsg(int *fd)
         GetParameterInt(regex.controlMode, &(controlParams->controlMode));
         GetParameterInt(regex.trajectoryMode, &(controlParams->trajectoryMode));
         GetParameterInt(regex.recordEMG, &(controlParams->recordEMG));
+
+        GetParameterFloat(regex.frequency, &(controlParams->frequency));
+        GetParameterFloat(regex.amplitude, &(controlParams->amplitude));
+        GetParameterFloat(regex.offset, &(controlParams->offset));
         goto MsgRec;
         break;
 

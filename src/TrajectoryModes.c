@@ -30,6 +30,7 @@
 #include <sched.h>
 #include <stdbool.h>
 #include <limits.h>
+#include <Math.h>
 
 #include "./include/Parameters.h"
 #include "./include/Structures.h"
@@ -45,4 +46,29 @@ void RandomStaticPosition(struct States * s, struct ControlParams * p)
 {
 	//
 	p->x0 = ((double)rand()/(double)RAND_MAX)*p->xend;
+}
+
+void GoTo(struct States * s, struct ControlParams * p, double x0, double vel)
+{
+	if(x0 > p->xend) x0 = p->xend;
+	if(x0 < p->xend) x0 = 0.0;	
+	p->x0 = p->x0 + 0.001*vel;
+	p->dx0 = vel;
+}
+
+void SineWave(struct States * s, struct ControlParams * p, double A, double w, double offset)
+{
+	p->x0 = p>amplitude*sin( p>frequencys->t) +  p>offset;
+	p->dx0 = p>frequency*p>amplitude*sin(p>frequency*s->t);
+
+	if(p->x0 > p->xend)
+	{
+		p->x0 = p->xend;
+		p->dx0 = 0.0;
+	}
+	else if(p->x0 < 0)
+	{
+		p->x0 = 0.0;
+		p->dx0 = 0.0;
+	}
 }

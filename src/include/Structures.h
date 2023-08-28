@@ -43,6 +43,11 @@ struct ControlParams {
 	int trajectoryMode; //0 = Static pos, 1 = back and forth, 2 = static range (for stoch.force)
 	int stochasticState; //0 go to x0, 1 apply forces
 
+	int cont_iteration;
+	double amplitude;
+	double frequency;
+	double offset;
+
 };
 
 struct LogData {
@@ -115,6 +120,9 @@ struct regexMatch {
     char *recordEMG;
     char *stochasticStepTime;
     char *randomRate;
+    char *amplitude;
+  	char *frequency;
+  	char *offset;
 };
 
 struct tensorFlowVars {
