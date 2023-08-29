@@ -158,7 +158,7 @@ void * controllerThread (void * d)
                 //Unified Impedance and Admittance Control
                 if(controlParams->cont_iteration < controlParams->delta*controlParams->alpha/2)
                 {
-                    ImpedanceMope(s,controlParams);
+                    ImpedanceMode(s,controlParams);
                     PeriodicReset(s);
                     controlParams->cont_iteration + 1;
                 }

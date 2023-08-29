@@ -17,15 +17,15 @@
 
 void NoOpDeallocator(void* data, size_t a, void* b) {return;}
 
-void runModel(struct tensorFlowVars * tf, double * inputVals)
+void runModel(struct tensorFlowVars * tf)
 {
  
 
-    float data[1*tf->NumInputs] = {0.0};
+    float data[1*tf->NumInputs];
     
     for(int i = 0; i < tf->NumInputs; i++)
     {
-        data[i] = inputVals[i];
+        data[i] = tf->inputVals[i];
     }
        
 
@@ -97,10 +97,14 @@ void initModel(struct tensorFlowVars * tf)
     tf->OutputValues = (TF_Tensor**)malloc(sizeof(TF_Tensor*)*tf->NumOutputs);
 
     int ndims = 2;
-    int64_t dims[] = {1,NumInputs};
-    float data[1*tf->NumInputs] = {0.0};
+    int64_t dims[] = {1,tf->NumInputs};
+    float data[1*tf->NumInputs];
 
-    int ndata = sizeof(float)*1*NumInputs ;// This is tricky, it number of bytes not number of element
+    for(int i = 0; i < tf->NumInputs; i++)
+    {
+        data[i] = 0.0;
+    }
+    int ndata = sizeof(float)*1*tf->NumInputs ;// This is tricky, it number of bytes not number of element
 
     TF_Tensor* int_tensor = TF_NewTensor(TF_FLOAT, dims, ndims, data, ndata, &NoOpDeallocator, 0);
     if (int_tensor != NULL)
