@@ -117,7 +117,7 @@ void * controllerThread (void * d)
                 }
                 
                
-                break
+                break;
 
         }
         

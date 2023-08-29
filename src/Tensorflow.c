@@ -15,7 +15,7 @@
 #include "./include/Structures.h"
 #include "./include/Tensorflow.h"
 
-void NoOpDeallocator(void* data, size_t a, void* b) {}
+void NoOpDeallocator(void* data, size_t a, void* b) {return;}
 
 void runModel(struct tensorFlowVars * tf, double * inputVals)
 {

@@ -62,7 +62,7 @@ struct ControlParams {
 	double offset;
 
 	int useFriction;
-	struct tensorFlowVars * tf;
+	struct tensorFlowVars * tensorflow;
 
 };
 

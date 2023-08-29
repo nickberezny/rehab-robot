@@ -30,7 +30,7 @@
 #include <sched.h>
 #include <stdbool.h>
 #include <limits.h>
-#include <Math.h>
+#include <math.h>
 
 #include "./include/Parameters.h"
 #include "./include/Structures.h"
@@ -56,10 +56,10 @@ void GoTo(struct States * s, struct ControlParams * p, double x0, double vel)
 	p->dx0 = vel;
 }
 
-void SineWave(struct States * s, struct ControlParams * p, double A, double w, double offset)
+void SineWave(struct States * s, struct ControlParams * p)
 {
-	p->x0 = p>amplitude*sin( p>frequencys->t) +  p>offset;
-	p->dx0 = p>frequency*p>amplitude*sin(p>frequency*s->t);
+	p->x0 = p->amplitude*sin( p->frequency*s->t) +  p->offset;
+	p->dx0 = p->frequency*p->amplitude*sin(p->frequency*s->t);
 
 	if(p->x0 > p->xend)
 	{
