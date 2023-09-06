@@ -48,17 +48,33 @@ void RandomStaticPosition(struct States * s, struct ControlParams * p)
 	p->x0 = ((double)rand()/(double)RAND_MAX)*p->xend;
 }
 
-void GoTo(struct States * s, struct ControlParams * p, double x0, double vel)
+void GoTo(struct States * s, struct ControlParams * p, double * x0, double vel)
 {
-	if(x0 > p->xend) x0 = p->xend;
-	if(x0 < p->xend) x0 = 0.0;	
-	p->x0 = p->x0 + 0.001*vel;
-	p->dx0 = vel;
+	if(*x0 > p->xend) p->x0 = p->xend;
+	if(*x0 < 0.0) p->x0 = 0.0;	
+	if(p->x0 < *x0)
+	{
+		p->x0 = p->x0 + 0.001*vel;
+		p->dx0 = vel;
+	}
+	else if(p->x0 > *x0)
+	{
+		p->x0 = p->x0 - 0.001*vel;
+		p->dx0 = -vel;
+
+	}
+	if(fabs(p->x0 - *x0) < 0.01)
+	{
+		p->x0 = *x0;
+		p->dx0 = 0.0;
+		
+	}
+	
 }
 
 void SineWave(struct States * s, struct ControlParams * p)
 {
-	p->x0 = p->amplitude*sin( p->frequency*s->t) +  p->offset;
+	p->x0 = p->amplitude*sin(p->frequency*s->t) +  p->offset;
 	p->dx0 = p->frequency*p->amplitude*sin(p->frequency*s->t);
 
 	if(p->x0 > p->xend)

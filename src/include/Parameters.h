@@ -31,13 +31,13 @@
 
 #define STATIC_MODE 0
 #define TRAJECTORY_MODE 1
-#define RANDOM_STATIC_MODE 2
-#define SINE_WAVE 3
+#define RANDOM_STATIC_MODE 3
+#define SINE_WAVE 2
 
 #define ADDR "127.0.0.1" //"192.168.0.93"
 
-#define FT_GAIN_g -16017.6
-#define FT_OFFSET_g 98.17
+#define FT_GAIN_g -6479.9 //OLD -16017.6
+#define FT_OFFSET_g 0.0 //OLD 98.17
 
 #define CMD_GAIN 0.2516
 #define CMD_OFFSET 2.51

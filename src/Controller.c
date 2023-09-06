@@ -89,7 +89,6 @@ void * controllerThread (void * d)
 
         //set trajectory
 
-        
 
         switch(controlParams->trajectoryMode)
         {
@@ -107,8 +106,10 @@ void * controllerThread (void * d)
                 if(controlParams->stochasticState == 0)
                 {
                     //phase 1: go to offset
-                    GoTo(s, controlParams, controlParams->offset, 0.01);
-                    if(abs(s->x - controlParams->offset) < 0.01) controlParams->stochasticState = 1;
+                    GoTo(s, controlParams, &(controlParams->offset), 0.01);
+                    printf("Sine wave err: %f\n", fabs(s->x - controlParams->offset));
+                    if(fabs(s->x - controlParams->offset) < 0.02) controlParams->stochasticState = 1;
+
                 }
                 else
                 {
