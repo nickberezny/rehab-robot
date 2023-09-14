@@ -45,6 +45,7 @@ void PositionMode(struct States * s, struct ControlParams * p)
     return;
 }
 
+
 void AdmittanceMode(struct States * s, struct ControlParams * p)
 {
 

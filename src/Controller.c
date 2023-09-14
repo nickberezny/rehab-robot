@@ -114,6 +114,7 @@ void * controllerThread (void * d)
                 else
                 {
                     //phase 2: begin sine wave
+                    if(controlParams->t_last == 0) controlParams->t_last = s->t;
                     SineWave(s, controlParams);
                 }
                 

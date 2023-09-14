@@ -74,8 +74,8 @@ void GoTo(struct States * s, struct ControlParams * p, double * x0, double vel)
 
 void SineWave(struct States * s, struct ControlParams * p)
 {
-	p->x0 = p->amplitude*sin(p->frequency*s->t) +  p->offset;
-	p->dx0 = p->frequency*p->amplitude*sin(p->frequency*s->t);
+	p->x0 = p->amplitude*sin(p->frequency*(s->t-p->t_last)) +  p->offset;
+	p->dx0 = p->frequency*p->amplitude*sin(p->frequency*(s->t-p->t_last));
 
 	if(p->x0 > p->xend)
 	{
