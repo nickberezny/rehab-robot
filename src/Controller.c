@@ -181,6 +181,7 @@ void * controllerThread (void * d)
                 //Stochastic forces in static positions for Limb Imp Estimation
                 switch(controlParams->stochasticState)
                 {
+
                     case 0:
                         //PositionMode(s, controlParams);
                         s->cmd = 0.0;
@@ -188,47 +189,50 @@ void * controllerThread (void * d)
                         controlParams->t_last = s->t;
                         break;
                     case 1:
-                        if(s->t >= controlParams->t_last + controlParams->stochasticStepTime)
+                        if(s->t >= controlParams->t_last)
                         {
                             StochasticForceMode(s, controlParams);
-                            controlParams->t_last = s->t;
+                            controlParams->t_last = s->t + controlParams->stochasticStepTime;
                         }
-                        
-                        if(s->t <= controlParams->t_last + controlParams->stochasticStepTime / 4.0) 
+
+                        if(s->t <= controlParams->t_last - (3.0* controlParams->stochasticStepTime / 4.0))
                         {
-                            //pulse width is 1/4 phase time
                             s_next->cmd = s->cmd;
                         }
                         else
                         {
-                            s_next->cmd = 0.0; 
+                            s_next->cmd = 0.0;
                         }
-
-                        
 
                         if((s->t-controlParams->tf)>controlParams->phaseTime) //TODO change
                         {
                             controlParams->stochasticState = 2;
                             printf("Next state : 2\n");
                         }
+
                         break;
                     case 2: 
                         if(controlParams->x0 == controlParams->xend)
                             quitThreads = 1;
                         else
+                        {
                             //avoid 5% of length on either end
                             controlParams->x0 += 0.9*controlParams->xend/(double)controlParams->numPositions;
                             controlParams->stochasticState = 0;
                             printf("x0: %f, Next state : 0\n", controlParams->x0);
+                        }
                         break;
-           
+                
                 }
+
                 break; 
+            
         }
 
         //ctl***************
 
         s->cmd += 2.5; 
+        //printf("cmd : %f\n",s->cmd);
 
         if(s->cmd > 3.5) s->cmd = 3.5;
         if(s->cmd < 1.5) s->cmd = 1.5;
