@@ -48,10 +48,7 @@ void * controllerThread (void * d)
     extern struct DAQ *daq;
     extern quitThreads;
     //what?
-    if(controlParams->controlMode == UIC_MODE)
-    {
-        controlParams->x0 = 0.05*controlParams->xend;
-    }
+
     sleep(1);
 
     clock_gettime(CLOCK_MONOTONIC, &controlParams->t_first);  
@@ -147,9 +144,11 @@ void * controllerThread (void * d)
                 {
                     PeriodicReset(s);
                     iter_reset += controlParams->delta;
+                    printf("iter reset %d\n", iter_cont);
 
                     if(iter_reset>BUFFER_SIZE-1)
                     {
+
                         iter_reset = iter_reset-BUFFER_SIZE;
                     }
 
@@ -158,16 +157,19 @@ void * controllerThread (void * d)
                 break; 
             case UIAC_MODE:
                 //Unified Impedance and Admittance Control
-                if(controlParams->cont_iteration < controlParams->delta*controlParams->alpha/2)
+                if(controlParams->cont_iteration < controlParams->delta*controlParams->alpha)
                 {
                     ImpedanceMode(s,controlParams);
                     PeriodicReset(s);
-                    controlParams->cont_iteration + 1;
+                    controlParams->cont_iteration = controlParams->cont_iteration  + 1;
+                    printf("imp %f\n", s->cmd);
+                    printf("test test %d\n", controlParams->cont_iteration);
                 }
                 else
                 {
                     AdmittanceMode(s,controlParams);
-                    controlParams->cont_iteration + 1;
+                    controlParams->cont_iteration = controlParams->cont_iteration + 1;
+                    printf("adm %f\n", s->cmd);
                 }
 
                 if(controlParams->cont_iteration > controlParams->delta)
@@ -234,8 +236,8 @@ void * controllerThread (void * d)
         s->cmd += 2.5; 
         //printf("cmd : %f\n",s->cmd);
 
-        if(s->cmd > 3.5) s->cmd = 3.5;
-        if(s->cmd < 1.5) s->cmd = 1.5;
+        if(s->cmd > 4) s->cmd = 4;
+        if(s->cmd < 1) s->cmd = 1;
 
         if(s->lsb & s->cmd < 2.5) s->cmd = 2.5;
         if(s->lsf & s->cmd > 2.5) s->cmd = 2.5;
@@ -244,6 +246,7 @@ void * controllerThread (void * d)
 
         ReadWriteDAQ(s_next, daq);
         s_next->Fext -= controlParams->Fext_offset;
+        s->Fraw = s_next->Fext;
 
         if(controlParams->recordEMG)
         {
@@ -252,13 +255,22 @@ void * controllerThread (void * d)
             s->emg3 = daq->aValues[8];
             s->emg4 = daq->aValues[9];
         }
+
+       
+        s->gonio = (double)daq->aValues[10]*0.002618;
         
-        checkVelocity(s,s_next);
-
-        FIR_FILTER(FextArray, &s_next->Fext, &FextOrder);
-        FIR_FILTER(VelArray, &s_next->dx, &VelOrder);
-
         s_next->x = s->x + s_next->dx*(STEP_SIZE_MS/1000.0);
+        //checkVelocity(s,s_next);
+
+        //FIR_FILTER(FextArray, &s_next->Fext, &FextOrder);
+        //FIR_FILTER(VelArray, &s_next->dx, &VelOrder);
+
+        Butterworth10(&(s_next->dx),&(s->dx),controlParams->dx_filt_x,controlParams->dx_filt_y, controlParams->filter_a_100Hz, controlParams->filter_b_100Hz);
+        Butterworth10(&(s_next->Fext),&(s->Fext),controlParams->F_filt_x,controlParams->F_filt_y, controlParams->filter_a_10Hz, controlParams->filter_b_10Hz);
+
+        s_next->Fext = s->Fext;
+        s_next->dx = s->dx;
+        
 
         s_next->xv_prev = s->xv;
         s_next->dxv_prev = s->dxv;

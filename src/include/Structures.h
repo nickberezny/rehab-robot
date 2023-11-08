@@ -40,7 +40,7 @@ struct ControlParams {
 	double tf;
 	double stochasticStepTime;
 	double t_last;
-	
+
 	struct timespec t_first;
 	bool firstRun;
 
@@ -64,6 +64,14 @@ struct ControlParams {
 	int useFriction;
 	struct tensorFlowVars * tensorflow;
 
+	double filter_a_10Hz[4];
+	double filter_b_10Hz[4]; 
+	double filter_a_100Hz[4];
+	double filter_b_100Hz[4]; 
+	double dx_filt_x[FILTER_ORDER+1];
+	double dx_filt_y[FILTER_ORDER+1];
+	double F_filt_x[FILTER_ORDER+1];
+	double F_filt_y[FILTER_ORDER+1];
 };
 
 struct LogData {
@@ -102,12 +110,14 @@ struct States {
 	double t;
 
 	double x, dx, ddx;
-	double Fext;
+	double Fext, Fraw;
 	double xv,dxv,ddxv;
 	double xv_prev, dxv_prev, ddxv_prev;
 	double x0,dx0,ddx0;
 	double xstar, cmd;
 	double emg1,emg2,emg3,emg4;
+	double gonio;
+	
 	
 	int lsb, lsf; //limit switches
 };

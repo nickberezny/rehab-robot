@@ -50,7 +50,7 @@ void AdmittanceMode(struct States * s, struct ControlParams * p)
 {
 
     VirtualTrajectory(s,p);
-    BasicPD(s,p);
+    BasicPDxv(s,p);
     return;
 }
 

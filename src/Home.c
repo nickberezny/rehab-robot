@@ -21,6 +21,9 @@
 
 void HomeToBack(struct States * s, struct DAQ * daq)
 {
+    
+    
+
     extern struct ControlParams *controlParams;
     /**
      * @brief Slowly moves robot until contact with back limit switch
@@ -29,6 +32,8 @@ void HomeToBack(struct States * s, struct DAQ * daq)
     
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
     ReadWriteDAQ(s, daq);
+
+   
     s->lsb = daq->aValues[2];
     s->x = 0;
     s->dx = 0;
@@ -43,11 +48,14 @@ void HomeToBack(struct States * s, struct DAQ * daq)
     
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
     controlParams->xend = s->x;
-    printf("xend: %f\n",controlParams->xend);
+    printf("xend: %f\n",controlParams->xend); 
+
+
 }
 
 void HomeToFront(struct States * s, struct DAQ * daq)
 {
+    
     /**
      * @brief Slowly moves robot until contact with front limit switch
      * @param[in] *s : pointer to robot States
@@ -57,6 +65,7 @@ void HomeToFront(struct States * s, struct DAQ * daq)
     LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
     s->lsf = daq->aValues[3];
     
+
     daq->aValues[0] = CMD_GAIN*(0.45) + CMD_OFFSET;
     
     while(s->lsf == 0)

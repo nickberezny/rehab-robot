@@ -47,16 +47,24 @@ void BasicPD(struct States * s, struct ControlParams * p)
     s->cmd = (p->kp*(s->x0-s->x) - p->kv*s->dx);
 }
 
+void BasicPDxv(struct States * s, struct ControlParams * p)
+{
+
+    s->cmd = (p->kp*(s->xv-s->x) - p->kv*(s->dx-s->dxv));
+    printf("cmd, xv,x,dx: %f, %f, %f, %f\n", s->cmd,s->xv,s->x,s->dx);
+}
+
 void ComputedTorque(struct States * s, struct ControlParams * p)
 {
-    s->cmd = p->m*(s->ddxv + (p->kv)*(s->dxv - s->dx) + (p->kp)*(s->xv - s->x)) + p->c*s->dx + s->Fext/431.0;
-    if(p->useFriction) GetFriction(s, p);
+    s->cmd = p->m*(s->ddxv + (p->kv)*(s->dxv - s->dx) + (p->kp)*(s->xv - s->x)) + p->c*s->dx + s->Fext/466.0;
+    //printf("x0: %.2f\n", s->x0);
+    //if(p->useFriction) GetFriction(s, p);
 }
 
 void ComputedTorqueImp(struct States * s, struct ControlParams * p)
 {
-    s->cmd = (p->m/p->Md)*(p->Md*s->ddx0 + p->Dd*(s->dx-s->dx0)+p->Kd*(s->x-s->x0)-s->Fext) + p->c*s->dx + s->Fext/431.;
-    if(p->useFriction) GetFriction(s, p);
+    s->cmd = (p->m/p->Md)*(p->Md*s->ddx0 - p->Dd*(s->dx-s->dx0) - p->Kd*(s->x-s->x0) + s->Fext) + p->c*s->dx - s->Fext/431.0;
+    //if(p->useFriction) GetFriction(s, p);
 }
 
 void GetFriction(struct States * s, struct ControlParams * p)

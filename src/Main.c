@@ -124,6 +124,34 @@ int main(int argc, char* argv[])
     commData = calloc(1, sizeof *commData);
     daq = calloc(6,sizeof *daq);
 
+    //Butterworth filter params
+    controlParams->filter_a_100Hz[0] = 0.0; 
+    controlParams->filter_a_100Hz[1] = -1.76004188;
+    controlParams->filter_a_100Hz[2] = 1.182893262;
+    controlParams->filter_a_100Hz[3] = -0.27805991;
+
+    controlParams->filter_b_100Hz[0] = 0.018098933;
+    controlParams->filter_b_100Hz[1] = 0.054296799;
+    controlParams->filter_b_100Hz[2] = 0.054296799;
+    controlParams->filter_b_100Hz[3] = 0.018098933;
+
+    controlParams->filter_a_10Hz[0] = 0.0; 
+    controlParams->filter_a_10Hz[1] = -2.8743569;
+    controlParams->filter_a_10Hz[2] = 2.7564832;
+    controlParams->filter_a_10Hz[3] = -0.8818931;
+
+    controlParams->filter_b_10Hz[0] = 0.000029146;
+    controlParams->filter_b_10Hz[1] = 0.000087439;
+    controlParams->filter_b_10Hz[2] = 0.000087439;
+    controlParams->filter_b_10Hz[3] = 0.000029146;
+    for(int i = 0; i < FILTER_ORDER+1; i++)
+    {
+        controlParams->dx_filt_x[i] = 0.0;
+        controlParams->dx_filt_y[i] = 0.0;
+        controlParams->F_filt_x[i] = 0.0;
+        controlParams->F_filt_y[i] = 0.0;
+    }
+
     pthread_t thread[NUMBER_OF_THREADS];
     memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
     pthread_attr_t attr[NUMBER_OF_THREADS];
@@ -240,8 +268,8 @@ int main(int argc, char* argv[])
                 printf("Bd: %f, %f\n",B[0],B[1]);
 
                 controlParams->dx_bound = 0.01;
-                controlParams->m = controlParams->m;//(1.0/0.8041);
-                controlParams->c = controlParams->c;//(1.096/0.8041);
+                controlParams->m = 0.858;//1.0/0.8041;
+                controlParams->c = 0.35;//1.096/0.8041;
 
                 if(controlParams->controlMode == UIC_MODE)
                 {
@@ -252,17 +280,11 @@ int main(int argc, char* argv[])
                 printf("Gains: %f, %f\n", controlParams->kv,controlParams->kp);
 
                 //*************Initialize Daq*******************
-            
-                if(controlParams->recordEMG)
-                {
-                    daq->numChannels = 10;
-                    initDaq(daq);
-                }
-                else
-                {
-                    daq->numChannels = 6;
-                    initDaq(daq);
-                }
+
+                daq->numChannels = 11;
+                initDaq(daq);
+
+
 
                 if(controlParams->useFriction)
                 {

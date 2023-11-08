@@ -61,6 +61,13 @@ int initDaq(struct DAQ *daq)
     printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 0));
     printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_INDEX", 8));
     printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 1));
+
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO6_EF_ENABLE", 0));
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO6_EF_INDEX", 10));
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO6_EF_ENABLE", 1));
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO7_EF_ENABLE", 0));
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO7_EF_INDEX", 10));
+    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO7_EF_ENABLE", 1));
    
 
     //set Analog in resolution
@@ -87,21 +94,25 @@ int initDaq(struct DAQ *daq)
 
     const char * aNamesTmp6[6] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; 
     const char * aNamesTmp10[10] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET","AIN1","AIN2","AIN3","AIN4"}; 
+    const char * aNamesTmp11[11] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET","AIN1","AIN2","AIN3","AIN4","DIO6_EF_READ_A_F"}; 
+
+    printf("DAQ NUM %d\n", daq->numChannels);
 
     
-    for(int i = 0; i < BUFFER_SIZE; i++)
-    {
-        if(daq->numChannels == 10)
-            memcpy(&(daq->aNames),aNamesTmp10, 100*daq->numChannels*sizeof(char));
-        else
-            memcpy(&(daq->aNames),aNamesTmp6, 100*daq->numChannels*sizeof(char));
-  
-        memcpy(&(daq->aValues), aValues, DAQ_NUM_OF_CH*sizeof(double));
-        memcpy(&(daq->aNumValues),aNumValues, DAQ_NUM_OF_CH*sizeof(int));
-        memcpy(&(daq->aWrites),aWrites, DAQ_NUM_OF_CH*sizeof(int));
-        memcpy(&(daq->daqHandle),&handle,sizeof(int));
-        memcpy(&(daq->errorAddress),&errAdress,sizeof(int));
-    }
+    if(daq->numChannels == 11)
+        memcpy(&(daq->aNames),aNamesTmp11, 100*daq->numChannels*sizeof(char));
+    else if(daq->numChannels == 10)
+        memcpy(&(daq->aNames),aNamesTmp10, 100*daq->numChannels*sizeof(char));
+    else
+        memcpy(&(daq->aNames),aNamesTmp6, 100*daq->numChannels*sizeof(char));
+    
+    printf("DAQ NUM %d\n", daq->numChannels);
+    memcpy(&(daq->aValues), aValues, DAQ_NUM_OF_CH*sizeof(double));
+    memcpy(&(daq->aNumValues),aNumValues, DAQ_NUM_OF_CH*sizeof(int));
+    memcpy(&(daq->aWrites),aWrites, DAQ_NUM_OF_CH*sizeof(int));
+    memcpy(&(daq->daqHandle),&handle,sizeof(int));
+    memcpy(&(daq->errorAddress),&errAdress,sizeof(int));
+
     
     printf("DAQ Handle: %d\n", daq->daqHandle);
     

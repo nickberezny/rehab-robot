@@ -4,3 +4,4 @@ void BasicPD(struct States * s, struct ControlParams * p);
 void ComputedTorque(struct States * s, struct ControlParams * p);
 void ComputedTorqueImp(struct States * s, struct ControlParams * p);
 void GetFriction(struct States * s, struct ControlParams * p);
+void BasicPDxv(struct States * s, struct ControlParams * p);

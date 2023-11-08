@@ -170,3 +170,34 @@ void FIR_FILTER(double * array, double * output, int * order)
     *output = *output / (double) *order;
 }
 
+void Butterworth10(double * x0, double * y0, double * x, double * y, double * a, double * b)
+{
+	//3rd order Butterworth, cutoff Freq = 10Hz
+
+	//shift vectors
+	for(int i = 3; i > 0; i--)
+	{
+		x[i] = x[i-1];
+		y[i] = y[i-1];
+	}
+
+	
+
+	x[0] = *x0;
+	y[0] = b[0]*x[0];
+
+	//discrete filter
+	for(int i = 1; i < 4; i++)
+	{
+		y[0] = y[0] + b[i]*x[i] - a[i]*y[i];
+	}
+
+	//printf("filter x: %f, %f, %f, %f\n", x[0], x[1], x[2], x[3]);
+	//printf("filter y: %f, %f, %f, %f\n", y[0], y[1], y[2], y[3]);
+
+	*y0 = y[0];
+
+	return;
+
+}
+

@@ -10,7 +10,7 @@
 #define NSEC_IN_SEC 1000000000.0
 #define BUFFER_SIZE 10
 #define STEP_SIZE_MS 1.0
-#define DAQ_NUM_OF_CH 10
+#define DAQ_NUM_OF_CH 11
 #define MAT_EXP_ITERATIONS 50
 
 #define WAIT_STATE 0
@@ -39,6 +39,8 @@
 #define FT_GAIN_g -6479.9 //OLD -16017.6
 #define FT_OFFSET_g 0.0 //OLD 98.17
 
+#define FILTER_ORDER 3
+
 #define CMD_GAIN 0.2516
 #define CMD_OFFSET 2.51
 #define MOTOR_KT 38.5 //mNm 
@@ -49,8 +51,8 @@
 #define BD_TEST 10.0
 #define KD_TEST 100.0
 
-#define FEXT_FIR_SIZE 20
-#define VEL_FIR_SIZE 20
+#define FEXT_FIR_SIZE 10
+#define VEL_FIR_SIZE 10
 
 //TODO
 #define MOTOR_ZERO 0
