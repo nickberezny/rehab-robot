@@ -39,6 +39,7 @@ struct ControlParams {
 	double dx_bound;
 	double tf;
 	double stochasticStepTime;
+	double F_stochastic;
 	double t_last;
 
 	struct timespec t_first;

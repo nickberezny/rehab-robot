@@ -51,7 +51,6 @@ void BasicPDxv(struct States * s, struct ControlParams * p)
 {
 
     s->cmd = (p->kp*(s->xv-s->x) - p->kv*(s->dx-s->dxv));
-    printf("cmd, xv,x,dx: %f, %f, %f, %f\n", s->cmd,s->xv,s->x,s->dx);
 }
 
 void ComputedTorque(struct States * s, struct ControlParams * p)

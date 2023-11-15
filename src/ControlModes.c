@@ -77,3 +77,9 @@ void StochasticForceMode(struct States * s, struct ControlParams * p)
     printf("stoch cmd: %.2f\n", (((double)rand()/(double)RAND_MAX)-0.5)*2.0*p->Fmax);
     return;
 }
+
+void AddRandomAmountToCommand(struct States * s, struct ControlParams * p)
+{
+    s->cmd += (((double)rand()/(double)RAND_MAX)-0.5)*2.0*p->Fmax;
+    return;
+}

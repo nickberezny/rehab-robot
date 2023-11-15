@@ -28,6 +28,7 @@
 #define UIC_MODE 3
 #define UIAC_MODE 4
 #define STOCHASTIC_MODE 5
+#define STOCHASTIC_TRAJ_MODE 6
 
 #define STATIC_MODE 0
 #define TRAJECTORY_MODE 1

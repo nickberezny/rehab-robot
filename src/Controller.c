@@ -228,6 +228,32 @@ void * controllerThread (void * d)
                 }
 
                 break; 
+            case STOCHASTIC_TRAJ_MODE:
+                //t_last is next force time
+                //phase time is duration of force
+                //stochastic Step time is duration between for application 
+                AdmittanceMode(s, controlParams);
+
+                if(s->t > controlParams->t_last + controlParams->phaseTime)
+                {
+                    controlParams->t_last += controlParams->phaseTime + controlParams->stochasticStepTime*(((double)rand()/(double)RAND_MAX) + 1.0);
+                    printf("new t_last %f\n", controlParams->t_last);
+                    controlParams->stochasticState = 0;
+                }
+
+                if(s->t > controlParams->t_last) 
+                {
+                    if(controlParams->stochasticState == 0)
+                    {
+                        controlParams->F_stochastic = (((double)rand()/(double)RAND_MAX)-0.5)*2.0*controlParams->Fmax;
+                        controlParams->stochasticState = 1;
+                    }
+                    
+                    s->cmd += controlParams->F_stochastic;
+                    printf("Add force %f, %f\n",s->t, controlParams->F_stochastic);
+                }                  
+                
+                break;
             
         }
 
