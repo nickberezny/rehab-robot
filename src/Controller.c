@@ -111,8 +111,9 @@ void * controllerThread (void * d)
                 else
                 {
                     //phase 2: begin sine wave
-                    if(controlParams->t_last == 0) controlParams->t_last = s->t;
+                    if(controlParams->t_traj_start == 0) controlParams->t_traj_start = s->t;
                     SineWave(s, controlParams);
+                    printf("Sine wave x0: %f\n", controlParams->x0);
                 }
                 
                
@@ -234,16 +235,16 @@ void * controllerThread (void * d)
                 //stochastic Step time is duration between for application 
                 AdmittanceMode(s, controlParams);
 
-                if(s->t > controlParams->t_last + controlParams->phaseTime)
+                if(s->t > controlParams->t_last + controlParams->phaseTime && controlParams->stochasticState == 1)
                 {
                     controlParams->t_last += controlParams->phaseTime + controlParams->stochasticStepTime*(((double)rand()/(double)RAND_MAX) + 1.0);
                     printf("new t_last %f\n", controlParams->t_last);
-                    controlParams->stochasticState = 0;
+                    controlParams->stochasticState = 2;
                 }
 
                 if(s->t > controlParams->t_last) 
                 {
-                    if(controlParams->stochasticState == 0)
+                    if(controlParams->stochasticState == 2)
                     {
                         controlParams->F_stochastic = (((double)rand()/(double)RAND_MAX)-0.5)*2.0*controlParams->Fmax;
                         controlParams->stochasticState = 1;

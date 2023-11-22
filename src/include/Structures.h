@@ -41,6 +41,7 @@ struct ControlParams {
 	double stochasticStepTime;
 	double F_stochastic;
 	double t_last;
+	double t_traj_start;
 
 	struct timespec t_first;
 	bool firstRun;
