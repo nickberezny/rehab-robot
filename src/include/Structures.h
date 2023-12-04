@@ -33,7 +33,11 @@ struct ControlParams {
 	double delta, alpha;
 	double *Ad, *Bd;
 	double xend; //length of actuator
-	double x0, dx0, ddx0;
+ 	double * process;
+	double * ctl;
+	double ** t;
+	double ** x;
+	double ** cmd;
 	double xstart;
 	double Fext_offset;
 	double dx_bound;

@@ -1,0 +1,1 @@
+void ReadProcessFile(char * fullpath, struct ControlParams * p);
