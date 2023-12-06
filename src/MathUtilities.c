@@ -203,15 +203,15 @@ void Butterworth10(double * x0, double * y0, double * x, double * y, double * a,
 
 void Interpolation(double * t, double * x, double *ti, double *xi, int n)
 {
-	int i = t((int)(1000*ti));
-	if(t(i) == *ti)
+	int i = t[(int)(1000*(*ti))];
+	if(t[i] == *ti)
 	{
-		*xi = x(i);
+		*xi = x[i];
 		return;
 	} 
-	else if(t(i) > *ti)
+	else if(t[i] > *ti)
 	{
-		while(t(i) > *ti)
+		while(t[i] > *ti)
 		{
 			i = i - 1;
 			if(i < 0)
@@ -222,9 +222,9 @@ void Interpolation(double * t, double * x, double *ti, double *xi, int n)
 			}
 		}
 	}
-	else if(t(i) < *ti)
+	else if(t[i] < *ti)
 	{
-		while(t(i) < *ti)
+		while(t[i] < *ti)
 		{
 			i = i + 1;
 			if(i > n)
@@ -236,7 +236,7 @@ void Interpolation(double * t, double * x, double *ti, double *xi, int n)
 		}
 	}
 
-	*xi = x(i);
+	*xi = x[i];
 	return;
 
 }

@@ -28,49 +28,137 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "./include/Parameters.h"
+#include "./include/Structures.h"
 #include "./include/ReadProcessFile.h"
 
-const char* getfield(char* line, int num)
-{
-    const char* tok;
-    for (tok = strtok(line, ";");
-            tok && *tok;
-            tok = strtok(NULL, ";\n"))
-    {
-        if (!--num)
-            return tok;
-    }
-    return NULL;
-}
 
 void ReadProcessFile(char * fullpath, struct ControlParams * p)
 {
-	File* stream = fopen(fullpath,"r");
+    FILE* stream = fopen(fullpath,"r");
     char line[1024];
-    j = 0;
-    ctlNum = -1;
+    int j = 0;
+    char* tmp;
+    char *eptr;
+    char* tok;
+    double ret;  
+
+    (p->process) = calloc(17, sizeof(double));
+    (p->trajectory) = calloc(17, sizeof(double));
+
 
     while (fgets(line, 1024, stream))
     {
-
-        char* tmp = strdup(line);
-        char *eptr;
-        p->process[j] = atoi(getfield(tmp, 2));
-        p->ctl[j] = atoi(getfield(tmp, 3));
-        if(p->ctl[j] == 5) ctlNum = ctlNum + 1;
-
-        p->t[ctlNum][j] = strtod(getfield(tmp, 4), &eptr);
-        p->x[ctlNum][j] = strtod(getfield(tmp, 5), &eptr);
-        if(j == 0) p->dx[ctlNum][j] = 0;
-        else p->dx[ctlNum][j] = (p->x[ctlNum][j] - p->x[ctlNum][j-1])/(p->t[ctlNum][j] - p->t[ctlNum][j-1]);
-        p->cmd[ctlNum][j] = strtod(getfield(tmp, 6), &eptr);
+        tmp = strdup(line);
         
+        //read process/ctl number
+        tok = strtok(line, ",");
+        ret = strtod(tok, &eptr);
+
+        p->process[j] = ret;
+
+        //read traj number
+        tok = strtok(NULL, ",");
+        ret = strtod(tok, &eptr);
+
+        p->trajectory[j] = ret;
+
         j = j + 1;
-        free(tmp);
-        
+ 
     }
 }
+
+void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
+{
+    
+    FILE* stream = fopen(fullpath,"r");
+    char line[1024];
+    int j = 0;
+
+    char* tmp;
+    char *eptr;
+
+    char* tok = strtok(line, ",");
+    tok = strtok(line, ",");
+
+    //int index = atoi(tok);
+    int index = 0;
+    double ret;
+
+    
+    
+
+    while (fgets(line, 1024, stream))
+    {
+        tmp = strdup(line);
+        
+        //read time
+        tok = strtok(line, ",");
+        ret = strtod(tok, &eptr);
+        
+        p->t[index][j] = ret;
+        
+       
+        //read x
+        tok = strtok(NULL, ",");
+        ret = strtod(tok, &eptr);
+        p->x[index][j] = ret;
+        j = j + 1;
+
+        
+    }
+
+}
+
+void ReadControlFile(char * fullpath, struct ControlParams * p)
+{
+
+    int n = 7;
+    char paramNames[7][10] = {"Md","Bd","Kd","kp","kv","alpha","delta"};
+    double ** paramVals[7] = {&(p->Md),&(p->Bd),&(p->Kd),&(p->kp),&(p->kv),&(p->alpha),&(p->delta)};
+
+    FILE* stream = fopen(fullpath,"r");
+    char line[1024];
+    int j = 0;
+
+    char* tmp = strdup(line);
+    char *eptr;
+
+    //read process/ctl number
+    char* tok = strtok(line, ",");
+    tok = strtok(line, ",");
+
+    int index = atoi(tok);
+    double ret;
+
+    while (fgets(line, 1024, stream))
+    {
+        tmp = strdup(line);
+
+        //read param
+        tok = strtok(line, ",");
+        
+        for(int i = 0; i < n; i++)
+        {
+            if(strcmp(tok,paramNames[i])==0)
+            {
+
+            }
+        }
+
+
+
+        //read traj number
+        tok = strtok(NULL, ",");
+        ret = strtod(tok, &eptr);
+        p->x[index][j] = ret;
+        j = j + 1;
+
+        
+    }
+
+}
+
 
 
 
