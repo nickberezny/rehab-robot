@@ -170,8 +170,9 @@ int main(int argc, char* argv[])
     int port = 5000;
     int len;
 
-    /*
-    char * filename_path = "P1.txt";
+/*
+    char * filename_path = "C1.txt";
+    ReadControlFile(filename_path, controlParams);
     controlParams->t  = calloc(20, sizeof(*(controlParams->t)));
     controlParams->x  = calloc(20, sizeof(*(controlParams->x)));
     ReadProcessFile(filename_path, controlParams);
