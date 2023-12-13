@@ -464,6 +464,20 @@ void WaitForMsg(int *fd, int *state)
             else
                 printf("Error, already running\n");
         }
+        else if(strncmp(buffer, "P_", 2) == 0)
+        {
+
+            //open process file
+            
+
+        }
+        else if(strncmp(buffer, "S_", 2) == 0)
+        {
+
+            //open session file
+
+        }
+
     }
 
     MsgRec: ;
