@@ -38,6 +38,7 @@
 #include "./include/Communication.h"
 #include "./include/Client.h"
 #include "./include/Tensorflow.h"
+#include "./include/ReadProcessFile.h"
 
 
 
@@ -169,6 +170,14 @@ int main(int argc, char* argv[])
     int port = 5000;
     int len;
 
+/*
+    char * filename_path = "C1.txt";
+    ReadControlFile(filename_path, controlParams);
+    controlParams->t  = calloc(20, sizeof(*(controlParams->t)));
+    controlParams->x  = calloc(20, sizeof(*(controlParams->x)));
+    ReadProcessFile(filename_path, controlParams);
+    ReadTrajectoryFile(filename_path, controlParams);
+*/
     //initialize folder 
     
     time_t rawtime;
@@ -181,6 +190,8 @@ int main(int argc, char* argv[])
     openClientSocket(&sockfd, &servaddr, &port);
     controlParams->currentState = WAIT_STATE; //State = Set
     printf("Starting Robot...\n");
+
+    
     
     //*************Initialize Tensorflow Neural Net*******************
 
