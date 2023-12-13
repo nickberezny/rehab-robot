@@ -28,10 +28,61 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h> 
+
 #include "./include/Parameters.h"
 #include "./include/Structures.h"
 #include "./include/ReadProcessFile.h"
 
+void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
+{
+
+    //first, controllers
+    char * temp[20];
+    strcpy(temp, sessionDir);
+    char * controllerPath = "/controller/"
+    char * trajectoryPath = "/trajectory/"
+    strcat(temp,controlPath);
+
+
+    DIR *d;
+    struct dirent *dir;
+    d = opendir(temp);
+    if (d) 
+    {
+
+        while ((dir = readdir(d)) != NULL) 
+        {
+            printf("%s\n", dir->d_name);
+            strcat(temp,dir->d_name);
+            ReadControlFile(temp, p);
+        }
+
+        closedir(d);
+
+    }
+
+
+    strcat(sessionDir,trajectoryPath);
+
+    DIR *d;
+    struct dirent *dir;
+    d = opendir(sessionDir);
+    if (d) 
+    {
+
+        while ((dir = readdir(d)) != NULL) 
+        {
+            printf("%s\n", dir->d_name);
+            strcat(sessionDir,dir->d_name);
+            ReadTrajectoryFile(sessionDir,p);
+        }
+
+        closedir(d);
+
+    }
+
+}
 
 void ReadProcessFile(char * fullpath, struct ControlParams * p)
 {

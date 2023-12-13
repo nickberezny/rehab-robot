@@ -479,15 +479,14 @@ void WaitForMsg(int *fd, int *state)
         {
 
             //open process file
-            
+            char * filename_path = "../path/";
+            strcat(filename_path,buffer[2]);
+            ReadProcessFile(filename_path, controlParams);
+
+            //then, read controllers and trajectories (get all in session folder)
 
         }
-        else if(strncmp(buffer, "S_", 2) == 0)
-        {
 
-            //open session file
-
-        }
 
     }
 
