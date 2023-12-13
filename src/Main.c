@@ -45,6 +45,7 @@
 //global variables 
 char buffer[4096];
 char buffer_small[10];
+char * sessionPath = "../ControllerSetup/";
 
 struct States *s_client; 
 struct States *s_log;
@@ -474,6 +475,17 @@ void WaitForMsg(int *fd, int *state)
                 controlParams->stochasticState = 1;
             else
                 printf("Error, already running\n");
+        }
+        else if(strncmp(buffer, "S_", 2) == 0)
+        {
+
+            //open process file
+            
+            strcat(sessionPath,buffer[2]);
+            printf("Path: %s\n", sessionPath);
+
+            //then, read controllers and trajectories (get all in session folder)
+
         }
         else if(strncmp(buffer, "P_", 2) == 0)
         {
