@@ -40,9 +40,9 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
     //first, controllers
     char * temp[20];
     strcpy(temp, sessionDir);
-    char * controllerPath = "/controller/"
-    char * trajectoryPath = "/trajectory/"
-    strcat(temp,controlPath);
+    char * controllerPath = "/controller/";
+    char * trajectoryPath = "/trajectory/";
+    strcat(temp,controllerPath);
 
 
     DIR *d;
@@ -65,8 +65,8 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
 
     strcat(sessionDir,trajectoryPath);
 
-    DIR *d;
-    struct dirent *dir;
+
+
     d = opendir(sessionDir);
     if (d) 
     {
