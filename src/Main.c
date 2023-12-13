@@ -45,7 +45,7 @@
 //global variables 
 char buffer[4096];
 char buffer_small[10];
-char * sessionPath = "../ControllerSetup/";
+char sessionPath[200] = "../ControllerSetup/";
 
 struct States *s_client; 
 struct States *s_log;
