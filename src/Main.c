@@ -480,9 +480,11 @@ void WaitForMsg(int *fd, int *state)
         {
 
             //open process file
-            
-            strcat(sessionPath,buffer[2]);
+            printf("Path: %s\n", buffer);
+            printf("Path: %s\n", &(buffer[2]));
+            strcat(sessionPath,&(buffer[2]));
             printf("Path: %s\n", sessionPath);
+
 
             //then, read controllers and trajectories (get all in session folder)
 
