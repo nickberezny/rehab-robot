@@ -479,8 +479,8 @@ void WaitForMsg(int *fd, int *state)
             //if process loaded, set next state in process array
             if(controlParams->processIndex >= 0)
             {
-                *state = controlParams->process[controlParams.processIndex];
-                controlParams.processIndex += 1;
+                *state = controlParams->process[controlParams->processIndex];
+                controlParams->processIndex += 1;
             }
             
         }
