@@ -502,7 +502,7 @@ void WaitForMsg(int *fd, int *state)
 
             //open process file
             
-            strcpy(tempPath,sessionPath);
+            
             char ProcessPath[20] = "/Processes/";
             char extension[20] = ".txt";
             strcat(tempPath,ProcessPath);
