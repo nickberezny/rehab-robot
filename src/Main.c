@@ -172,7 +172,7 @@ int main(int argc, char* argv[])
     int len;
 
 
-    char * filename_path = "../ControllerSetup/";
+    char * filename_path = "../ControllerSetup/S1/";
     ReadSessionFiles(filename_path, controlParams);
     /*
     ReadControlFile(filename_path, controlParams);
