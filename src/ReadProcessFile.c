@@ -67,7 +67,7 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
     strcpy(temp, sessionDir);
     strcat(temp,trajectoryPath);
 
-    d = opendir(sessionDir);
+    d = opendir(temp);
     if (d) 
     {
 
