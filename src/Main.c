@@ -46,6 +46,7 @@
 char buffer[4096];
 char buffer_small[10];
 char sessionPath[200] = "../ControllerSetup/";
+char tempPath[200] = "";
 
 struct States *s_client; 
 struct States *s_log;
@@ -174,11 +175,11 @@ int main(int argc, char* argv[])
     int len;
 
 
-    char * filename_path = "../ControllerSetup/S1";
+    char * filename_path = "../ControllerSetup/";
     controlParams->t  = calloc(20000, sizeof(*(controlParams->t)));
     controlParams->x  = calloc(20000, sizeof(*(controlParams->x)));
 
-    ReadSessionFiles(filename_path, controlParams);
+    //ReadSessionFiles(filename_path, controlParams);
     /*
     ReadControlFile(filename_path, controlParams);
     
@@ -488,20 +489,21 @@ void WaitForMsg(int *fd, int *state)
         {
 
             //open process file
-            strcat(sessionPath,&(buffer[2]));
-            printf("Path: %s\n", sessionPath);
-
+            strcpy(tempPath,sessionPath);
+            strcat(tempPath,&(buffer[2]));
+            printf("Path: %s\n", tempPath);
 
             //then, read controllers and trajectories (get all in session folder)
-            ReadSessionFiles(sessionPath,controlParams);
+            ReadSessionFiles(tempPath,controlParams);
+            break;
         }
         else if(strncmp(buffer, "P_", 2) == 0)
         {
 
             //open process file
-            char * filename_path = "../path/";
-            strcat(filename_path,&(buffer[2]));
-            ReadProcessFile(filename_path, controlParams);
+            strcpy(tempPath,sessionPath);
+            strcat(tempPath,&(buffer[2]));
+            ReadProcessFile(tempPath, controlParams);
             controlParams->processIndex = 0;
 
             //then, read controllers and trajectories (get all in session folder)
