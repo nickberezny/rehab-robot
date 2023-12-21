@@ -483,7 +483,7 @@ void WaitForMsg(int *fd, int *state)
                 *state = controlParams->process[controlParams->processIndex];
                 controlParams->processIndex += 1;
             }
-            
+            break;
         }
         else if(strncmp(buffer, "S_", 2) == 0)
         {
