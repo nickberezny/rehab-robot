@@ -39,6 +39,7 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
 
     //first, controllers
     char * temp[20];
+    char * temp2[20];
     strcpy(temp, sessionDir);
     char * controllerPath = "/Controllers/";
     char * trajectoryPath = "/Trajectories/";
@@ -53,9 +54,10 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
 
         while ((dir = readdir(d)) != NULL) 
         {
-            printf("%s\n", dir->d_name);
-            strcat(temp,dir->d_name);
-            ReadControlFile(temp, p);
+            strcpy(temp2, temp);
+            strcat(temp2,dir->d_name);
+            printf("%s\n", temp2);
+            ReadControlFile(temp2, p);
         }
 
         closedir(d);
