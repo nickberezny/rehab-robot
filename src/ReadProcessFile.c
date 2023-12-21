@@ -64,10 +64,8 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
 
     }
 
-
-    strcat(sessionDir,trajectoryPath);
-
-
+    strcpy(temp, sessionDir);
+    strcat(temp,trajectoryPath);
 
     d = opendir(sessionDir);
     if (d) 
@@ -75,9 +73,10 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
 
         while ((dir = readdir(d)) != NULL) 
         {
-            printf("%s\n", dir->d_name);
-            strcat(sessionDir,dir->d_name);
-            ReadTrajectoryFile(sessionDir,p);
+            strcpy(temp2, temp);
+            strcat(temp2,dir->d_name);
+            printf("%s\n", temp2);
+            ReadTrajectoryFile(temp2,p);
         }
 
         closedir(d);
