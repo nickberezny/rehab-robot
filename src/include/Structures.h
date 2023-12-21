@@ -50,8 +50,8 @@ struct ControlParams {
  	double * process;
  	double * trajectory;
 	double * ctl;
-	double ( * t )[3];
-	double ( * x )[3];
+	double ( * t )[10];
+	double ( * x )[10];
 	double ** cmd;
 	double xstart;
 	double Fext_offset;
