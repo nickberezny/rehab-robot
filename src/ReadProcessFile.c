@@ -43,7 +43,7 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
     char * controllerPath = "/Controller/";
     char * trajectoryPath = "/Trajectory/";
     strcat(temp,controllerPath);
-
+    printf("%s\n", temp);
 
     DIR *d;
     struct dirent *dir;
