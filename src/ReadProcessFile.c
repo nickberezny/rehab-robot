@@ -150,7 +150,6 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p, int index)
         //read time
         tok = strtok(line, ",");
         ret = strtod(tok, &eptr);
-        printf("%f\n",ret);
 
         p->t[index][j] = ret;
         
@@ -204,7 +203,7 @@ void ReadControlFile(char * fullpath, struct ControlParams * p, int index)
                 tok = strtok(NULL, ",");
                 ret = strtod(tok, &eptr);
                 *(paramVals[i]) = ret;
-                printf("%f\n",tok,ret);
+                
                 break;
             }
         }

@@ -154,6 +154,8 @@ int main(int argc, char* argv[])
         controlParams->F_filt_y[i] = 0.0;
     }
 
+    controlParams->processIndex = -1;
+
     pthread_t thread[NUMBER_OF_THREADS];
     memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
     pthread_attr_t attr[NUMBER_OF_THREADS];
@@ -474,11 +476,13 @@ void WaitForMsg(int *fd, int *state)
         }
         else if(strcmp(buffer, "NEXT") == 0)
         {
-            printf("Next stochastic force run\n");
-            if(controlParams->stochasticState==0)
-                controlParams->stochasticState = 1;
-            else
-                printf("Error, already running\n");
+            //if process loaded, set next state in process array
+            if(controlParams->processIndex >= 0)
+            {
+                *state = controlParams.process[controlParams.processIndex];
+                controlParams.processIndex += 1;
+            }
+            
         }
         else if(strncmp(buffer, "S_", 2) == 0)
         {
@@ -498,11 +502,11 @@ void WaitForMsg(int *fd, int *state)
             char * filename_path = "../path/";
             strcat(filename_path,&(buffer[2]));
             ReadProcessFile(filename_path, controlParams);
+            controlParams->processIndex = 0;
 
             //then, read controllers and trajectories (get all in session folder)
-
-           
         }
+
 
 
     }
