@@ -40,8 +40,8 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
     //first, controllers
     char * temp[20];
     strcpy(temp, sessionDir);
-    char * controllerPath = "/controller/";
-    char * trajectoryPath = "/trajectory/";
+    char * controllerPath = "/Controller/";
+    char * trajectoryPath = "/Trajectory/";
     strcat(temp,controllerPath);
 
 

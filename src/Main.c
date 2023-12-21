@@ -171,8 +171,10 @@ int main(int argc, char* argv[])
     int port = 5000;
     int len;
 
-/*
-    char * filename_path = "C1.txt";
+
+    char * filename_path = "../ControllerSetup/";
+    ReadSessionFiles(filename_path, controlParams);
+    /*
     ReadControlFile(filename_path, controlParams);
     controlParams->t  = calloc(20, sizeof(*(controlParams->t)));
     controlParams->x  = calloc(20, sizeof(*(controlParams->x)));
