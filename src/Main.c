@@ -172,11 +172,11 @@ int main(int argc, char* argv[])
     int len;
 
 
-    //char * filename_path = "../ControllerSetup/S1";
+    char * filename_path = "../ControllerSetup/S1";
     controlParams->t  = calloc(20000, sizeof(*(controlParams->t)));
     controlParams->x  = calloc(20000, sizeof(*(controlParams->x)));
 
-    //ReadSessionFiles(filename_path, controlParams);
+    ReadSessionFiles(filename_path, controlParams);
     /*
     ReadControlFile(filename_path, controlParams);
     
@@ -484,14 +484,12 @@ void WaitForMsg(int *fd, int *state)
         {
 
             //open process file
-            printf("Path: %s\n", buffer);
-            printf("Path: %s\n", &(buffer[2]));
             strcat(sessionPath,&(buffer[2]));
             printf("Path: %s\n", sessionPath);
 
 
             //then, read controllers and trajectories (get all in session folder)
-            ReadSessionFiles(sessionPath);
+            ReadSessionFiles(sessionPath,controlParams);
         }
         else if(strncmp(buffer, "P_", 2) == 0)
         {
