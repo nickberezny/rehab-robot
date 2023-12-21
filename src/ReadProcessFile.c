@@ -46,6 +46,8 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
     strcat(temp,controllerPath);
     printf("%s\n", temp);
 
+    int index = 0;
+
     DIR *d;
     struct dirent *dir;
     d = opendir(temp);
@@ -57,7 +59,8 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
             strcpy(temp2, temp);
             strcat(temp2,dir->d_name);
             printf("%s\n", temp2);
-            ReadControlFile(temp2, p);
+            ReadControlFile(temp2, p, index);
+            index = index + 1;
         }
 
         closedir(d);
@@ -67,6 +70,7 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
     strcpy(temp, sessionDir);
     strcat(temp,trajectoryPath);
 
+    int index = 0;
     d = opendir(temp);
     if (d) 
     {
@@ -76,7 +80,8 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
             strcpy(temp2, temp);
             strcat(temp2,dir->d_name);
             printf("%s\n", temp2);
-            ReadTrajectoryFile(temp2,p);
+            ReadTrajectoryFile(temp2,p,index);
+            index = index + 1;
         }
 
         closedir(d);
@@ -120,7 +125,7 @@ void ReadProcessFile(char * fullpath, struct ControlParams * p)
     }
 }
 
-void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
+void ReadTrajectoryFile(char * fullpath, struct ControlParams * p, int index)
 {
     printf("%s\n", fullpath);
     FILE* stream = fopen(fullpath,"r");
@@ -135,7 +140,7 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
     tok = strtok(line, ",");
 
     //int index = atoi(tok);
-    int index = 0;
+    
     double ret;
 
     while (fgets(line, 1024, stream))
@@ -146,7 +151,7 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
         tok = strtok(line, ",");
         ret = strtod(tok, &eptr);
         printf("%f\n",ret);
-        
+
         p->t[index][j] = ret;
         
        
@@ -161,12 +166,12 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
 
 }
 
-void ReadControlFile(char * fullpath, struct ControlParams * p)
+void ReadControlFile(char * fullpath, struct ControlParams * p, int index)
 {
 
     int n = 7;
     const char paramNames[7][10] = {"Md","Bd","Kd","kp","kv","alpha","delta"};
-    double * paramVals[7] = {&(p->Md),&(p->Dd),&(p->Kd),&(p->kp),&(p->kv),&(p->alpha),&(p->delta)};
+    double * paramVals[7] = {&(p->paramArray->Md[index]),&(p->Dd),&(p->Kd),&(p->kp),&(p->kv),&(p->alpha),&(p->delta)};
     
     FILE* stream = fopen(fullpath,"r");
     char line[1024];
