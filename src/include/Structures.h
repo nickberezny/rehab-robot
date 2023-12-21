@@ -23,6 +23,18 @@ struct tensorFlowVars {
 	double * outputVals;
 };
 
+struct ControlParamArray {
+
+	double Md[10];
+	double Dd[10];
+	double Kd[10];
+	double kp[10];
+	double kv[10];
+	double delta[10];
+	double alpha[10];
+
+};
+
 
 
 struct ControlParams {
@@ -31,6 +43,7 @@ struct ControlParams {
 	double kp, kv;
 	double m, c;
 	double delta, alpha;
+	struct ControlParamArray paramArray;
 	double *Ad, *Bd;
 	double xend; //length of actuator
 	double x0, dx0, ddx0;
@@ -81,6 +94,8 @@ struct ControlParams {
 	double F_filt_x[FILTER_ORDER+1];
 	double F_filt_y[FILTER_ORDER+1];
 };
+
+
 
 struct LogData {
 
