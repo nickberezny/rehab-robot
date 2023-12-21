@@ -70,7 +70,7 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
     strcpy(temp, sessionDir);
     strcat(temp,trajectoryPath);
 
-    int index = 0;
+    index = 0;
     d = opendir(temp);
     if (d) 
     {
@@ -185,7 +185,7 @@ void ReadControlFile(char * fullpath, struct ControlParams * p, int index)
     tok = strtok(line, ",");
     
     //int index = atoi(tok);
-    int index = 0;
+    
     double ret;
 
     while (fgets(line, 1024, stream))
