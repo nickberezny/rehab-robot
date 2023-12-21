@@ -173,11 +173,12 @@ int main(int argc, char* argv[])
 
 
     char * filename_path = "../ControllerSetup/S1";
+    controlParams->t  = calloc(20, sizeof(*(controlParams->t)));
+    controlParams->x  = calloc(20, sizeof(*(controlParams->x)));
     ReadSessionFiles(filename_path, controlParams);
     /*
     ReadControlFile(filename_path, controlParams);
-    controlParams->t  = calloc(20, sizeof(*(controlParams->t)));
-    controlParams->x  = calloc(20, sizeof(*(controlParams->x)));
+    
     ReadProcessFile(filename_path, controlParams);
     ReadTrajectoryFile(filename_path, controlParams);
 */
