@@ -175,10 +175,10 @@ int main(int argc, char* argv[])
     int len;
 
 
-    char * filename_path = "../ControllerSetup/";
+    char * filename_path = "../ControllerSetup/S1/Processes/P1.txt";
     controlParams->t  = calloc(20000, sizeof(*(controlParams->t)));
     controlParams->x  = calloc(20000, sizeof(*(controlParams->x)));
-
+    ReadProcessFile(filename_path, controlParams);
     //ReadSessionFiles(filename_path, controlParams);
     /*
     ReadControlFile(filename_path, controlParams);
@@ -503,7 +503,11 @@ void WaitForMsg(int *fd, int *state)
             //open process file
             
             strcpy(tempPath,sessionPath);
+            char ProcessPath[20] = "/Processes/";
+            char extension[20] = ".txt";
+            strcat(tempPath,ProcessPath);
             strcat(tempPath,&(buffer[2]));
+            strcat(tempPath,extension);
             printf("Path: %s\n", tempPath);
             ReadProcessFile(tempPath, controlParams);
             controlParams->processIndex = 0;
