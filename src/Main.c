@@ -508,7 +508,7 @@ void WaitForMsg(int *fd, int *state)
             strcat(tempPath,ProcessPath);
             strcat(tempPath,&(buffer[2]));
             strcat(tempPath,extension);
-            printf("Path: %s\n", tempPath);
+            printf("Process Path: %s\n", tempPath);
             ReadProcessFile(tempPath, controlParams);
             controlParams->processIndex = 0;
 
