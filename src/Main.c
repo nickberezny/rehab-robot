@@ -511,7 +511,7 @@ void WaitForMsg(int *fd, int *state)
             printf("Process Path: %s\n", tempPath);
             ReadProcessFile(tempPath, controlParams);
             controlParams->processIndex = 0;
-
+            break;
             //then, read controllers and trajectories (get all in session folder)
         }
 
