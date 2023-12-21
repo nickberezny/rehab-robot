@@ -175,8 +175,8 @@ int main(int argc, char* argv[])
     char * filename_path = "../ControllerSetup/S1/Trajectories/T7.txt";
     controlParams->t  = calloc(20000, sizeof(*(controlParams->t)));
     controlParams->x  = calloc(20000, sizeof(*(controlParams->x)));
-    ReadTrajectoryFile(filename_path, controlParams);
-    //ReadSessionFiles(filename_path, controlParams);
+
+    ReadSessionFiles(filename_path, controlParams);
     /*
     ReadControlFile(filename_path, controlParams);
     
