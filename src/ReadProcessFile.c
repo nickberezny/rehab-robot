@@ -171,7 +171,7 @@ void ReadControlFile(char * fullpath, struct ControlParams * p, int index)
 
     int n = 7;
     const char paramNames[7][10] = {"Md","Bd","Kd","kp","kv","alpha","delta"};
-    double * paramVals[7] = {&(p->paramArray.Md[index]),&(p->Dd),&(p->Kd),&(p->kp),&(p->kv),&(p->alpha),&(p->delta)};
+    double * paramVals[7] = {&(p->paramArray.Md[index]),&(p->paramArray.Dd),&(p->paramArray.Kd),&(p->paramArray.kp),&(p->paramArray.kv),&(p->paramArray.alpha),&(p->paramArray.delta)};
     
     FILE* stream = fopen(fullpath,"r");
     char line[1024];
