@@ -174,13 +174,13 @@ int main(int argc, char* argv[])
     int port = 5000;
     int len;
 
-
+/*
     char * filename_path = "../ControllerSetup/S1/Processes/P1.txt";
     controlParams->t  = calloc(20000, sizeof(*(controlParams->t)));
     controlParams->x  = calloc(20000, sizeof(*(controlParams->x)));
     ReadProcessFile(filename_path, controlParams);
     //ReadSessionFiles(filename_path, controlParams);
-    /*
+    
     ReadControlFile(filename_path, controlParams);
     
     ReadProcessFile(filename_path, controlParams);

@@ -58,7 +58,7 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
         {
             strcpy(temp2, temp);
             strcat(temp2,dir->d_name);
-            printf("%s\n", temp2);
+            printf("control dir %s\n", dir->d_name);
             ReadControlFile(temp2, p, index);
             index = index + 1;
         }
@@ -116,7 +116,7 @@ void ReadProcessFile(char * fullpath, struct ControlParams * p)
         
         if(tok[0]==letterC)
         {
-            ret = strtod(&(tok[1]), &eptr);
+            ret = strtod(&(tok[1]), &eptr) + 4.0;
             printf("Ctl Num: %f\n",ret);
         }
         else
