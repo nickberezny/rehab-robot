@@ -78,6 +78,7 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
 
         while ((dir = readdir(d)) != NULL) 
         {
+            printf("%d\n", index);
             strcpy(temp2, temp);
             strcat(temp2,dir->d_name);
             printf("%s\n", temp2);
@@ -145,9 +146,8 @@ void ReadProcessFile(char * fullpath, struct ControlParams * p)
 
 void ReadTrajectoryFile(char * fullpath, struct ControlParams * p, int index)
 {
-    printf("%s\n", fullpath);
+
     FILE* stream = fopen(fullpath,"r");
-    printf("%s\n", fullpath);
     char line[1024];
     int j = 0;
 
