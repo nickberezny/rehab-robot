@@ -447,7 +447,7 @@ void WaitForMsg(int *fd, int *state)
 
         if(strcmp(buffer, "HOME") == 0)
         {
-            if(*state == WAIT_STATE || *state == READY_STATE) *state = HOME_STATE;
+            if(*state == WAIT_STATE || *state == READY_STATE) *state = HOME_BACK_STATE;
             break;
         }
         else if(strcmp(buffer, "CALIBRATE") == 0)
