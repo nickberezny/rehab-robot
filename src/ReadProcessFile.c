@@ -58,7 +58,7 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
         {
             strcpy(temp2, temp);
             strcat(temp2,dir->d_name);
-            p->controllers[index] = strtok(line, ".");
+            p->controllers[index] = strtok(dir->d_name, ".");
             printf("control dir %s\n", p->controllers[index]);
             ReadControlFile(temp2, p, index);
             index = index + 1;
@@ -81,7 +81,7 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
             strcpy(temp2, temp);
             strcat(temp2,dir->d_name);
             printf("%s\n", temp2);
-            p->trajectories[index] = strtok(line, ".");
+            p->trajectories[index] = strtok(dir->d_name, ".");
             ReadTrajectoryFile(temp2,p,index);
             index = index + 1;
         }

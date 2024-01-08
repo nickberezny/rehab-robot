@@ -48,7 +48,7 @@ struct ControlParams {
 	double xend; //length of actuator
 	double x0, dx0, ddx0;
 	int processIndex;
- 	double ** process;
+ 	double * process;
  	char * trajectories[10];
  	char * controllers[10];
 	double * ctl;
