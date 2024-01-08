@@ -106,7 +106,7 @@ void ReadProcessFile(char * fullpath, struct ControlParams * p)
     char letterT = 'T';
 
     (p->process) = calloc(17, sizeof(double));
-    (p->trajectory) = calloc(17, sizeof(double));
+    //(p->trajectory) = calloc(17, sizeof(double));
 
 
     while (fgets(line, 1024, stream))
@@ -134,7 +134,7 @@ void ReadProcessFile(char * fullpath, struct ControlParams * p)
         tok = strtok(NULL, ",");
         ret = strtod(tok, &eptr);
 
-        p->trajectory[j] = ret;
+        //p->trajectory[j] = ret;
 
         j = j + 1;
  
