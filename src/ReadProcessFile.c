@@ -110,6 +110,7 @@ void ReadProcessFile(char * fullpath, struct ControlParams * p)
         
         //read process/ctl number
         tok = strtok(line, ",");
+        printf("Process string: %s\n", tok);
         ret = strtod(tok, &eptr);
 
         p->process[j] = ret;
