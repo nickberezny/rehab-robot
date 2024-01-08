@@ -56,6 +56,7 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
 
         while ((dir = readdir(d)) != NULL) 
         {
+            if(!dir->d_name) break;
             strcpy(temp2, temp);
             strcat(temp2,dir->d_name);
             p->controllers[index] = strtok(dir->d_name, ".");
@@ -78,6 +79,7 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
 
         while ((dir = readdir(d)) != NULL) 
         {
+            if(!dir->d_name) break;
             printf("%d\n", index);
             strcpy(temp2, temp);
             strcat(temp2,dir->d_name);
