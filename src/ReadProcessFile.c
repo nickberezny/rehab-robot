@@ -169,6 +169,7 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p, int index)
 
     while (fgets(line, 1024, stream))
     {
+        printf("Check22\n");
         tmp = strdup(line);
         
         //read time
