@@ -82,6 +82,7 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
             strcat(temp2,dir->d_name);
             printf("%s\n", temp2);
             p->trajectories[index] = strtok(dir->d_name, ".");
+            printf("traj dir %s\n",  p->trajectories[index]);
             ReadTrajectoryFile(temp2,p,index);
             index = index + 1;
         }
@@ -120,6 +121,7 @@ void ReadProcessFile(char * fullpath, struct ControlParams * p)
         {
             ret = strtod(&(tok[1]), &eptr) + 4.0;
             printf("Ctl Num: %f\n",ret);
+            ret = 5;
         }
         else
         {
