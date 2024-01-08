@@ -56,15 +56,14 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
 
         while ((dir = readdir(d)) != NULL) 
         {
-            if(strtok(dir->d_name, "."))
-            {
-                strcpy(temp2, temp);
-                strcat(temp2,dir->d_name);
-                p->controllers[index] = strtok(dir->d_name, ".");
-                printf("control dir %s\n", p->controllers[index]);
-                ReadControlFile(temp2, p, index);
-                index = index + 1;
-            }
+
+            strcpy(temp2, temp);
+            strcat(temp2,dir->d_name);
+            p->controllers[index] = strtok(dir->d_name, ".");
+            printf("control dir %s\n", p->controllers[index]);
+            ReadControlFile(temp2, p, index);
+            index = index + 1;
+
         }
 
         closedir(d);
@@ -81,18 +80,17 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
 
         while ((dir = readdir(d)) != NULL) 
         {
-            if(strtok(dir->d_name, "."))
-            {
-                printf("%d\n", index);
-                strcpy(temp2, temp);
-                strcat(temp2,dir->d_name);
-                printf("%s\n", temp2);
-                p->trajectories[index] = strtok(dir->d_name, ".");
-                printf("traj dir %s\n",  temp2);
-                ReadTrajectoryFile(temp2,p,index);
-                printf("traj dir %s\n",  p->trajectories[index]);
-                index = index + 1;
-            }
+
+            printf("%d\n", index);
+            strcpy(temp2, temp);
+            strcat(temp2,dir->d_name);
+            printf("%s\n", temp2);
+            p->trajectories[index] = strtok(dir->d_name, ".");
+            printf("traj dir %s\n",  temp2);
+            ReadTrajectoryFile(temp2,p,index);
+            printf("traj dir %s\n",  p->trajectories[index]);
+            index = index + 1;
+ 
             
         }
 
@@ -154,11 +152,11 @@ void ReadProcessFile(char * fullpath, struct ControlParams * p)
 
 void ReadTrajectoryFile(char * fullpath, struct ControlParams * p, int index)
 {
-
+    printf("Check22\n");
     FILE* stream = fopen(fullpath,"r");
     char line[1024];
     int j = 0;
-
+    printf("Check22\n");
     char* tmp;
     char *eptr;
 
@@ -166,7 +164,7 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p, int index)
     tok = strtok(line, ",");
 
     //int index = atoi(tok);
-    
+    printf("Check22\n");
     double ret;
 
     while (fgets(line, 1024, stream))
@@ -179,13 +177,13 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p, int index)
 
         p->t[index][j] = ret;
         
-       
+        printf("Check22\n");
         //read x
         tok = strtok(NULL, ",");
         ret = strtod(tok, &eptr);
         p->x[index][j] = ret;
         j = j + 1;
-
+        printf("Check22\n");
         
     }
 
