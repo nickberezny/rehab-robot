@@ -232,22 +232,13 @@ int main(int argc, char* argv[])
                 WaitForMsg(&sockfd, &controlParams->currentState);
                 break;
 
-            case HOME_STATE:
+            case HOME_BACK_STATE:
                 
                 sendMessage(&sockfd, "UI::STARTTASK::");
-                
-                if(homeToBack == 0)
-                {
-                    HomeToFront(d,daq);
-                    HomeToBack(d,daq);
-                }
-                else if(homeToBack == 1)
-                {
-                    HomeToBack(d,daq);
-                    controlParams->xend = 0.4;
-                }
-                
-                
+             
+                HomeToBack(d,daq);
+                controlParams->xend = 0.4;
+    
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
                 sendMessage(&sockfd, sendData);
@@ -255,6 +246,18 @@ int main(int argc, char* argv[])
                 homed = true;
                 controlParams->currentState = WAIT_STATE;
                 break;
+
+            case HOME_FRONT_BACK_STATE:
+                HomeToFront(d,daq);
+                HomeToBack(d,daq);
+                sleep(2);
+                sprintf(sendData, "UI::HOME");
+                sendMessage(&sockfd, sendData);
+                
+                homed = true;
+                controlParams->currentState = WAIT_STATE;
+                break;
+
 
             case CALIBRATE_STATE:
                 sendMessage(&sockfd, "UI::STARTTASK::");
@@ -512,7 +515,7 @@ void WaitForMsg(int *fd, int *state)
             ReadProcessFile(tempPath, controlParams);
             controlParams->processIndex = 0;
             break;
-            //then, read controllers and trajectories (get all in session folder)
+            
         }
 
 

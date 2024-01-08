@@ -14,9 +14,9 @@
 #define MAT_EXP_ITERATIONS 50
 
 #define WAIT_STATE 0
-#define HOME_STATE 1
-#define CALIBRATE_STATE 2
-#define SET_STATE 3
+#define HOME_BACK_STATE 1
+#define HOME_FRONT_BACK_STATE 2
+#define CALIBRATE_STATE 3
 #define READY_STATE 4
 #define RUN_STATE 5
 #define STOP_STATE 6
