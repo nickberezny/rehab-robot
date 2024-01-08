@@ -171,11 +171,12 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p, int index)
     {
         printf("Check22\n");
         tmp = strdup(line);
-        
+        printf("Check22\n");
         //read time
         tok = strtok(line, ",");
+        printf("Check22\n");
         ret = strtod(tok, &eptr);
-
+        printf("Check22\n");
         p->t[index][j] = ret;
         
         printf("Check22\n");
