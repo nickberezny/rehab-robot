@@ -111,7 +111,7 @@ void ReadProcessFile(char * fullpath, struct ControlParams * p)
         //read process/ctl number
         tok = strtok(line, ",");
         printf("Process string: %s\n", tok);
-        printf("Is it C? %d\n",stcmp(tok[0],'C'));
+        printf("Is it C? %d\n",strcmp(tok[0],'C'));
         ret = strtod(tok, &eptr);
 
         p->process[j] = ret;
