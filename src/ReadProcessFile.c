@@ -117,7 +117,7 @@ void ReadProcessFile(char * fullpath, struct ControlParams * p)
         if(tok[0]==letterC)
         {
             ret = strtod(&(tok[1]), &eptr);
-            printf("Ctl Num: %d\n",ret);
+            printf("Ctl Num: %s\n",&(tok[1]));
         }
         else
         {
