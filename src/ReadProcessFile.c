@@ -56,13 +56,15 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
 
         while ((dir = readdir(d)) != NULL) 
         {
-            if(!dir->d_name) break;
-            strcpy(temp2, temp);
-            strcat(temp2,dir->d_name);
-            p->controllers[index] = strtok(dir->d_name, ".");
-            printf("control dir %s\n", p->controllers[index]);
-            ReadControlFile(temp2, p, index);
-            index = index + 1;
+            if(strtok(dir->d_name, "."))
+            {
+                strcpy(temp2, temp);
+                strcat(temp2,dir->d_name);
+                p->controllers[index] = strtok(dir->d_name, ".");
+                printf("control dir %s\n", p->controllers[index]);
+                ReadControlFile(temp2, p, index);
+                index = index + 1;
+            }
         }
 
         closedir(d);
@@ -79,16 +81,19 @@ void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
 
         while ((dir = readdir(d)) != NULL) 
         {
-            if(!strtok(dir->d_name, ".")) break;
-            printf("%d\n", index);
-            strcpy(temp2, temp);
-            strcat(temp2,dir->d_name);
-            printf("%s\n", temp2);
-            p->trajectories[index] = strtok(dir->d_name, ".");
-            printf("traj dir %s\n",  temp2);
-            ReadTrajectoryFile(temp2,p,index);
-            printf("traj dir %s\n",  p->trajectories[index]);
-            index = index + 1;
+            if(strtok(dir->d_name, "."))
+            {
+                printf("%d\n", index);
+                strcpy(temp2, temp);
+                strcat(temp2,dir->d_name);
+                printf("%s\n", temp2);
+                p->trajectories[index] = strtok(dir->d_name, ".");
+                printf("traj dir %s\n",  temp2);
+                ReadTrajectoryFile(temp2,p,index);
+                printf("traj dir %s\n",  p->trajectories[index]);
+                index = index + 1;
+            }
+            
         }
 
         closedir(d);
