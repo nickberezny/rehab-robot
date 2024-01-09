@@ -403,13 +403,10 @@ void WaitForParamMsg(int *fd)
             
         }
 
-        goto MsgRec;
-        break;
 
     }
 
-    MsgRec: ;
-    return;
+
 }
 
 
