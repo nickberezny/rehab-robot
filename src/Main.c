@@ -312,7 +312,7 @@ int main(int argc, char* argv[])
 
                 set = true;
                 controlParams->currentState = WAIT_STATE;
-`
+
                 break;
 
             case READY_STATE:
@@ -398,7 +398,7 @@ void WaitForParamMsg(int *fd)
             strcpy(tempPath,sessionPath);
             strcat(tempPath,&(buffer[2]));
             printf("Path: %s\n", tempPath);
-            
+
             break;
             
         }
