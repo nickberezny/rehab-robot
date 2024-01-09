@@ -17,11 +17,11 @@
 #define HOME_BACK_STATE 1
 #define HOME_FRONT_BACK_STATE 2
 #define CALIBRATE_STATE 3
-#define SET_STATE -1
-#define READY_STATE 4
-#define RUN_STATE 5
-#define STOP_STATE 6
-#define SHUTDOWN_STATE 7
+#define SET_STATE 4
+#define READY_STATE 5
+#define RUN_STATE 6
+#define STOP_STATE 7
+#define SHUTDOWN_STATE 8
 
 #define PD_MODE 0
 #define IMP_MODE 1

@@ -261,7 +261,10 @@ int main(int argc, char* argv[])
             case SET_STATE:
                 sendMessage(&sockfd, "UI::STARTTASK::");
                 //run fn
+
+                
                 WaitForParamMsg(&sockfd);
+                /*
                 double Atemp[2][2] = {{0.0, 1.0},{-controlParams->Kd/controlParams->Md, -controlParams->Dd/controlParams->Md}};
                 double A[2][2];
                 DiscretizeMatrix(Atemp,A);
@@ -302,14 +305,14 @@ int main(int argc, char* argv[])
                     initModel(controlParams->tensorflow);
                 }
                     
-
+                */
                 sleep(2);
                 sprintf(sendData, "UI::SET");
                 sendMessage(&sockfd, sendData);
 
                 set = true;
                 controlParams->currentState = WAIT_STATE;
-
+`
                 break;
 
             case READY_STATE:
@@ -376,38 +379,30 @@ void WaitForParamMsg(int *fd)
 
         if(strcmp(buffer, "") != 0) printf("Received (Main): %s\n", buffer);
 
-        GetParameterFloat(regex.Md, &(controlParams->Md));
-        GetParameterFloat(regex.Dd, &(controlParams->Dd));
-        GetParameterFloat(regex.Kd, &(controlParams->Kd));
+        if(strncmp(buffer, "T_", 2) == 0)
+        {
 
-        GetParameterFloat(regex.xstart, &(controlParams->xstart));
-        GetParameterFloat(regex.x0, &(controlParams->x0));
+            //open process file
+            strcpy(tempPath,sessionPath);
+            strcat(tempPath,&(buffer[2]));
+            printf("Path: %s\n", tempPath);
 
-        GetParameterFloat(regex.alpha, &(controlParams->alpha));
-        GetParameterFloat(regex.delta, &(controlParams->delta));
+            //then, read controllers and trajectories (get all in session folder)
+            //ReadSessionFiles(tempPath,controlParams);
+            //break;
+        }
+        else if(strncmp(buffer, "C_", 2) == 0)
+        {
 
-        GetParameterFloat(regex.kp, &(controlParams->kp));
-        GetParameterFloat(regex.kv, &(controlParams->kv));
+            //open process file
+            strcpy(tempPath,sessionPath);
+            strcat(tempPath,&(buffer[2]));
+            printf("Path: %s\n", tempPath);
+            
+            break;
+            
+        }
 
-        GetParameterFloat(regex.mass, &(controlParams->m));
-        GetParameterFloat(regex.damp, &(controlParams->c));
-
-        GetParameterFloat(regex.Fmax, &(controlParams->Fmax));
-        GetParameterFloat(regex.phaseTime, &(controlParams->phaseTime));
-        GetParameterInt(regex.numPositions, &(controlParams->numPositions));
-        GetParameterFloat(regex.stochasticStepTime, &(controlParams->stochasticStepTime));
-        GetParameterFloat(regex.randomRate, &(controlParams->randomRate));
-
-        GetParameterFloat(regex.Home, &(homeToBack));
-        GetParameterInt(regex.controlMode, &(controlParams->controlMode));
-        GetParameterInt(regex.trajectoryMode, &(controlParams->trajectoryMode));
-        GetParameterInt(regex.recordEMG, &(controlParams->recordEMG));
-
-        GetParameterFloat(regex.frequency, &(controlParams->frequency));
-        GetParameterFloat(regex.amplitude, &(controlParams->amplitude));
-        GetParameterFloat(regex.offset, &(controlParams->offset));
-
-        GetParameterInt(regex.useFriction, &(controlParams->useFriction));
         goto MsgRec;
         break;
 
@@ -475,35 +470,7 @@ void WaitForMsg(int *fd, int *state)
             }
             break;
         }
-        else if(strncmp(buffer, "S_", 2) == 0)
-        {
 
-            //open process file
-            strcpy(tempPath,sessionPath);
-            strcat(tempPath,&(buffer[2]));
-            printf("Path: %s\n", tempPath);
-
-            //then, read controllers and trajectories (get all in session folder)
-            ReadSessionFiles(tempPath,controlParams);
-            break;
-        }
-        else if(strncmp(buffer, "P_", 2) == 0)
-        {
-
-            //open process file
-            
-            
-            char ProcessPath[20] = "/Processes/";
-            char extension[20] = ".txt";
-            strcat(tempPath,ProcessPath);
-            strcat(tempPath,&(buffer[2]));
-            strcat(tempPath,extension);
-            printf("Process Path: %s\n", tempPath);
-            ReadProcessFile(tempPath, controlParams);
-            controlParams->processIndex = 0;
-            break;
-            
-        }
 
 
 
