@@ -174,19 +174,6 @@ int main(int argc, char* argv[])
     int port = 5000;
     int len;
 
-/*
-    char * filename_path = "../ControllerSetup/S1/Processes/P1.txt";
-    controlParams->t  = calloc(20000, sizeof(*(controlParams->t)));
-    controlParams->x  = calloc(20000, sizeof(*(controlParams->x)));
-    ReadProcessFile(filename_path, controlParams);
-    //ReadSessionFiles(filename_path, controlParams);
-    
-    ReadControlFile(filename_path, controlParams);
-    
-    ReadProcessFile(filename_path, controlParams);
-    ReadTrajectoryFile(filename_path, controlParams);
-*/
-    //initialize folder 
     
     time_t rawtime;
     struct tm * timeinfo;
@@ -236,7 +223,7 @@ int main(int argc, char* argv[])
                 
                 sendMessage(&sockfd, "UI::STARTTASK::");
              
-                HomeToBack(d,daq);
+                //HomeToBack(d,daq);
                 controlParams->xend = 0.4;
     
                 sleep(2);
