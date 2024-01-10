@@ -236,6 +236,7 @@ void Interpolation(double * t, double * x, double *ti, double *xi, int n)
 		}
 	}
 
+	printf("intep index: %d\n",i);
 	*xi = x[i];
 	return;
 
