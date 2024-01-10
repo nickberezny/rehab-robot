@@ -89,7 +89,7 @@ void * controllerThread (void * d)
         s->x0 = controlParams->x0;
         s->x0_duration = controlParams->x0_duration[controlParams->x0_index];
 
-        printf("t:%f, x:%f\n",s->t,s->x0);
+        printf("t:%f, x:%f, x0d: %f\n",s->t,s->x0,s->x0_duration);
 
         //ctl*****************
         switch(controlParams->controlMode)
