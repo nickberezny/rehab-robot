@@ -201,7 +201,7 @@ void Butterworth10(double * x0, double * y0, double * x, double * y, double * a,
 
 }
 
-void Interpolation(double * t, double * x, double *ti, double *xi, int n)
+void Interpolation(double * t, double * x, double *ti, double *xi, int *index, int n)
 {
 	int i = (int)(1000*(*ti));
 
@@ -240,6 +240,7 @@ void Interpolation(double * t, double * x, double *ti, double *xi, int n)
 	}
 
 	*xi = x[i];
+	*index = i;
 	return;
 
 }

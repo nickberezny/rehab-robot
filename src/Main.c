@@ -388,6 +388,7 @@ void WaitForParamMsg(int *fd)
 
             controlParams->x = malloc(600000.0*sizeof(double));
             controlParams->t = malloc(600000.0*sizeof(double));
+            controlParams->x0_duration = malloc(600000.0*sizeof(double));
 
             ReadTrajectoryFile(tempPath, controlParams);
 

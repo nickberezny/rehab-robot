@@ -34,8 +34,9 @@ struct ControlParams {
 	double xend; //length of actuator
 	double x0, dx0, ddx0;
 	double *t;
-	int trajSize;
 	double *x;
+	double *x0_duration;
+	int trajSize;
 	double ** cmd;
 	double xstart;
 	double Fext_offset;
@@ -52,6 +53,8 @@ struct ControlParams {
 	double Fmax; //for stochastic force generation
 	double phaseTime;
     int numPositions;
+
+    int x0_index;
 
     double randomRate;
 	
@@ -121,6 +124,7 @@ struct States {
 	double xv,dxv,ddxv;
 	double xv_prev, dxv_prev, ddxv_prev;
 	double x0,dx0,ddx0;
+	double x0_duration;
 	double xstar, cmd;
 	double emg1,emg2,emg3,emg4;
 	double gonio;

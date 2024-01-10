@@ -154,7 +154,7 @@ void ReadProcessFile(char * fullpath, struct ControlParams * p)
 */
 void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
 {
-
+    //ADD X0 DURATION!!!
     FILE* stream = fopen(fullpath,"r");
     char line[1024];
     int j = 0;
@@ -179,6 +179,10 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
         tok = strtok(NULL, ",");
         ret = strtod(tok, &eptr);
         p->x[j] = ret;
+
+        tok = strtok(NULL, ",");
+        ret = strtod(tok, &eptr);
+        p->x0_duration[j] = ret;
 
         printf("traj: %f,%f\n",p->t[j],p->x[j]);
 
