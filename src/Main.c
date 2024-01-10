@@ -386,6 +386,9 @@ void WaitForParamMsg(int *fd)
             strcat(tempPath,&(buffer[2]));
             printf("Path: %s\n", tempPath);
 
+            controlParams->x = malloc(600000.0*sizeof(double));
+            controlParams->t = malloc(600000.0*sizeof(double));
+
             ReadTrajectoryFile(tempPath, controlParams);
 
             //then, read controllers and trajectories (get all in session folder)
