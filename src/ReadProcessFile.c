@@ -183,14 +183,16 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
 
     }
 
+    controlParams->trajSize = j;
+
 }
 
 void ReadControlFile(char * fullpath, struct ControlParams * p)
 {
 
     int n = 7;
-    const char paramNames[7][10] = {"Md","Bd","Kd","kp","kv","alpha","delta"};
-    double * paramVals[7] = {&(p->paramArray.Md),&(p->paramArray.Dd),&(p->paramArray.Kd),&(p->paramArray.kp),&(p->paramArray.kv),&(p->paramArray.alpha),&(p->paramArray.delta)};
+    const char paramNames[7][10] = {"Md","Bd","Kd","kp","kv","alpha","delta","Type"};
+    double * paramVals[7] = {&(p->Md),&(p->Dd),&(p->Kd),&(p->kp),&(p->kv),&(p->alpha),&(p->delta),&(p->controlMode)};
     
     FILE* stream = fopen(fullpath,"r");
     char line[1024];
@@ -232,7 +234,7 @@ void ReadControlFile(char * fullpath, struct ControlParams * p)
 
     }
 
-    printf("Md, Bd, Kd, kv, delta: %f, %f, %f, %f, %f\n", p->paramArray.Md, p->paramArray.Dd, p->paramArray.Kd, p->paramArray.kv, p->paramArray.delta);
+    printf("Md, Bd, Kd, kv, delta: %f, %f, %f, %f, %f\n", p->Md, p->Dd, p->Kd, p->kv, p->delta);
 
 }
 

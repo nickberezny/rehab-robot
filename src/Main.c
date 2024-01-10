@@ -263,7 +263,7 @@ int main(int argc, char* argv[])
 
                 
                 WaitForParamMsg(&sockfd);
-                /*
+                
                 double Atemp[2][2] = {{0.0, 1.0},{-controlParams->Kd/controlParams->Md, -controlParams->Dd/controlParams->Md}};
                 double A[2][2];
                 DiscretizeMatrix(Atemp,A);
@@ -304,7 +304,7 @@ int main(int argc, char* argv[])
                     initModel(controlParams->tensorflow);
                 }
                     
-                */
+                
                 sleep(2);
                 sprintf(sendData, "UI::SET");
                 sendMessage(&sockfd, sendData);

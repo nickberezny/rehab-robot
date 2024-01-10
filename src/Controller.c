@@ -82,47 +82,12 @@ void * controllerThread (void * d)
         //***************************************************************************************************************
         
         getElapsedTime(&controlParams->t_first, &s->t_start, &s->t);
-        //printf("t:%f\n",s->t);
+        //
 
         //set trajectory
-
-
-        switch(controlParams->trajectoryMode)
-        {
-            case STATIC_MODE:
-                //do nothing?
-                break;
-            case TRAJECTORY_MODE:
-                //
-                break;
-            case RANDOM_STATIC_MODE:
-                RandomStaticPosition(s, controlParams);
-                break;
-            case SINE_WAVE:
-                
-                if(controlParams->stochasticState == 0)
-                {
-                    //phase 1: go to offset
-                    GoTo(s, controlParams, &(controlParams->offset), 0.01);
-                    printf("Sine wave err: %f\n", fabs(s->x - controlParams->offset));
-                    if(fabs(s->x - controlParams->offset) < 0.02) controlParams->stochasticState = 1;
-
-                }
-                else
-                {
-                    //phase 2: begin sine wave
-                    if(controlParams->t_traj_start == 0) controlParams->t_traj_start = s->t;
-                    SineWave(s, controlParams);
-                    printf("Sine wave x0: %f\n", controlParams->x0);
-                }
-                
-               
-                break;
-
-        }
-        
-
+        Interpolation(&(controlParams->t), &(controlParams->x), &(s->t), &(controlParams->x0), controlParams->trajSize);
         s->x0 = controlParams->x0;
+        printf("t:%f, x:%f\n",s->t,s->x0);
 
         //ctl*****************
         switch(controlParams->controlMode)
