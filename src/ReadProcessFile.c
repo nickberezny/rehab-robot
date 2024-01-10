@@ -183,7 +183,7 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
 
     }
 
-    controlParams->trajSize = j;
+    p->trajSize = j;
 
 }
 
