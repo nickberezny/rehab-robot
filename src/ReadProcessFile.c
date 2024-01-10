@@ -34,6 +34,8 @@
 #include "./include/Structures.h"
 #include "./include/ReadProcessFile.h"
 
+/*
+
 void ReadSessionFiles(char * sessionDir, struct ControlParams * p)
 {
 
@@ -149,14 +151,13 @@ void ReadProcessFile(char * fullpath, struct ControlParams * p)
  
     }
 }
-
-void ReadTrajectoryFile(char * fullpath, struct ControlParams * p, int index)
+*/
+void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
 {
-    printf("Check22\n");
+
     FILE* stream = fopen(fullpath,"r");
     char line[1024];
     int j = 0;
-    printf("Check22\n");
     char* tmp;
     char *eptr;
 
@@ -164,39 +165,32 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p, int index)
     tok = strtok(line, ",");
 
     //int index = atoi(tok);
-    printf("Check22\n");
     double ret;
 
     while (fgets(line, 1024, stream))
     {
-        printf("Check22\n");
         tmp = strdup(line);
-        printf("Check22\n");
         //read time
-        tok = strtok(line, ",");
-        printf("Check22\n");
+        tok = strtok(line, ",");     
         ret = strtod(tok, &eptr);
-        printf("Check22\n");
-        p->t[index][j] = ret;
+        p->t[j] = ret;
         
-        printf("Check22\n");
         //read x
         tok = strtok(NULL, ",");
         ret = strtod(tok, &eptr);
-        p->x[index][j] = ret;
+        p->x[j] = ret;
         j = j + 1;
-        printf("Check22\n");
-        
+
     }
 
 }
 
-void ReadControlFile(char * fullpath, struct ControlParams * p, int index)
+void ReadControlFile(char * fullpath, struct ControlParams * p)
 {
 
     int n = 7;
     const char paramNames[7][10] = {"Md","Bd","Kd","kp","kv","alpha","delta"};
-    double * paramVals[7] = {&(p->paramArray.Md[index]),&(p->paramArray.Dd),&(p->paramArray.Kd),&(p->paramArray.kp),&(p->paramArray.kv),&(p->paramArray.alpha),&(p->paramArray.delta)};
+    double * paramVals[7] = {&(p->paramArray.Md),&(p->paramArray.Dd),&(p->paramArray.Kd),&(p->paramArray.kp),&(p->paramArray.kv),&(p->paramArray.alpha),&(p->paramArray.delta)};
     
     FILE* stream = fopen(fullpath,"r");
     char line[1024];

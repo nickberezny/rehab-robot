@@ -25,13 +25,13 @@ struct tensorFlowVars {
 
 struct ControlParamArray {
 
-	double Md[10];
-	double Dd[10];
-	double Kd[10];
-	double kp[10];
-	double kv[10];
-	double delta[10];
-	double alpha[10];
+	double Md;
+	double Dd;
+	double Kd;
+	double kp;
+	double kv;
+	double delta;
+	double alpha;
 
 };
 
@@ -47,13 +47,8 @@ struct ControlParams {
 	double *Ad, *Bd;
 	double xend; //length of actuator
 	double x0, dx0, ddx0;
-	int processIndex;
- 	double * process;
- 	char * trajectories[10];
- 	char * controllers[10];
-	double * ctl;
-	double ( * t )[10];
-	double ( * x )[10];
+	double *t;
+	double *x;
 	double ** cmd;
 	double xstart;
 	double Fext_offset;
