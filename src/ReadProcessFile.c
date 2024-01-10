@@ -179,6 +179,9 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
         tok = strtok(NULL, ",");
         ret = strtod(tok, &eptr);
         p->x[j] = ret;
+
+        printf("traj: %f,%f\n",p->t[j],p->x[j]);
+
         j = j + 1;
 
     }
