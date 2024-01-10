@@ -155,7 +155,6 @@ int main(int argc, char* argv[])
         controlParams->F_filt_y[i] = 0.0;
     }
 
-    controlParams->processIndex = -1;
 
     pthread_t thread[NUMBER_OF_THREADS];
     memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
@@ -464,11 +463,7 @@ void WaitForMsg(int *fd, int *state)
         else if(strcmp(buffer, "NEXT") == 0)
         {
             //if process loaded, set next state in process array
-            if(controlParams->processIndex >= 0)
-            {
-                *state = controlParams->process[controlParams->processIndex];
-                controlParams->processIndex += 1;
-            }
+
             break;
         }
 
