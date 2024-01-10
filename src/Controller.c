@@ -85,7 +85,7 @@ void * controllerThread (void * d)
         //
 
         //set trajectory
-        Interpolation((controlParams->t), (controlParams->x), &(s->t), &(controlParams->x0), &(controlParams->x0_index) controlParams->trajSize);
+        Interpolation((controlParams->t), (controlParams->x), &(s->t), &(controlParams->x0), &(controlParams->x0_index), controlParams->trajSize);
         s->x0 = controlParams->x0;
         s->x0_duration = controlParams->x0_duration[controlParams->x0_index];
 
