@@ -203,7 +203,7 @@ void Butterworth10(double * x0, double * y0, double * x, double * y, double * a,
 
 void Interpolation(double * t, double * x, double *ti, double *xi, int n)
 {
-	int i = t[(int)(1000*(*ti))];
+	int i = (int)(1000*(*ti));
 	if(t[i] == *ti)
 	{
 		*xi = x[i];
