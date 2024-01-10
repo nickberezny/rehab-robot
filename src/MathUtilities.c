@@ -204,6 +204,7 @@ void Butterworth10(double * x0, double * y0, double * x, double * y, double * a,
 void Interpolation(double * t, double * x, double *ti, double *xi, int n)
 {
 	int i = (int)(1000*(*ti));
+	printf("intep index init: %d\n",i);
 	if(t[i] == *ti)
 	{
 		*xi = x[i];
@@ -216,7 +217,7 @@ void Interpolation(double * t, double * x, double *ti, double *xi, int n)
 			i = i - 1;
 			if(i < 0)
 			{
-				printf("Interpolation error: time is below lowest time in trajectory vector");
+				printf("Interpolation error: time is below lowest time in trajectory vector\n");
 				i = 0;
 				break;
 			}
@@ -229,7 +230,7 @@ void Interpolation(double * t, double * x, double *ti, double *xi, int n)
 			i = i + 1;
 			if(i > n)
 			{
-				printf("Interpolation error: time exceeds trajectory vector");
+				printf("Interpolation error: time exceeds trajectory vector\n");
 				i = n;
 				break;
 			}
