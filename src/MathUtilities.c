@@ -204,7 +204,9 @@ void Butterworth10(double * x0, double * y0, double * x, double * y, double * a,
 void Interpolation(double * t, double * x, double *ti, double *xi, int n)
 {
 	int i = (int)(1000*(*ti));
-	printf("intep index init: %d\n",i);
+
+	printf("intep index init: %f, %f\n",t[i], *ti);
+
 	if(t[i] == *ti)
 	{
 		*xi = x[i];
@@ -237,7 +239,6 @@ void Interpolation(double * t, double * x, double *ti, double *xi, int n)
 		}
 	}
 
-	printf("intep index: %d\n",i);
 	*xi = x[i];
 	return;
 
