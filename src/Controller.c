@@ -85,7 +85,7 @@ void * controllerThread (void * d)
         //
 
         //set trajectory
-        Interpolation(&(controlParams->t), &(controlParams->x), &(s->t), &(controlParams->x0), controlParams->trajSize);
+        //Interpolation(&(controlParams->t), &(controlParams->x), &(s->t), &(controlParams->x0), controlParams->trajSize);
         s->x0 = controlParams->x0;
         printf("t:%f, x:%f\n",s->t,s->x0);
 
