@@ -81,12 +81,12 @@ void * controllerThread (void * d)
         //***************************************************************************************************************
         
         getElapsedTime(&controlParams->t_first, &s->t_start, &s->t);
-        if(controlParams->t_last =< s->t)
+        if(controlParams->t_last <= s->t)
         {
             quitThreads = true;
         }
 
-        if(s->t > controlParams->trajSize)
+        
         //set trajectory
         Interpolation((controlParams->t), (controlParams->x), &(s->t), &(controlParams->x0), &(controlParams->x0_index), controlParams->trajSize);
         Interpolation((controlParams->tdist), (controlParams->xdist), &(s->t), &(controlParams->x0dist), &(controlParams->x0_index), controlParams->trajSize);
