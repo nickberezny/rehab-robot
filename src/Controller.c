@@ -21,7 +21,6 @@
 #include "./include/Daq.h"
 #include "./include/GetModelData.h"
 #include "./include/ControlModes.h"
-#include "./include/TrajectoryModes.h"
 
 
 void * controllerThread (void * d)

@@ -44,11 +44,14 @@ struct ControlParams {
 	double Fext_offset;
 	double dx_bound;
 
+	struct timespec t_first;
 	bool firstRun;
 
     int x0_index;
+
 	int recordEMG;
 	int currentState; 
+	int cont_iteration;
 	int controlMode; //0 = PD, 1 = Adm, 2 = Imp, 3 = UIC, 4 = Stoch. Force
 
 	int useFriction;
