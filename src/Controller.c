@@ -81,7 +81,10 @@ void * controllerThread (void * d)
         //***************************************************************************************************************
         
         getElapsedTime(&controlParams->t_first, &s->t_start, &s->t);
-        //
+        if(controlParams->t_last =< s->t)
+        {
+            quitThreads = true;
+        }
 
         if(s->t > controlParams->trajSize)
         //set trajectory

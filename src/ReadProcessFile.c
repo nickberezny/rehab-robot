@@ -191,6 +191,7 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
     }
 
     p->trajSize = j;
+    p->t_last = p->t[j-1];
 
 }
 

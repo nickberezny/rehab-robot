@@ -43,6 +43,7 @@ struct ControlParams {
 	double xstart;
 	double Fext_offset;
 	double dx_bound;
+	double t_last;
 
 	struct timespec t_first;
 	bool firstRun;
