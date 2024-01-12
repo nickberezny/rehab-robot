@@ -194,6 +194,44 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
 
 }
 
+void ReadTrajectoryDisturbanceFile(char * fullpath, struct ControlParams * p)
+{
+    //ADD X0 DURATION!!!
+    FILE* stream = fopen(fullpath,"r");
+    char line[1024];
+    int j = 0;
+    char* tmp;
+    char *eptr;
+
+    char* tok = strtok(line, ",");
+    tok = strtok(line, ",");
+
+    //int index = atoi(tok);
+    double ret;
+
+    while (fgets(line, 1024, stream))
+    {
+        tmp = strdup(line);
+        //read time
+        tok = strtok(line, ",");     
+        ret = strtod(tok, &eptr);
+        p->tdist[j] = ret;
+        
+        //read x
+        tok = strtok(NULL, ",");
+        ret = strtod(tok, &eptr);
+        p->xdist[j] = ret;
+
+        printf("traj: %f,%f\n",p->t[j],p->x[j]);
+
+        j = j + 1;
+
+    }
+
+    p->trajSize = j;
+
+}
+
 void ReadControlFile(char * fullpath, struct ControlParams * p)
 {
 

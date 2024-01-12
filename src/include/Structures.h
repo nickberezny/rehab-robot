@@ -32,9 +32,11 @@ struct ControlParams {
 	double delta, alpha;
 	double *Ad, *Bd;
 	double xend; //length of actuator
-	double x0, dx0, ddx0;
+	double x0, dx0, ddx0, x0dist;
 	double *t;
 	double *x;
+	double *tdist;
+	double *xdist;
 	double *x0_duration;
 	int trajSize;
 	double ** cmd;
@@ -123,7 +125,7 @@ struct States {
 	double Fext, Fraw;
 	double xv,dxv,ddxv;
 	double xv_prev, dxv_prev, ddxv_prev;
-	double x0,dx0,ddx0;
+	double x0,dx0,ddx0,x0_to_send;
 	double x0_duration;
 	double xstar, cmd;
 	double emg1,emg2,emg3,emg4;

@@ -409,6 +409,19 @@ void WaitForParamMsg(int *fd)
             break;
             
         }
+        else if(strncmp(buffer, "D_", 2) == 0)
+        {
+
+            //open process file
+            strcpy(tempPath,sessionPath);
+            strcat(tempPath,&(buffer[2]));
+            printf("Path: %s\n", tempPath);
+
+            ReadTrajectoryDisturbanceFile(tempPath, controlParams);
+
+            break;
+            
+        }
 
 
     }
