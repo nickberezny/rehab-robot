@@ -228,8 +228,6 @@ void ReadTrajectoryDisturbanceFile(char * fullpath, struct ControlParams * p)
 
     }
 
-    p->trajSize = j;
-
 }
 
 void ReadControlFile(char * fullpath, struct ControlParams * p)

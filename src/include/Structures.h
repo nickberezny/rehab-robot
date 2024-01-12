@@ -43,33 +43,13 @@ struct ControlParams {
 	double xstart;
 	double Fext_offset;
 	double dx_bound;
-	double tf;
-	double stochasticStepTime;
-	double F_stochastic;
-	double t_last;
-	double t_traj_start;
 
-	struct timespec t_first;
 	bool firstRun;
 
-	double Fmax; //for stochastic force generation
-	double phaseTime;
-    int numPositions;
-
     int x0_index;
-
-    double randomRate;
-	
 	int recordEMG;
 	int currentState; 
 	int controlMode; //0 = PD, 1 = Adm, 2 = Imp, 3 = UIC, 4 = Stoch. Force
-	int trajectoryMode; //0 = Static pos, 1 = back and forth, 2 = static range (for stoch.force)
-	int stochasticState; //0 go to x0, 1 apply forces
-
-	int cont_iteration;
-	double amplitude;
-	double frequency;
-	double offset;
 
 	int useFriction;
 	struct tensorFlowVars * tensorflow;
