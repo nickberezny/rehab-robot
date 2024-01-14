@@ -469,6 +469,11 @@ void WaitForMsg(int *fd, int *state)
         }
         else if(strcmp(buffer, "SET") == 0)
         {
+            bzero(buffer, sizeof(buffer));
+            read(*fd, buffer, sizeof(buffer));
+            controlParams->x0_is_percent = (int)strtod(buffer, eptr);
+            printf("x0 as percent: %d\n", controlParams->x0_is_percent);
+
             if(*state == WAIT_STATE || *state == READY_STATE) *state = SET_STATE;
             break;
         }
