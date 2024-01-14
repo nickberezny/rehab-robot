@@ -224,7 +224,7 @@ int main(int argc, char* argv[])
                 sendMessage(&sockfd, "UI::STARTTASK::");
              
                 //HomeToBack(d,daq);
-                controlParams->xend = 0.4;
+                //controlParams->xend = 0.4;
     
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
