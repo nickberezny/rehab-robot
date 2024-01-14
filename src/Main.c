@@ -471,6 +471,7 @@ void WaitForMsg(int *fd, int *state)
         {
             bzero(buffer, sizeof(buffer));
             read(*fd, buffer, sizeof(buffer));
+            printf("x0 as percent buffer %s\n", buffer);
             controlParams->x0_is_percent = (int)strtod(buffer, eptr);
             printf("x0 as percent: %d\n", controlParams->x0_is_percent);
 
