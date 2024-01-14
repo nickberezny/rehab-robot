@@ -47,6 +47,7 @@ char buffer[4096];
 char buffer_small[10];
 char sessionPath[200] = "../ControllerSetup/";
 char tempPath[200] = "";
+char *eptr; 
 
 struct States *s_client; 
 struct States *s_log;
@@ -449,6 +450,16 @@ void WaitForMsg(int *fd, int *state)
         if(strcmp(buffer, "HOME") == 0)
         {
             if(*state == WAIT_STATE || *state == READY_STATE) *state = HOME_BACK_STATE;
+            bzero(buffer, sizeof(buffer));
+            read(*fd, buffer, sizeof(buffer));
+            controlParams->xend = strtod(buffer, eptr);
+            printf("xend: %f\n", controlParams->xend);
+
+            break;
+        }
+        else if(strcmp(buffer, "HOME_FRONT") == 0)
+        {
+            if(*state == WAIT_STATE || *state == READY_STATE) *state = HOME_FRONT_BACK_STATE;
             break;
         }
         else if(strcmp(buffer, "CALIBRATE") == 0)
