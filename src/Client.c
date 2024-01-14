@@ -49,7 +49,14 @@ void * clientThread (void * d)
         {
 
             //sprintf(buffer, "PLOT::%.2f::%.2f", s_client->x, s_client->x0);
-            sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::", s_client->x0_to_send, s_client->x0,s_client->x0_duration,s_client->Fext);
+            if(controlParams->x0_is_percent)
+            {
+                sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::", s_client->x/controlParams->xend, s_client->x0_to_send,s_client->x0_duration,s_client->Fext);
+            }
+            else
+            {
+                sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::", s_client->x/controlParams->xend, s_client->x0_to_send/controlParams->xend,s_client->x0_duration,s_client->Fext);
+            }
             sendMessage(commData->sockfd, buffer);
         }
         

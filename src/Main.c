@@ -571,6 +571,7 @@ void RunController(struct States *data, pthread_t *thread, pthread_attr_t *attr,
     //pthread_join(thread[0], NULL);
     //pthread_join(thread[1], NULL);
 
+    WaitForMsg(commData->sockfd, &(controlParams->currentState));
 
     printf("Finished Threads...\n");
 

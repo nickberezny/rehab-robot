@@ -38,6 +38,7 @@ struct ControlParams {
 	double *tdist;
 	double *xdist;
 	double *x0_duration;
+	int x0_is_percent;
 	int trajSize;
 	double ** cmd;
 	double xstart;
