@@ -57,9 +57,11 @@ void * clientThread (void * d)
             }
             else
             {
-                sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::", s_client->x/controlParams->xend, s_client->x0_to_send/controlParams->xend,
+                /*sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::", s_client->x/controlParams->xend, s_client->x0_to_send/controlParams->xend,
                     s_client->x0_duration,s_client->Fext, s_client->Fext,controlParams->Kest,
-                    s_client->emg1,s_client->emg2,s_client->emg3,s_client->emg4);
+                    s_client->emg1,s_client->emg2,s_client->emg3,s_client->emg4); 
+                    */
+                sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::",1,2,3,4,5,6,7,8,9);
             }
             sendMessage(commData->sockfd, buffer);
         }
