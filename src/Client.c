@@ -61,7 +61,8 @@ void * clientThread (void * d)
                     s_client->x0_duration,s_client->Fext, s_client->Fext,controlParams->Kest,
                     s_client->emg1,s_client->emg2,s_client->emg3,s_client->emg4); 
                     */
-                sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::",1,2,3,4,5,6,7,8,9);
+                double xtest = 1.0;
+                sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::",xtest,xtest + 1.0,xtest + 2.0,xtest,xtest,xtest,xtest,xtest,xtest);
             }
             sendMessage(commData->sockfd, buffer);
         }
