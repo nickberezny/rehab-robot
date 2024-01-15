@@ -121,7 +121,10 @@ int main(int argc, char* argv[])
     struct States data[BUFFER_SIZE] = {0};
     struct States *d = &data[0];
 
-    
+    double xtest[10] = {1,2,3,4,5,6,7,8,9,19};
+    double *xavg;
+    AverageVector(xtest,xavg,10);
+    printf("Average: %f\n",*xavg);
     
     controlParams = calloc(17, sizeof *controlParams);
     logData = calloc(2, sizeof *logData);

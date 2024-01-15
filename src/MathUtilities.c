@@ -245,3 +245,13 @@ void Interpolation(double * t, double * x, double *ti, double *xi, int *index, i
 
 }
 
+
+void AverageVector(double * x, double * avg, int n)
+{
+	for(int i = 0; i < n; i++)
+	{
+		*avg = *avg + x[i];
+	}
+
+	*avg = *avg/(double)n;
+}

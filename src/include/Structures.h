@@ -59,6 +59,11 @@ struct ControlParams {
 	int useFriction;
 	struct tensorFlowVars * tensorflow;
 
+	double F_for_Kest[100];
+	int F_index;
+	double X_init_for_Kest;
+	double Kest;
+
 	double filter_a_10Hz[4];
 	double filter_b_10Hz[4]; 
 	double filter_a_100Hz[4];

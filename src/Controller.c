@@ -96,6 +96,21 @@ void * controllerThread (void * d)
         s->x0_duration = controlParams->x0_duration[controlParams->x0_index];
         if(controlParams->x0_is_percent) s->x0 = s->x0*controlParams->xend;
 
+        if(controlParams->x0dist != 0)
+        {
+            if(controlParams->F_index == 0) controlParams->X_init_for_Kest = s->x;
+            controlParams->F_for_Kest[controlParams->F_index] = s->Fext;
+            controlParams->F_index = controlParams->F_index + 1;
+        }
+        else if(controlParams->x0dist == 0 && controlParams->F_index != 0)
+        {
+            //calc Kest
+            //avg force
+            //controlParams->Kest = Fmean/(s->x-controlParam->X_init_for_Kest);
+
+            controlParams->F_index = 0;
+        }
+
         printf("t:%f, x:%f, x0d: %f\n",s->t,s->x0,s->x0_duration);
 
         //ctl*****************
