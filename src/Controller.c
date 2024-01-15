@@ -113,7 +113,7 @@ void * controllerThread (void * d)
             printf("Kest: %f\n", controlParams->Kest);
         }
 
-        printf("t:%f, x:%f, x0d: %f\n",s->t,s->x0,s->x0_duration);
+        //printf("t:%f, x:%f, x0d: %f\n",s->t,s->x0,s->x0_duration);
 
         //ctl*****************
         switch(controlParams->controlMode)

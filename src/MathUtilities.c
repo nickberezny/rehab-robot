@@ -205,7 +205,7 @@ void Interpolation(double * t, double * x, double *ti, double *xi, int *index, i
 {
 	int i = (int)(1000*(*ti));
 
-	printf("intep index init: %f, %f\n",t[i], *ti);
+	//printf("intep index init: %f, %f\n",t[i], *ti);
 
 	if(t[i] == *ti)
 	{
