@@ -57,12 +57,12 @@ void * clientThread (void * d)
             }
             else
             {
-                /*sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::", s_client->x/controlParams->xend, s_client->x0_to_send/controlParams->xend,
+                sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::", s_client->x/controlParams->xend, s_client->x0_to_send/controlParams->xend,
                     s_client->x0_duration,s_client->Fext, s_client->Fext,controlParams->Kest,
                     s_client->emg1,s_client->emg2,s_client->emg3,s_client->emg4); 
-                    */
-                double xtest = 1.0;
-                sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::",xtest,xtest + 1.0,xtest + 2.0,xtest,xtest,xtest,xtest,xtest,xtest);
+                    
+               // double xtest = 1.0;
+                //sprintf(buffer, "PLOT::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::",xtest,xtest + 1.0,xtest + 2.0,xtest+3.0,xtest+4.0,xtest,xtest,xtest,xtest);
             }
             sendMessage(commData->sockfd, buffer);
         }
