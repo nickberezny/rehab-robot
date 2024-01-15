@@ -108,7 +108,7 @@ void * controllerThread (void * d)
             //avg force
             //controlParams->Kest = Fmean/(s->x-controlParam->X_init_for_Kest);
             AverageVector(controlParams->F_for_Kest, &(controlParams->Kest), 100);
-            controlParams->Kest = controlParams->Kest/(s->x - controlParams->X_init_for_Kest);
+            controlParams->Kest = controlParams->Kest/(s->x - controlParams->X_init_for_Kest + 0.000001);
             controlParams->F_index = 0;
             printf("Kest: %f\n", controlParams->Kest);
         }
