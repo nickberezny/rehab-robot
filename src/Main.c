@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
     double xtest[10] = {1,2,3,4,5,6,7,8,9,19};
     double xavg = 0.0;
     AverageVector(xtest,&xavg,10);
-    printf("Average: %f\n",*xavg);
+    printf("Average: %f\n",xavg);
     
     controlParams = calloc(17, sizeof *controlParams);
     logData = calloc(2, sizeof *logData);
