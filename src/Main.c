@@ -158,7 +158,7 @@ int main(int argc, char* argv[])
     openClientSocket(&sockfd, &servaddr, &port);
     controlParams->currentState = WAIT_STATE; //State = Set
 
-    memset (preThread, 0, sizeof (pthread_t));
+    memset (&preThread, 0, sizeof (pthread_t));
     printf("init: %d\n",initThread(&preRunAttr, &preRunParam, 90));
 
     printf("Starting Robot...\n");
