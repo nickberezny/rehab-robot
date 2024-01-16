@@ -202,7 +202,7 @@ int main(int argc, char* argv[])
              
                 //HomeToBack(d,daq);
                 //controlParams->xend = 0.4;
-                pthread_create(&preThread, &preRunAttr, &preRunThread, (void *)ps);
+                //pthread_create(&preThread, &preRunAttr, &preRunThread, (void *)ps);
     
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
