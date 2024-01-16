@@ -63,7 +63,7 @@ struct CommData *commData;
 struct DAQ *daq;
 
 struct sched_param preRunParam;
-pthread_t preRunThread;
+pthread_t preThread;
 
 pthread_attr_t preRunAttr;
 
@@ -158,7 +158,7 @@ int main(int argc, char* argv[])
     openClientSocket(&sockfd, &servaddr, &port);
     controlParams->currentState = WAIT_STATE; //State = Set
 
-    memset (preRunThread, 0, sizeof (pthread_t));
+    memset (preThread, 0, sizeof (pthread_t));
     printf("init: %d\n",initThread(&preRunAttr, &preRunParam, 90));
 
     printf("Starting Robot...\n");
@@ -202,7 +202,7 @@ int main(int argc, char* argv[])
              
                 //HomeToBack(d,daq);
                 //controlParams->xend = 0.4;
-                pthread_create(&preRunThread, &preRunAttr, &preRunThread, (void *)ps);
+                pthread_create(&preThread, &preRunAttr, &preRunThread, (void *)ps);
     
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
