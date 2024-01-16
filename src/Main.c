@@ -63,7 +63,7 @@ struct DAQ *daq;
 
 struct sched_param preRunParam;
 pthread_t preRunThread;
-memset (preRunThread, 0, sizeof (pthread_t));
+
 pthread_attr_t preRunAttr;
 
 int iter_client;
@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
     logData = calloc(2, sizeof *logData);
     commData = calloc(1, sizeof *commData);
     daq = calloc(6,sizeof *daq);
-    ps = calloc(*1, sizeof *ps);
+    ps = calloc(1, sizeof *ps);
 
     //Butterworth filter params
     controlParams->filter_a_100Hz[0] = 0.0; 
@@ -157,6 +157,7 @@ int main(int argc, char* argv[])
     openClientSocket(&sockfd, &servaddr, &port);
     controlParams->currentState = WAIT_STATE; //State = Set
 
+    memset (preRunThread, 0, sizeof (pthread_t));
     printf("init: %d\n",initThread(&preRunAttr, &preRunParam, 90));
 
     printf("Starting Robot...\n");
