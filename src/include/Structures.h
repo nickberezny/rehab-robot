@@ -22,7 +22,7 @@ struct preRunStates {
 	double dt;
 	double t;
 	int lsb, lsf;
-}
+};
 
 struct tensorFlowVars {
 	TF_Session* Session;

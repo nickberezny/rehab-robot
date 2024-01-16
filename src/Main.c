@@ -80,8 +80,8 @@ bool loggingActivated = true;
 char folder[1000] = "log/";
 int fileIteration = 0;
 
-void GetParameterFloat(char *regex, double *param);
-void GetParameterInt(char *regex, int *param);
+//void GetParameterFloat(char *regex, double *param);
+//void GetParameterInt(char *regex, int *param);
 
 int main(int argc, char* argv[]) 
 {
@@ -582,6 +582,7 @@ void ResetController()
 
 }
 
+/*
 void GetParameterFloat(char *regex, double *param)
 {
     regcomp(&compiled, regex, REG_EXTENDED);
@@ -601,3 +602,4 @@ void GetParameterInt(char *regex, int *param)
         printf("%s %d\n", regex, *param);
     }
 }
+*/
