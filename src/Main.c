@@ -54,10 +54,17 @@ struct States *s_log;
 struct States *s;
 struct States *s_next;
 
+struct preRunStates *ps;
+
 struct ControlParams *controlParams;
 struct LogData *logData;
 struct CommData *commData;
 struct DAQ *daq;
+
+struct sched_param preRunParam;
+pthread_t preRunThread;
+memset (preRunThread, 0, sizeof (pthread_t));
+pthread_attr_t preRunAttr;
 
 int iter_client;
 int iter_log;
@@ -70,41 +77,6 @@ bool quitThreads = false;
 
 bool loggingActivated = true; 
 
-struct regexMatch regex =
-{
-    .Md = "Md([0-9]*.[0-9]*),",
-    .Dd = "Bd([0-9]*.[0-9]*),",
-    .Kd = "Kd([0-9]*.[0-9]*),",
-    .xstart = "x_start([0-9]*.[0-9]*),",
-    .xend = "x_end([0-9]*.[0-9]*),",
-    .x0 = "x0_([0-9]*.[0-9]*),",
-    .dx0 = "dx0_([0-9]*.[0-9]*),",
-    .alpha = "alpha([0-9]*.[0-9]*)",
-    .delta = "delta([0-9]*)",
-    .kv = "kv([0-9]*.[0-9]*)",
-    .kp = "kp([0-9]*.[0-9]*)",
-    .kp = "kp([0-9]*.[0-9]*)",
-    .filename = "filename(*.txt)",
-    .Home = "Home([0-9]*)",
-    .mass = "mass([0-9]*.[0-9]*),",
-    .damp = "damp([0-9]*.[0-9]*),",
-    .controlMode = "controlMode([0-9]),",
-    .trajectoryMode = "trajMode([0-9]),",
-    .Fmax = "Fmax([0-9]*.[0-9]*),",
-    .recordEMG = "recordEMG([0-9])",
-    .phaseTime = "PhaseTime([0-9]*.[0-9]*)",
-    .numPositions = "NumPositions([0-9])",
-    .stochasticStepTime = "StochasticStepTime([0-9]*.[0-9]*)",
-    .randomRate = "Rate([0-9]*.[0-9]*)",
-    .amplitude = "Amplitude([0-9]*.[0-9]*)",
-    .frequency = "Frequency([0-9]*.[0-9]*)",
-    .offset = "Offset([0-9]*.[0-9]*)",
-    .useFriction = "useFriction([0-9]*)",
-} ; //regex matches
-
-regex_t compiled;
-regmatch_t matches[2];
-char matchBuffer[100];
 char folder[1000] = "log/";
 int fileIteration = 0;
 
@@ -126,6 +98,7 @@ int main(int argc, char* argv[])
     logData = calloc(2, sizeof *logData);
     commData = calloc(1, sizeof *commData);
     daq = calloc(6,sizeof *daq);
+    ps = calloc(*1, sizeof *ps);
 
     //Butterworth filter params
     controlParams->filter_a_100Hz[0] = 0.0; 
@@ -183,6 +156,9 @@ int main(int argc, char* argv[])
 
     openClientSocket(&sockfd, &servaddr, &port);
     controlParams->currentState = WAIT_STATE; //State = Set
+
+    printf("init: %d\n",initThread(&preRunAttr, &preRunParam, 90));
+
     printf("Starting Robot...\n");
 
     
@@ -224,6 +200,7 @@ int main(int argc, char* argv[])
              
                 //HomeToBack(d,daq);
                 //controlParams->xend = 0.4;
+                pthread_create(&preRunThread, &preRunAttr, &preRunThread, (void *)ps);
     
                 sleep(2);
                 sprintf(sendData, "UI::HOME");

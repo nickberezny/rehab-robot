@@ -10,6 +10,20 @@
 #include <stdbool.h>
 #include "tensorflow/c/c_api.h"
 
+
+
+struct preRunStates {
+	double kp,kv;
+	double dx,x;
+	double Fext;
+	struct timespec t_start;
+	struct timespec t_end;
+	struct timespec t_first;
+	double dt;
+	double t;
+	int lsb, lsf;
+}
+
 struct tensorFlowVars {
 	TF_Session* Session;
 	TF_Status* Status;
