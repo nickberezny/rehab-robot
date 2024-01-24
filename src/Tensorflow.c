@@ -30,16 +30,15 @@ void runModel(struct tensorFlowVars * tf)
     }
     */
 
-    data[0]=3.0;
-    data[1]=1.5;
-    data[2]=10000.0;
-    data[3]=2.0;
-    data[4]=0.0;
-    data[5]=0.0;
-    data[6]=1.0;
-    data[7]=20000.0;
-    data[8]=1979.0;
-    data[9]=1999.0;
+    data[0]=1.5;
+    data[1]=-0.3;
+    data[2]=-1.7;
+    data[3]=0.34;
+    data[4]=0.17;
+    data[5]=0.03;
+    data[6]=0.02;
+    data[7]=0.3;
+
 
     int ndims = 2;
     int64_t dims[] = {1,tf->InputSize};
