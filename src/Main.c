@@ -163,7 +163,13 @@ int main(int argc, char* argv[])
 
     printf("Starting Robot...\n");
 
-    
+   if(true)
+    {
+        controlParams->tensorflow->NumInputs = 8;
+        controlParams->tensorflow->NumOutputs = 2;
+        initModel(controlParams->tensorflow);
+    }
+
     
     //*************Initialize Tensorflow Neural Net*******************
 
@@ -276,12 +282,7 @@ int main(int argc, char* argv[])
 
 
 
-                if(true)
-                {
-                    controlParams->tensorflow->NumInputs = 8;
-                    controlParams->tensorflow->NumOutputs = 2;
-                    initModel(controlParams->tensorflow);
-                }
+             
                     
                 
                 sleep(2);

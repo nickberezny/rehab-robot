@@ -1,1 +1,1 @@
-void FilterEMG(double emg, double emg_filtered, double * emgVec, int size);
+void FilterEMG(double * emg, double * emg_filtered, double * emgVec, int size);

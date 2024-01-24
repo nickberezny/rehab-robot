@@ -25,17 +25,17 @@
 void FilterEMG(double * emg, double * emg_filtered, double * emgVec, int size)
 {
 
-	emg_filtered = 0;
+	*emg_filtered = 0;
 
 	//rectify 
 	for(int i = 0; i < size-1; i++)
 	{
 		emgVec[i] = emgVec[i+1];
-		emg_filtered = emg_filtered + emgVec[i];
+		*emg_filtered = *emg_filtered + emgVec[i];
 	}
 
-	emgVec[size-1] = fabs(emg);
-	emg_filtered = (emg_filtered + emgVec[size-1])/((double)size);
+	emgVec[size-1] = fabs(*emg);
+	*emg_filtered = (*emg_filtered + emgVec[size-1])/((double)size);
 
 	return;
 }
