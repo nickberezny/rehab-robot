@@ -151,6 +151,7 @@ int main(int argc, char* argv[])
     {
         controlParams->tensorflow->NumInputs = 8;
         controlParams->tensorflow->NumOutputs = 2;
+        printf("Entering TF...\n");
         initModel(controlParams->tensorflow);
     }
 
