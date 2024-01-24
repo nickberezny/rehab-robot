@@ -200,12 +200,12 @@ void * controllerThread (void * d)
             s->emg4 = daq->aValues[9];
         }
 
-        for(int i = 0; i<controlParams->tensorFlowVars->NumInputs; i++)
+        for(int i = 0; i<controlParams->tensorflow->NumInputs; i++)
         {
-            controlParams->tensorFlowVars->inputVals[i] = 0.1;
+            controlParams->tensorflow->inputVals[i] = 0.1;
         }
         
-        runModel(controlParams->tensorFlowVars);
+        runModel(controlParams->tensorflow);
 
        
         s->gonio = (double)daq->aValues[10]*0.002618;
