@@ -21,7 +21,7 @@ void runModel(struct tensorFlowVars * tf)
 {
  
     printf("TF test 0\n");
-    float data[1*tf->NumInputs];
+    float data[1*10];
     
     /*
     for(int i = 0; i < tf->NumInputs; i++)
