@@ -159,10 +159,10 @@ int main(int argc, char* argv[])
     {
         controlParams->tensorflow = tensorflow;
 
-        controlParams->tensorflow->InputSize = 10;
-        controlParams->tensorflow->OutputSize = 1;
+        controlParams->tensorflow->InputSize = 8;
+        controlParams->tensorflow->OutputSize = 2;
 
-        double inputVals[10] = {0.0};
+        double inputVals[8] = {0.0};
         controlParams->tensorflow->inputVals = inputVals;
 
         initModel(controlParams->tensorflow);

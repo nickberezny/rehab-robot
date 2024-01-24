@@ -67,7 +67,7 @@ void initModel(struct tensorFlowVars * tf)
     TF_SessionOptions* SessionOpts = TF_NewSessionOptions();
     TF_Buffer* RunOpts = NULL;
 
-    const char* saved_model_dir = "./src/test_model/";
+    const char* saved_model_dir = "./src/test_model_K/";
     const char* tags = "serve"; // default model serving tag; can change in future
     int ntags = 1;
  
