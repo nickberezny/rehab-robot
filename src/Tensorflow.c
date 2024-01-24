@@ -84,7 +84,7 @@ void initModel(struct tensorFlowVars * tf)
 
     //****** Get input tensor
     //TODO : need to use saved_model_cli to read saved_model arch
-    tf->NumInputs = 10;
+    tf->NumInputs = 1;
     tf->Input = (TF_Output*)malloc(sizeof(TF_Output) * tf->NumInputs);
 
     TF_Output t0 = {TF_GraphOperationByName(Graph, "serving_default_input_1"), 0};

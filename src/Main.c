@@ -159,7 +159,7 @@ int main(int argc, char* argv[])
     {
         controlParams->tensorflow = tensorflow;
 
-        controlParams->tensorflow->NumInputs = 10;
+        controlParams->tensorflow->NumInputs = 1;
         controlParams->tensorflow->NumOutputs = 1;
 
         double inputVals[10] = {0.0};
