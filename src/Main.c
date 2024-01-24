@@ -58,6 +58,7 @@ struct States *s_next;
 struct preRunStates *ps;
 
 struct ControlParams *controlParams;
+struct tensorFlowVars *tensorflow;
 struct LogData *logData;
 struct CommData *commData;
 struct DAQ *daq;
@@ -100,6 +101,7 @@ int main(int argc, char* argv[])
     commData = calloc(1, sizeof *commData);
     daq = calloc(6,sizeof *daq);
     ps = calloc(1, sizeof *ps);
+    tensorflow = calloc(1, sizeof *tensorflow);
 
     //Butterworth filter params
     controlParams->filter_a_100Hz[0] = 0.0; 
@@ -149,6 +151,9 @@ int main(int argc, char* argv[])
 
     if(true)
     {
+
+        controlParams->tensorflow = tensorflow;
+
         printf("Setting TF...\n");
         controlParams->tensorflow->NumInputs = 8;
         controlParams->tensorflow->NumOutputs = 2;
