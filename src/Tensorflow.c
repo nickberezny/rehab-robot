@@ -41,21 +41,20 @@ void runModel(struct tensorFlowVars * tf)
     data[8]=1979.0;
     data[9]=1999.0;
 
-    printf("TF test 1\n");   
-
     int ndims = 2;
     int64_t dims[] = {1,tf->InputSize};
     int ndata = sizeof(float)*1*tf->InputSize ;
 
     TF_Tensor* int_tensor = TF_NewTensor(TF_FLOAT, dims, ndims, data, ndata, &NoOpDeallocator, 0);
     tf->InputValues[0] = int_tensor;
-    printf("TF test 2\n");
+
     //Run the Session
     TF_SessionRun(tf->Session, NULL, tf->Input, tf->InputValues, tf->NumInputs, tf->Output, tf->OutputValues, tf->NumOutputs, NULL, 0,NULL , tf->Status);
-    printf("TF test 3\n");
+
     void* buff = TF_TensorData(tf->OutputValues[0]);
     tf->outputVals = (double*)buff;
-    printf("TF test 4\n");
+
+    printf("Out: %f, %f\n", tf->outputVals[0], tf->outputVals[1]);
 }
 
 void initModel(struct tensorFlowVars * tf)
