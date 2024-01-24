@@ -276,10 +276,10 @@ int main(int argc, char* argv[])
 
 
 
-                if(controlParams->useFriction)
+                if(true)
                 {
-                    controlParams->tensorflow->NumInputs = 3;
-                    controlParams->tensorflow->NumOutputs = 1;
+                    controlParams->tensorflow->NumInputs = 8;
+                    controlParams->tensorflow->NumOutputs = 2;
                     initModel(controlParams->tensorflow);
                 }
                     
