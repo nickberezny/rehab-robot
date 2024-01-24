@@ -44,8 +44,8 @@ void runModel(struct tensorFlowVars * tf)
     printf("TF test 1\n");   
 
     int ndims = 2;
-    int64_t dims[] = {1,tf->NumInputs};
-    int ndata = sizeof(float)*1*tf->NumInputs ;
+    int64_t dims[] = {1,10};
+    int ndata = sizeof(float)*1*10 ;
 
     TF_Tensor* int_tensor = TF_NewTensor(TF_FLOAT, dims, ndims, data, ndata, &NoOpDeallocator, 0);
     tf->InputValues[0] = int_tensor;
