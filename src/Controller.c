@@ -21,6 +21,7 @@
 #include "./include/Daq.h"
 #include "./include/GetModelData.h"
 #include "./include/ControlModes.h"
+#include "./include/Tensorflow.h"
 
 
 void * controllerThread (void * d)
@@ -198,6 +199,13 @@ void * controllerThread (void * d)
             s->emg3 = daq->aValues[8];
             s->emg4 = daq->aValues[9];
         }
+
+        for(int i = 0; i<controlParams->tensorFlowVars->NumInputs; i++)
+        {
+            controlParams->tensorFlowVars->inputVals[i] = 0.1;
+        }
+        
+        runModel(controlParams->tensorFlowVars);
 
        
         s->gonio = (double)daq->aValues[10]*0.002618;

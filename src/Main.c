@@ -149,17 +149,6 @@ int main(int argc, char* argv[])
     int port = 5000;
     int len;
 
-    if(true)
-    {
-
-        controlParams->tensorflow = tensorflow;
-
-        printf("Setting TF...\n");
-        controlParams->tensorflow->NumInputs = 8;
-        controlParams->tensorflow->NumOutputs = 2;
-        printf("Entering TF...\n");
-        initModel(controlParams->tensorflow);
-    }
 
 
     
@@ -290,6 +279,17 @@ int main(int argc, char* argv[])
                 initDaq(daq);
 
 
+                if(true)
+                {
+
+                    controlParams->tensorflow = tensorflow;
+
+                    printf("Setting TF...\n");
+                    controlParams->tensorflow->NumInputs = 8;
+                    controlParams->tensorflow->NumOutputs = 2;
+                    printf("Entering TF...\n");
+                    initModel(controlParams->tensorflow);
+                }
 
              
                     
