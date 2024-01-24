@@ -50,14 +50,21 @@ void initModel(struct tensorFlowVars * tf)
     TF_Graph* Graph = TF_NewGraph();
     tf->Status = TF_NewStatus();
     
+    printf("TF test 0\n");
+
     TF_SessionOptions* SessionOpts = TF_NewSessionOptions();
     TF_Buffer* RunOpts = NULL;
 
     const char* saved_model_dir = "./src/test_model/";
     const char* tags = "serve"; // default model serving tag; can change in future
     int ntags = 1;
+
+    printf("TF test 1\n");
  
     tf->Session = TF_LoadSessionFromSavedModel(SessionOpts, RunOpts, saved_model_dir, &tags, ntags, Graph, NULL, tf->Status);
+
+    printf("TF test 2\n");
+
     if(TF_GetCode(tf->Status) == TF_OK)
     {
         printf("TF_LoadSessionFromSavedModel OK\n");
