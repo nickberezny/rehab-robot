@@ -51,9 +51,9 @@ void runModel(struct tensorFlowVars * tf)
     TF_SessionRun(tf->Session, NULL, tf->Input, tf->InputValues, tf->NumInputs, tf->Output, tf->OutputValues, tf->NumOutputs, NULL, 0,NULL , tf->Status);
 
     void* buff = TF_TensorData(tf->OutputValues[0]);
-    tf->outputVals = (double*)buff;
+    float* offsets = (float*)buff;
+    printf("Result Tensor:%f, %f\n", offsets[0], offsets[1]);
 
-    printf("Out: %f, %f\n", tf->outputVals[0], tf->outputVals[1]);
 }
 
 void initModel(struct tensorFlowVars * tf)
