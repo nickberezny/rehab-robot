@@ -297,7 +297,7 @@ int main(int argc, char* argv[])
                 daq->numChannels = 11;
                 initDaq(daq);
 
-
+                /*
                 if(true)
                 {
                     controlParams->tensorflow = tensorflow;
@@ -311,7 +311,7 @@ int main(int argc, char* argv[])
                     initModel(controlParams->tensorflow);
                 }
 
-             
+             */
                     
                 
                 sleep(2);

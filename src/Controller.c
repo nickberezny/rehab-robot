@@ -200,10 +200,6 @@ void * controllerThread (void * d)
             s->emg4 = daq->aValues[9];
         }
 
-        for(int i = 0; i<controlParams->tensorflow->NumInputs; i++)
-        {
-            controlParams->tensorflow->inputVals[i] = 0.1;
-        }
         
         runModel(controlParams->tensorflow);
 
