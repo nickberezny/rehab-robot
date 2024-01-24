@@ -149,6 +149,7 @@ int main(int argc, char* argv[])
 
     if(true)
     {
+        printf("Setting TF...\n");
         controlParams->tensorflow->NumInputs = 8;
         controlParams->tensorflow->NumOutputs = 2;
         printf("Entering TF...\n");
