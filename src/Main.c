@@ -162,17 +162,12 @@ int main(int argc, char* argv[])
         controlParams->tensorflow->NumInputs = 8;
         controlParams->tensorflow->NumOutputs = 2;
 
-        double inputVals[8] = {0.0};
+      
         controlParams->tensorflow->inputVals = inputVals;
 
         initModel(controlParams->tensorflow);
     }
 
-
-    for(int i = 0; i<controlParams->tensorflow->NumInputs; i++)
-    {
-        controlParams->tensorflow->inputVals[i] = 0.1;
-    }
     
     runModel(controlParams->tensorflow);
     
