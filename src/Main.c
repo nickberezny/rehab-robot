@@ -147,6 +147,14 @@ int main(int argc, char* argv[])
     int port = 5000;
     int len;
 
+    if(true)
+    {
+        controlParams->tensorflow->NumInputs = 8;
+        controlParams->tensorflow->NumOutputs = 2;
+        initModel(controlParams->tensorflow);
+    }
+
+
     
     time_t rawtime;
     struct tm * timeinfo;
@@ -163,12 +171,6 @@ int main(int argc, char* argv[])
 
     printf("Starting Robot...\n");
 
-   if(true)
-    {
-        controlParams->tensorflow->NumInputs = 8;
-        controlParams->tensorflow->NumOutputs = 2;
-        initModel(controlParams->tensorflow);
-    }
 
     
     //*************Initialize Tensorflow Neural Net*******************
