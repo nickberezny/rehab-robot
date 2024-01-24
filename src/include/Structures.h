@@ -33,6 +33,8 @@ struct tensorFlowVars {
 	TF_Tensor** OutputValues;
 	int NumInputs;
 	int NumOutputs;
+	int InputSize;
+	int OutputSize;
 	double * inputVals;
 	double * outputVals;
 };

@@ -21,7 +21,7 @@ void runModel(struct tensorFlowVars * tf)
 {
  
     printf("TF test 0\n");
-    float data[1*10];
+    float data[1*tf->InputSize];
     
     /*
     for(int i = 0; i < tf->NumInputs; i++)
@@ -44,8 +44,8 @@ void runModel(struct tensorFlowVars * tf)
     printf("TF test 1\n");   
 
     int ndims = 2;
-    int64_t dims[] = {1,10};
-    int ndata = sizeof(float)*1*10 ;
+    int64_t dims[] = {1,tf->InputSize};
+    int ndata = sizeof(float)*1*tf->InputSize ;
 
     TF_Tensor* int_tensor = TF_NewTensor(TF_FLOAT, dims, ndims, data, ndata, &NoOpDeallocator, 0);
     tf->InputValues[0] = int_tensor;
@@ -112,14 +112,14 @@ void initModel(struct tensorFlowVars * tf)
     tf->OutputValues = (TF_Tensor**)malloc(sizeof(TF_Tensor*)*tf->NumOutputs);
 
     int ndims = 2;
-    int64_t dims[] = {1,10};
-    float data[1*10];
+    int64_t dims[] = {1,tf->InputSize};
+    float data[1*tf->InputSize];
 
     for(int i = 0; i < tf->NumInputs; i++)
     {
         data[i] = 0.0;
     }
-    int ndata = sizeof(float)*1*10 ;// This is tricky, it number of bytes not number of element
+    int ndata = sizeof(float)*1*tf->InputSize ;// This is tricky, it number of bytes not number of element
 
     TF_Tensor* int_tensor = TF_NewTensor(TF_FLOAT, dims, ndims, data, ndata, &NoOpDeallocator, 0);
     if (int_tensor != NULL)
