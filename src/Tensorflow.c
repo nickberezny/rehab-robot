@@ -20,7 +20,6 @@ void NoOpDeallocator(void* data, size_t a, void* b) {return;}
 void runModel(struct tensorFlowVars * tf)
 {
  
-    printf("TF test 0\n");
     float data[1*tf->InputSize];
     
     /*
@@ -52,7 +51,7 @@ void runModel(struct tensorFlowVars * tf)
 
     void* buff = TF_TensorData(tf->OutputValues[0]);
     float* offsets = (float*)buff;
-    printf("Result Tensor:%f, %f\n", offsets[0], offsets[1]);
+
 
 }
 

@@ -184,8 +184,6 @@ void ReadTrajectoryFile(char * fullpath, struct ControlParams * p)
         ret = strtod(tok, &eptr);
         p->x0_duration[j] = ret;
 
-        printf("traj: %f,%f\n",p->t[j],p->x[j]);
-
         j = j + 1;
 
     }
@@ -222,8 +220,6 @@ void ReadTrajectoryDisturbanceFile(char * fullpath, struct ControlParams * p)
         tok = strtok(NULL, ",");
         ret = strtod(tok, &eptr);
         p->xdist[j] = ret;
-
-        printf("traj: %f,%f\n",p->t[j],p->x[j]);
 
         j = j + 1;
 
