@@ -20,14 +20,14 @@ void NoOpDeallocator(void* data, size_t a, void* b) {return;}
 void runModel(struct tensorFlowVars * tf)
 {
  
-
+    printf("TF test 0\n");
     float data[1*tf->NumInputs];
     
     for(int i = 0; i < tf->NumInputs; i++)
     {
         data[i] = tf->inputVals[i];
     }
-       
+    printf("TF test 1\n");   
 
     int ndims = 2;
     int64_t dims[] = {1,tf->NumInputs};
@@ -35,7 +35,7 @@ void runModel(struct tensorFlowVars * tf)
 
     TF_Tensor* int_tensor = TF_NewTensor(TF_FLOAT, dims, ndims, data, ndata, &NoOpDeallocator, 0);
     tf->InputValues[0] = int_tensor;
-
+    printf("TF test 2\n");
     //Run the Session
     TF_SessionRun(tf->Session, NULL, tf->Input, tf->InputValues, tf->NumInputs, tf->Output, tf->OutputValues, tf->NumOutputs, NULL, 0,NULL , tf->Status);
 

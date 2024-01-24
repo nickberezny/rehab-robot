@@ -154,6 +154,27 @@ int main(int argc, char* argv[])
     struct tm * timeinfo;
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
+
+    if(true)
+    {
+        controlParams->tensorflow = tensorflow;
+
+        controlParams->tensorflow->NumInputs = 8;
+        controlParams->tensorflow->NumOutputs = 2;
+
+        double inputVals[8] = {0.0};
+        controlParams->tensorflow->inputVals = inputVals;
+
+        initModel(controlParams->tensorflow);
+    }
+
+
+    for(int i = 0; i<controlParams->tensorflow->NumInputs; i++)
+    {
+        controlParams->tensorflow->inputVals[i] = 0.1;
+    }
+    
+    runModel(controlParams->tensorflow);
     
     initFolder(timeinfo,folder);
 
@@ -279,13 +300,14 @@ int main(int argc, char* argv[])
 
                 if(true)
                 {
-
                     controlParams->tensorflow = tensorflow;
 
-                    printf("Setting TF...\n");
                     controlParams->tensorflow->NumInputs = 8;
                     controlParams->tensorflow->NumOutputs = 2;
-                    printf("Entering TF...\n");
+
+                    double inputVals[8] = {0.0};
+                    controlParams->tensorflow->inputVals = inputVals;
+
                     initModel(controlParams->tensorflow);
                 }
 
