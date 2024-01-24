@@ -150,8 +150,6 @@ int main(int argc, char* argv[])
     int len;
 
 
-
-    
     time_t rawtime;
     struct tm * timeinfo;
     time ( &rawtime );
