@@ -23,10 +23,24 @@ void runModel(struct tensorFlowVars * tf)
     printf("TF test 0\n");
     float data[1*tf->NumInputs];
     
+    /*
     for(int i = 0; i < tf->NumInputs; i++)
     {
         data[i] = tf->inputVals[i];
     }
+    */
+
+    data[0]=3.0;
+    data[1]=1.5;
+    data[2]=10000.0;
+    data[3]=2.0;
+    data[4]=0.0;
+    data[5]=0.0;
+    data[6]=1.0;
+    data[7]=20000.0;
+    data[8]=1979.0;
+    data[9]=1999.0;
+
     printf("TF test 1\n");   
 
     int ndims = 2;
