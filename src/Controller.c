@@ -48,7 +48,7 @@ void * controllerThread (void * d)
     extern struct DAQ *daq;
     extern quitThreads;
     //what?
-    printf("Check!\n");
+    
     sleep(1);
 
     clock_gettime(CLOCK_MONOTONIC, &controlParams->t_first);  
@@ -64,7 +64,7 @@ void * controllerThread (void * d)
     s_next->dx = 0.0;
     s_next->xv = 0.0;
     s_next->xv_prev = 0.0;
-    printf("Check!\n");
+    
     while(!quitThreads)
     {
         
@@ -80,7 +80,7 @@ void * controllerThread (void * d)
         clock_gettime(CLOCK_MONOTONIC, &s->t_start);  
 
         //***************************************************************************************************************
-        printf("Check!\n");
+        
         getElapsedTime(&controlParams->t_first, &s->t_start, &s->t);
         if(controlParams->t_last <= s->t)
         {
@@ -92,7 +92,7 @@ void * controllerThread (void * d)
         Interpolation((controlParams->t), (controlParams->x), &(s->t), &(controlParams->x0), &(controlParams->x0_index), controlParams->trajSize);
         Interpolation((controlParams->tdist), (controlParams->xdist), &(s->t), &(controlParams->x0dist), &(controlParams->x0_index), controlParams->trajSize);
 
-        printf("Check!\n");
+        
         s->x0 = controlParams->x0 + controlParams->x0dist;
         s->x0_to_send = controlParams->x0;
         s->x0_duration = controlParams->x0_duration[controlParams->x0_index];
@@ -116,7 +116,7 @@ void * controllerThread (void * d)
         }
 
         //printf("t:%f, x:%f, x0d: %f\n",s->t,s->x0,s->x0_duration);
-        printf("Check!\n");
+        
         //ctl*****************
         switch(controlParams->controlMode)
         {
@@ -177,7 +177,7 @@ void * controllerThread (void * d)
         }
 
         //ctl***************
-        printf("Check!\n");
+        
         s->cmd += 2.5; 
         //printf("cmd : %f\n",s->cmd);
 
@@ -188,23 +188,20 @@ void * controllerThread (void * d)
         if(s->lsf & s->cmd > 2.5) s->cmd = 2.5;
 
         daq->aValues[0] = s->cmd;
-        printf("Check!\n");
+        
         //ReadWriteDAQ(s_next, daq);
         s_next->Fext -= controlParams->Fext_offset;
         s->Fraw = s_next->Fext;
-        printf("Check!\n");
-        /* if(controlParams->recordEMG)
+        
+         if(controlParams->recordEMG)
         {
             s->emg1 = daq->aValues[6];
             s->emg2 = daq->aValues[7];
             s->emg3 = daq->aValues[8];
             s->emg4 = daq->aValues[9];
         }
-    */
-        printf("Check!\n");
-        runModel(controlParams->tensorflow);
-
-       
+    
+        
         s->gonio = (double)daq->aValues[10]*0.002618;
         
         s_next->x = s->x + s_next->dx*(STEP_SIZE_MS/1000.0);
@@ -213,8 +210,8 @@ void * controllerThread (void * d)
         //FIR_FILTER(FextArray, &s_next->Fext, &FextOrder);
         //FIR_FILTER(VelArray, &s_next->dx, &VelOrder);
 
-        //Butterworth10(&(s_next->dx),&(s->dx),controlParams->dx_filt_x,controlParams->dx_filt_y, controlParams->filter_a_100Hz, controlParams->filter_b_100Hz);
-        //Butterworth10(&(s_next->Fext),&(s->Fext),controlParams->F_filt_x,controlParams->F_filt_y, controlParams->filter_a_10Hz, controlParams->filter_b_10Hz);
+        Butterworth10(&(s_next->dx),&(s->dx),controlParams->dx_filt_x,controlParams->dx_filt_y, controlParams->filter_a_100Hz, controlParams->filter_b_100Hz);
+        Butterworth10(&(s_next->Fext),&(s->Fext),controlParams->F_filt_x,controlParams->F_filt_y, controlParams->filter_a_10Hz, controlParams->filter_b_10Hz);
 
         s_next->Fext = s->Fext;
         s_next->dx = s->dx;
@@ -222,7 +219,7 @@ void * controllerThread (void * d)
 
         s_next->xv_prev = s->xv;
         s_next->dxv_prev = s->dxv;
-        printf("Check!\n");
+
         //***************************************************************************************************************
 
         if(controlParams->firstRun) printf("mutex next unlock %d\n",pthread_mutex_unlock(&s_next->lock));
