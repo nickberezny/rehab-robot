@@ -188,11 +188,11 @@ void * controllerThread (void * d)
         if(s->lsf & s->cmd > 2.5) s->cmd = 2.5;
 
         daq->aValues[0] = s->cmd;
-
+        printf("Check!\n");
         //ReadWriteDAQ(s_next, daq);
         s_next->Fext -= controlParams->Fext_offset;
         s->Fraw = s_next->Fext;
-
+        printf("Check!\n");
         if(controlParams->recordEMG)
         {
             s->emg1 = daq->aValues[6];
