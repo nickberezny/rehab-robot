@@ -189,7 +189,7 @@ void * controllerThread (void * d)
 
         daq->aValues[0] = s->cmd;
 
-        ReadWriteDAQ(s_next, daq);
+        //ReadWriteDAQ(s_next, daq);
         s_next->Fext -= controlParams->Fext_offset;
         s->Fraw = s_next->Fext;
 
