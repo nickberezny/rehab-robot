@@ -48,7 +48,7 @@ void * controllerThread (void * d)
     extern struct DAQ *daq;
     extern quitThreads;
     //what?
-
+    printf("Check!\n");
     sleep(1);
 
     clock_gettime(CLOCK_MONOTONIC, &controlParams->t_first);  
@@ -64,7 +64,7 @@ void * controllerThread (void * d)
     s_next->dx = 0.0;
     s_next->xv = 0.0;
     s_next->xv_prev = 0.0;
-
+    printf("Check!\n");
     while(!quitThreads)
     {
         
@@ -80,7 +80,7 @@ void * controllerThread (void * d)
         clock_gettime(CLOCK_MONOTONIC, &s->t_start);  
 
         //***************************************************************************************************************
-        
+        printf("Check!\n");
         getElapsedTime(&controlParams->t_first, &s->t_start, &s->t);
         if(controlParams->t_last <= s->t)
         {
@@ -92,6 +92,7 @@ void * controllerThread (void * d)
         Interpolation((controlParams->t), (controlParams->x), &(s->t), &(controlParams->x0), &(controlParams->x0_index), controlParams->trajSize);
         Interpolation((controlParams->tdist), (controlParams->xdist), &(s->t), &(controlParams->x0dist), &(controlParams->x0_index), controlParams->trajSize);
 
+        printf("Check!\n");
         s->x0 = controlParams->x0 + controlParams->x0dist;
         s->x0_to_send = controlParams->x0;
         s->x0_duration = controlParams->x0_duration[controlParams->x0_index];
@@ -115,7 +116,7 @@ void * controllerThread (void * d)
         }
 
         //printf("t:%f, x:%f, x0d: %f\n",s->t,s->x0,s->x0_duration);
-
+        printf("Check!\n");
         //ctl*****************
         switch(controlParams->controlMode)
         {
@@ -176,7 +177,7 @@ void * controllerThread (void * d)
         }
 
         //ctl***************
-
+        printf("Check!\n");
         s->cmd += 2.5; 
         //printf("cmd : %f\n",s->cmd);
 
@@ -200,7 +201,7 @@ void * controllerThread (void * d)
             s->emg4 = daq->aValues[9];
         }
 
-        
+        printf("Check!\n");
         runModel(controlParams->tensorflow);
 
        
@@ -221,7 +222,7 @@ void * controllerThread (void * d)
 
         s_next->xv_prev = s->xv;
         s_next->dxv_prev = s->dxv;
-
+        printf("Check!\n");
         //***************************************************************************************************************
 
         if(controlParams->firstRun) printf("mutex next unlock %d\n",pthread_mutex_unlock(&s_next->lock));
