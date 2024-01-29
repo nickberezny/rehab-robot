@@ -155,7 +155,7 @@ int main(int argc, char* argv[])
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
 
-    if(true)
+    if(false)
     {
         controlParams->tensorflow = tensorflow;
 
@@ -166,15 +166,17 @@ int main(int argc, char* argv[])
         controlParams->tensorflow->inputVals = inputVals;
 
         initModel(controlParams->tensorflow);
+
+        for(int i = 0; i<controlParams->tensorflow->NumInputs; i++)
+        {
+            //controlParams->tensorflow->inputVals[i] = 0.1;
+        }
+        
+        runModel(controlParams->tensorflow);
     }
 
 
-    for(int i = 0; i<controlParams->tensorflow->NumInputs; i++)
-    {
-        //controlParams->tensorflow->inputVals[i] = 0.1;
-    }
-    
-    runModel(controlParams->tensorflow);
+   
     
     initFolder(timeinfo,folder);
 
