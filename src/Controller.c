@@ -213,8 +213,8 @@ void * controllerThread (void * d)
         //FIR_FILTER(FextArray, &s_next->Fext, &FextOrder);
         //FIR_FILTER(VelArray, &s_next->dx, &VelOrder);
 
-        Butterworth10(&(s_next->dx),&(s->dx),controlParams->dx_filt_x,controlParams->dx_filt_y, controlParams->filter_a_100Hz, controlParams->filter_b_100Hz);
-        Butterworth10(&(s_next->Fext),&(s->Fext),controlParams->F_filt_x,controlParams->F_filt_y, controlParams->filter_a_10Hz, controlParams->filter_b_10Hz);
+        //Butterworth10(&(s_next->dx),&(s->dx),controlParams->dx_filt_x,controlParams->dx_filt_y, controlParams->filter_a_100Hz, controlParams->filter_b_100Hz);
+        //Butterworth10(&(s_next->Fext),&(s->Fext),controlParams->F_filt_x,controlParams->F_filt_y, controlParams->filter_a_10Hz, controlParams->filter_b_10Hz);
 
         s_next->Fext = s->Fext;
         s_next->dx = s->dx;
