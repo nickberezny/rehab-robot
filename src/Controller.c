@@ -193,14 +193,14 @@ void * controllerThread (void * d)
         s_next->Fext -= controlParams->Fext_offset;
         s->Fraw = s_next->Fext;
         printf("Check!\n");
-        if(controlParams->recordEMG)
+        /* if(controlParams->recordEMG)
         {
             s->emg1 = daq->aValues[6];
             s->emg2 = daq->aValues[7];
             s->emg3 = daq->aValues[8];
             s->emg4 = daq->aValues[9];
         }
-
+    */
         printf("Check!\n");
         runModel(controlParams->tensorflow);
 
