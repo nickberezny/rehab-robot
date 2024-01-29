@@ -594,7 +594,7 @@ void RunController(struct States *data, pthread_t *thread, pthread_attr_t *attr,
 
     printf("thread: %d\n",pthread_create(&thread[0], &attr[0], controllerThread, (void *)data));
     if(loggingActivated) printf("thread: %d\n",pthread_create(&thread[1], &attr[1], logThread, (void *)data));
-    printf("thread: %d\n",pthread_create(&thread[2], &attr[2], clientThread, (void *)data));
+   // printf("thread: %d\n",pthread_create(&thread[2], &attr[2], clientThread, (void *)data));
     //pthread_join(thread[0], NULL);
     //pthread_join(thread[1], NULL);
 
