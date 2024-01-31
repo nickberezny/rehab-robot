@@ -295,7 +295,7 @@ int main(int argc, char* argv[])
                 printf("Gains: %f, %f\n", controlParams->kv,controlParams->kp);
 
                 //*************Initialize Daq*******************
-
+                controlParams->recordEMG = true;
                 daq->numChannels = 11;
                 initDaq(daq);
 
