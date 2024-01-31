@@ -112,7 +112,7 @@ void * controllerThread (void * d)
             AverageVector(controlParams->F_for_Kest, &(controlParams->Kest), 100);
             controlParams->Kest = controlParams->Kest/(s->x - controlParams->X_init_for_Kest + 0.000001);
             controlParams->F_index = 0;
-            printf("Kest: %f\n", controlParams->Kest);
+            //printf("Kest: %f\n", controlParams->Kest);
         }
 
         //printf("t:%f, x:%f, x0d: %f\n",s->t,s->x0,s->x0_duration);
