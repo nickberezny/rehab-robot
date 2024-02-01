@@ -274,7 +274,7 @@ void ReadControlFile(char * fullpath, struct ControlParams * p)
 
     }
 
-    printf("Md, Bd, Kd, kv, delta: %f, %f, %f, %f, %f\n", p->Md, p->Dd, p->Kd, p->kv, p->delta);
+    printf("Md, Bd, Kd, kv, delta, Type: %f, %f, %f, %f, %f\n", p->Md, p->Dd, p->Kd, p->kv, p->delta, p->controlMode);
 
 }
 

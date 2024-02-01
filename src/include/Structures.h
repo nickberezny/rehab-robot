@@ -70,7 +70,7 @@ struct ControlParams {
 	int recordEMG;
 	int currentState; 
 	int cont_iteration;
-	int controlMode; //0 = PD, 1 = Adm, 2 = Imp, 3 = UIC, 4 = Stoch. Force
+	double controlMode; //0 = PD, 1 = Adm, 2 = Imp, 3 = UIC, 4 = Stoch. Force
 
 	int useFriction;
 	struct tensorFlowVars * tensorflow;
