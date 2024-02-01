@@ -225,7 +225,7 @@ int main(int argc, char* argv[])
                 
                 sendMessage(&sockfd, "UI::STARTTASK::");
              
-                //HomeToBack(d,daq);
+                HomeToBack(d,daq);
                 //controlParams->xend = 0.4;
                 //pthread_create(&preThread, &preRunAttr, &preRunThread, (void *)ps);
     
