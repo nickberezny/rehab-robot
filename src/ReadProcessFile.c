@@ -230,9 +230,9 @@ void ReadTrajectoryDisturbanceFile(char * fullpath, struct ControlParams * p)
 void ReadControlFile(char * fullpath, struct ControlParams * p)
 {
 
-    int n = 7;
-    const char paramNames[7][10] = {"Md","Bd","Kd","kp","kv","alpha","delta","Type"};
-    double * paramVals[7] = {&(p->Md),&(p->Dd),&(p->Kd),&(p->kp),&(p->kv),&(p->alpha),&(p->delta),&(p->controlMode)};
+    int n = 8;
+    const char paramNames[8][10] = {"Md","Bd","Kd","kp","kv","alpha","delta","Type"};
+    double * paramVals[8] = {&(p->Md),&(p->Dd),&(p->Kd),&(p->kp),&(p->kv),&(p->alpha),&(p->delta),&(p->controlMode)};
     
     FILE* stream = fopen(fullpath,"r");
     char line[1024];
