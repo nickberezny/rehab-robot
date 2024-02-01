@@ -293,6 +293,7 @@ int main(int argc, char* argv[])
                 }
 
                 printf("Gains: %f, %f\n", controlParams->kv,controlParams->kp);
+                printf("Mode: %d\n",controlParams->controlMode);
 
                 //*************Initialize Daq*******************
                 controlParams->recordEMG = true;
