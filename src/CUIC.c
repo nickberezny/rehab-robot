@@ -45,7 +45,6 @@ void BasicPD(struct States * s, struct ControlParams * p)
 {
 
     s->cmd = (p->kp*(s->x0-s->x) - p->kv*s->dx);
-    printf("PD: kp %f, kv %f, cmd %f\n",p->kp, p->kv, s->cmd);
 }
 
 void BasicPDxv(struct States * s, struct ControlParams * p)

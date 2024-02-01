@@ -179,13 +179,15 @@ void * controllerThread (void * d)
         //ctl***************
         
         s->cmd += 2.5; 
-        printf("cmd : %f\n",s->cmd);
+        //printf("cmd : %f\n",s->cmd);
 
         if(s->cmd > 4) s->cmd = 4;
         if(s->cmd < 1) s->cmd = 1;
 
         if(s->lsb & s->cmd < 2.5) s->cmd = 2.5;
         if(s->lsf & s->cmd > 2.5) s->cmd = 2.5;
+
+        if(quitThreads) s->cmd = 2.5;
 
         daq->aValues[0] = s->cmd;
         
