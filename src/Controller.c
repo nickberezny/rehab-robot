@@ -118,7 +118,7 @@ void * controllerThread (void * d)
         //printf("t:%f, x:%f, x0d: %f\n",s->t,s->x0,s->x0_duration);
         
         //ctl*****************
-        switch(controlParams->controlMode)
+        switch((int)controlParams->controlMode)
         {
             case PD_MODE:
                 //Position control to x0
