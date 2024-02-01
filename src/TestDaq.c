@@ -44,6 +44,8 @@ int main(int aFextrgc, char* argv[])
 		//timeStep(struct timespec * ts, struct timespec * tf, int * dt);
 		ReadWriteDAQ(s, daq);
 		s->x += s->dx*0.001;
+		printf("Pos: %.5f\n", s->x);
+		printf("Force: %.2f\n", s->Fext);
 		//printf("%.2f,%.4f,%.2f,%d,%d\n",s->dt,s->Fext,s->x,s->lsf,s->lsb);
 		//printf("Dir: %.2f, %.6f\n",(double)daq->aValues[4],(double)daq->aValues[5]);
 		s->emg1 = (double)daq->aValues[6];
