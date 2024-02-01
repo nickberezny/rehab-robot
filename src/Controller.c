@@ -179,7 +179,7 @@ void * controllerThread (void * d)
         //ctl***************
         
         s->cmd += 2.5; 
-        //printf("cmd : %f\n",s->cmd);
+        printf("cmd : %f\n",s->cmd);
 
         if(s->cmd > 4) s->cmd = 4;
         if(s->cmd < 1) s->cmd = 1;
