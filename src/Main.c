@@ -433,7 +433,7 @@ void WaitForParamMsg(int *fd)
 
             ReadTrajectoryDisturbanceFile(tempPath, controlParams);
 
-            break;
+            //break;
             
         }
 
