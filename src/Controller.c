@@ -173,6 +173,11 @@ void * controllerThread (void * d)
                 //run imp for delta
                 //run adm for delta (reset)
                 break;
+            case FORCE_NORM_MODE:
+                s->x0
+                s->x0_to_send = 0.5*s->xend;
+                AdmittanceMode(s, controlParams);
+                
             
         }
 

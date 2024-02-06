@@ -28,8 +28,8 @@
 #define ADM_MODE 3
 #define UIC_MODE 4
 #define UIAC_MODE 5
-#define STOCHASTIC_MODE 6
-#define STOCHASTIC_TRAJ_MODE 7
+#define FORCE_NORM_MODE 6
+
 
 #define STATIC_MODE 0
 #define TRAJECTORY_MODE 1
