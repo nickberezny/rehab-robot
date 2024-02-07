@@ -103,33 +103,6 @@ int main(int argc, char* argv[])
     ps = calloc(1, sizeof *ps);
     tensorflow = calloc(1, sizeof *tensorflow);
 
-    //Butterworth filter params
-    controlParams->filter_a_100Hz[0] = 0.0; 
-    controlParams->filter_a_100Hz[1] = -1.76004188;
-    controlParams->filter_a_100Hz[2] = 1.182893262;
-    controlParams->filter_a_100Hz[3] = -0.27805991;
-
-    controlParams->filter_b_100Hz[0] = 0.018098933;
-    controlParams->filter_b_100Hz[1] = 0.054296799;
-    controlParams->filter_b_100Hz[2] = 0.054296799;
-    controlParams->filter_b_100Hz[3] = 0.018098933;
-
-    controlParams->filter_a_10Hz[0] = 0.0; 
-    controlParams->filter_a_10Hz[1] = -2.8743569;
-    controlParams->filter_a_10Hz[2] = 2.7564832;
-    controlParams->filter_a_10Hz[3] = -0.8818931;
-
-    controlParams->filter_b_10Hz[0] = 0.000029146;
-    controlParams->filter_b_10Hz[1] = 0.000087439;
-    controlParams->filter_b_10Hz[2] = 0.000087439;
-    controlParams->filter_b_10Hz[3] = 0.000029146;
-    for(int i = 0; i < FILTER_ORDER+1; i++)
-    {
-        controlParams->dx_filt_x[i] = 0.0;
-        controlParams->dx_filt_y[i] = 0.0;
-        controlParams->F_filt_x[i] = 0.0;
-        controlParams->F_filt_y[i] = 0.0;
-    }
 
 
     pthread_t thread[NUMBER_OF_THREADS];
@@ -291,6 +264,36 @@ int main(int argc, char* argv[])
                     controlParams->kv = controlParams->alpha*controlParams->kv + (1.0-controlParams->alpha)*(controlParams->Dd/controlParams->Md);
                     controlParams->kp = controlParams->alpha*controlParams->kp + (1.0-controlParams->alpha)*(controlParams->Kd/controlParams->Md);
                 }
+
+                //Butterworth filter params
+                controlParams->filter_a_100Hz[0] = 0.0; 
+                controlParams->filter_a_100Hz[1] = -1.76004188;
+                controlParams->filter_a_100Hz[2] = 1.182893262;
+                controlParams->filter_a_100Hz[3] = -0.27805991;
+
+                controlParams->filter_b_100Hz[0] = 0.018098933;
+                controlParams->filter_b_100Hz[1] = 0.054296799;
+                controlParams->filter_b_100Hz[2] = 0.054296799;
+                controlParams->filter_b_100Hz[3] = 0.018098933;
+
+                controlParams->filter_a_10Hz[0] = 0.0; 
+                controlParams->filter_a_10Hz[1] = -2.8743569;
+                controlParams->filter_a_10Hz[2] = 2.7564832;
+                controlParams->filter_a_10Hz[3] = -0.8818931;
+
+                controlParams->filter_b_10Hz[0] = 0.000029146;
+                controlParams->filter_b_10Hz[1] = 0.000087439;
+                controlParams->filter_b_10Hz[2] = 0.000087439;
+                controlParams->filter_b_10Hz[3] = 0.000029146;
+                
+                for(int i = 0; i < FILTER_ORDER+1; i++)
+                {
+                    controlParams->dx_filt_x[i] = 0.0;
+                    controlParams->dx_filt_y[i] = 0.0;
+                    controlParams->F_filt_x[i] = 0.0;
+                    controlParams->F_filt_y[i] = 0.0;
+                }
+
 
                 printf("Gains: %f, %f\n", controlParams->kv,controlParams->kp);
                 printf("Mode: %f\n",controlParams->controlMode);
