@@ -41,6 +41,11 @@ int main()
 
 void SPI(int handle)
 {
+
+	const char *hexstring = "0xabcdef0";
+	int number = (int)strtol(hexstring, NULL, 0);
+	printf("int conversion: %d\n", number);
+
 	int iter, errAdress, err;
 	const int numBytes = 1;
 	char dataRead[1] = {0};
