@@ -21,6 +21,7 @@
  * short MISO to VS or leave it unconnected, you will read back 255s.
 **/
 
+#include <string.h>
 #include <LabJackM.h>
 
 void SPI(int handle);
