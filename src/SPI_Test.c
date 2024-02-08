@@ -42,10 +42,9 @@ int main()
 void SPI(int handle)
 {
 	int iter, errAdress, err;
-	const int numBytes = 4;
-	const char dataWrite[4] = {0x12, 0x34, 0x56, 0x78};
-	char dataRead[4] = {0};
-
+	const int numBytes = 1;
+	char dataRead[1] = {0};
+	char dataWrite[1] = {0x00};
 
 	// Setting CS, CLK, MISO, and MOSI lines for the T7 and other devices.
 	LJM_eWriteName(handle, "SPI_CS_DIONUM", 1);  // CS is FIO1
@@ -80,8 +79,20 @@ void SPI(int handle)
 	LJM_eWriteName(handle, "SPI_NUM_BYTES", numBytes);
 
 	// Write the bytes
+	char dataWrite[1] = {0x88};
 	LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
 	LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
+	char dataWrite[1] = {0x01};
+	LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
+	LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
+	char dataWrite[1] = {0x90};
+	LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
+	LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
+	char dataWrite[1] = {0x00};
+	LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
+	LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
+
+
 
 	// Display the bytes written
 	printf("\n");
