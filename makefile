@@ -56,6 +56,9 @@ docs:
 daq: 
 	sudo gcc $(PATHS)TestDaq.c $(PATHS)Daq.c $(PATHS)TimeUtilities.c -o testDaq $(LIB)
 
+spi:
+	sudo gcc $(PATHS)SPI_Test.c -o spiTest $(LIB)
+
 test: $(BUILD_PATHS) $(RESULTS)
 	@echo "-----------------------\nIGNORES:\n-----------------------"
 	@echo "$(IGNORE)"

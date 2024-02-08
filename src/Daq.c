@@ -141,3 +141,8 @@ bool closeAllDaqs()
 	if(err == 0) return true;
 	else return false;
 }
+
+void readSPI()
+{
+    
+}
