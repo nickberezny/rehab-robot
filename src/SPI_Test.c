@@ -120,7 +120,7 @@ void SPI(int handle)
 		LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
 		LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
 		err = LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
-		printf("0x%02x\n", dataRead);
+		printf("%d\n", dataRead<<24);
 
 		dataWrite[0] = 0x01;
 		LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
