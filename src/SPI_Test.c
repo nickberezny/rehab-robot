@@ -82,7 +82,7 @@ void SPI(int handle)
 	dataWrite[0] = 0x88;
 	LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
 	LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
-	dataWrite[0] = 0x01;
+	dataWrite[0] = 0x00;
 	LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
 	LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
 	dataWrite[0] = 0x90;
