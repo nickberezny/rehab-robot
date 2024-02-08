@@ -41,7 +41,7 @@ int main()
 
 void SPI(int handle)
 {
-	int iter, errAdress;
+	int iter, errAdress, err;
 	const int numBytes = 4;
 	const char dataWrite[4] = {0x12, 0x34, 0x56, 0x78};
 	char dataRead[4] = {0};
@@ -90,7 +90,7 @@ void SPI(int handle)
 	}
 
 	// Read the bytes
-	err = LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errorAddress);
+	err = LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
 	
 	// Display the bytes read
 	printf("\n");
