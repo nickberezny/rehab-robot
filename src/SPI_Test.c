@@ -80,7 +80,7 @@ void SPI(int handle)
 	LJM_eWriteName(handle, "SPI_NUM_BYTES", numBytes);
 
 	// Write the bytes
-	LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite);
+	LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
 	LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
 
 	// Display the bytes written
