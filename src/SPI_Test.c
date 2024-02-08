@@ -110,7 +110,7 @@ void SPI(int handle)
 	}
 
 
-	while(true)
+	while(1)
 	{
 		dataWrite[0] = 0x60;
 		LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
