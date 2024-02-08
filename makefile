@@ -45,6 +45,7 @@ IGNORE = `grep -s IGNORE $(PATHR)*.txt`
 
 FILES = $(wildcard $(PATHS)*.c)
 FILES := $(filter-out %TestDaq.c, $(FILES))
+FILES := $(filter-out %SPI_Test.c, $(FILES))
 
 build:
 	sudo gcc $(FILES)  -o robotController $(LIB)
