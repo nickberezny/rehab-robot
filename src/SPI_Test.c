@@ -108,4 +108,39 @@ void SPI(int handle)
 	for (iter = 0; iter < numBytes; iter++) {
 		printf("dataRead[%d]  = 0x%02x\n", iter, dataRead[iter]);
 	}
+
+
+	while(true)
+	{
+		dataWrite[0] = 0x60;
+		LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
+		LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
+
+		dataWrite[0] = 0x00;
+		LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
+		LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
+		err = LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
+		printf("0x%02x\n", dataRead);
+
+		dataWrite[0] = 0x01;
+		LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
+		LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
+		err = LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
+		printf("0x%02x\n", dataRead);
+
+		dataWrite[0] = 0x02;
+		LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
+		LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
+		err = LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
+		printf("0x%02x\n", dataRead);
+
+		dataWrite[0] = 0x03;
+		LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
+		LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
+		err = LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
+		printf("0x%02x\n", dataRead);
+
+		sleep(1);
+	}
+
 }
