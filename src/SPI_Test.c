@@ -48,9 +48,12 @@ void SPI(int handle)
 	printf("int conversion: %d\n", number);
 
 	int iter, errAdress, err;
-	const int numBytes = 1;
-	char dataRead[1] = {0};
-	char dataWrite[1] = {0x00};
+	const int numBytes = 2;
+ 	char dataWrite[2] = {0x01};
+	char dataRead[2] = {0};
+	char posData[2];
+	int num = 0;
+
 
 	// Setting CS, CLK, MISO, and MOSI lines for the T7 and other devices.
 	LJM_eWriteName(handle, "SPI_CS_DIONUM", 1);  // CS is FIO1
@@ -60,7 +63,7 @@ void SPI(int handle)
 
 
 	// Selecting Mode CPHA=1 (bit 0), CPOL=1 (bit 1)
-	LJM_eWriteName(handle, "SPI_MODE", 3);
+	LJM_eWriteName(handle, "SPI_MODE", 0);
 
 	// Speed Throttle:
 	// Valid speed throttle values are 1 to 65536 where 0 = 65536.
@@ -84,6 +87,10 @@ void SPI(int handle)
 	// Write(TX)/Read(RX) 4 bytes
 	LJM_eWriteName(handle, "SPI_NUM_BYTES", numBytes);
 
+
+
+	
+
 	// Write the bytes
 	dataWrite[0] = 0x88;
 	LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
@@ -98,7 +105,10 @@ void SPI(int handle)
 	LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
 	LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
 
-
+	
+	dataWrite[0] = 0x48;
+	LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", 1, dataWrite, &errAdress);
+	err =  LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
 
 	// Display the bytes written
 	printf("\n");
@@ -107,8 +117,8 @@ void SPI(int handle)
 	}
 
 	// Read the bytes
-	err = LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
-	
+	LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
+	printf("Numbyte %d\n",err);
 	// Display the bytes read
 	printf("\n");
 	for (iter = 0; iter < numBytes; iter++) {
@@ -116,35 +126,38 @@ void SPI(int handle)
 	}
 
 
-	while(1)
+
+	for(int i = 0; i < 1000; i++)
 	{
-		dataWrite[0] = 0x60;
-		LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
-		LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
-
-		dataWrite[0] = 0x00;
-		LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
-		LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
-		err = LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
-		printf("0x%02x\n", dataRead);
-
 		dataWrite[0] = 0x01;
 		LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
 		LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
 		err = LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
-		printf("0x%02x\n", dataRead);
-
+		
 		dataWrite[0] = 0x02;
 		LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
 		LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
 		err = LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
-		printf("0x%02x\n", dataRead);
+
+		printf("0x%02x\n", dataRead[0]);
+		printf("0x%02x\n", dataRead[1]);
+
+		posData[0] = dataRead[0];
 
 		dataWrite[0] = 0x03;
 		LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", numBytes, dataWrite, &errAdress);
 		LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
 		err = LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
-		printf("0x%02x\n", dataRead);
+		
+		printf("0x%02x\n", dataRead[0]);
+		printf("0x%02x\n", dataRead[1]);
+
+		posData[1] = dataRead[0];
+
+		num = posData[0] | posData[1] << 8;
+
+		printf("Num: %d\n", num);
+
 
 		sleep(1);
 	}

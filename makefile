@@ -46,6 +46,8 @@ IGNORE = `grep -s IGNORE $(PATHR)*.txt`
 FILES = $(wildcard $(PATHS)*.c)
 FILES := $(filter-out %TestDaq.c, $(FILES))
 FILES := $(filter-out %SPI_Test.c, $(FILES))
+FILES := $(filter-out %I2C_Test.c, $(FILES))
+FILES := $(filter-out %UART_Test.c, $(FILES))
 
 build:
 	sudo gcc $(FILES)  -o robotController $(LIB)
@@ -59,6 +61,12 @@ daq:
 
 spi:
 	sudo gcc $(PATHS)SPI_Test.c -o spiTest $(LIB)
+
+i2c: 
+	sudo gcc $(PATHS)I2C_Test.c -o i2cTest $(LIB)
+
+uart: 
+	sudo gcc $(PATHS)UART_Test.c -o uartTest $(LIB)
 
 test: $(BUILD_PATHS) $(RESULTS)
 	@echo "-----------------------\nIGNORES:\n-----------------------"

@@ -28,9 +28,19 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
      */
 
     int err = LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
-  
 
-    s->dx = (1.0 - 2.0*(double)daq->aValues[4])*((double)daq->aValues[5])*ENC_TO_M/(STEP_SIZE_MS/1000.0); //in m/dt
+    //UART for position 
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
+    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 2);
+    LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 2, daq->dataRead, &(daq->errorAddress));
+  
+    
+    s->dx = ((int)daq->dataRead[1]) | ((int)daq->dataRead[0]) << 8;
+
+
+    //s->dx = (1.0 - 2.0*(double)daq->aValues[4])*((double)daq->aValues[5])*ENC_TO_M/(STEP_SIZE_MS/1000.0); //in m/dt
     s->Fext = 0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
     s->lsb = daq->aValues[2];
     s->lsf = daq->aValues[3];
@@ -39,6 +49,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
 
     
 }
+
 
 int initDaq(struct DAQ *daq) 
 {
@@ -58,10 +69,11 @@ int initDaq(struct DAQ *daq)
     LJM_eStreamStop(handle); //stop any previous streams
     //LJM_eWriteName(handle, "DAC0", MOTOR_ZERO); //set motor to zero
 
+    /*
     printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 0));
     printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_INDEX", 8));
     printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 1));
-
+    */
     printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO6_EF_ENABLE", 0));
     printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO6_EF_INDEX", 10));
     printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO6_EF_ENABLE", 1));
@@ -80,6 +92,16 @@ int initDaq(struct DAQ *daq)
     LJM_eWriteName(handle, "AIN3_RESOLUTION_INDEX", 1);
     LJM_eWriteName(handle, "AIN4_RESOLUTION_INDEX", 1);
 
+    LJM_eWriteName(handle, "ASYNCH_ENABLE", 0);
+    LJM_eWriteName(handle, "ASYNCH_TX_DIONUM", 2);  
+    LJM_eWriteName(handle, "ASYNCH_RX_DIONUM", 3);  
+    LJM_eWriteName(handle, "ASYNCH_BAUD", 19200);
+    LJM_eWriteName(handle, "ASYNCH_NUM_DATA_BITS", 8);
+    LJM_eWriteName(handle, "ASYNCH_PARITY", 0);
+    LJM_eWriteName(handle, "ASYNCH_NUM_STOP_BITS", 1);
+    LJM_eWriteName(handle, "ASYNCH_ENABLE", 1);
+
+
     double aValues[DAQ_NUM_OF_CH];
     memset( aValues, 0, DAQ_NUM_OF_CH*sizeof(double) );
     int aNumValues[DAQ_NUM_OF_CH];
@@ -92,16 +114,16 @@ int initDaq(struct DAQ *daq)
     for(int i = 0; i <DAQ_NUM_OF_CH;i++)
         aNumValues[i] = 1;
 
-    const char * aNamesTmp6[6] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET"}; 
-    const char * aNamesTmp10[10] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET","AIN1","AIN2","AIN3","AIN4"}; 
-    const char * aNamesTmp11[11] = {"DAC0", "AIN0","FIO0", "FIO1","FIO2","DIO3_EF_READ_A_AND_RESET","AIN1","AIN2","AIN3","AIN4","DIO6_EF_READ_A_F"}; 
+    const char * aNamesTmp6[4] = {"DAC0", "AIN0","FIO0", "FIO1"}; 
+    const char * aNamesTmp10[8] = {"DAC0", "AIN0","FIO0", "FIO1","AIN1","AIN2","AIN3","AIN4"}; 
+    const char * aNamesTmp11[9] = {"DAC0", "AIN0","FIO0", "FIO1","AIN1","AIN2","AIN3","AIN4","DIO6_EF_READ_A_F"}; 
 
     printf("DAQ NUM %d\n", daq->numChannels);
 
     
-    if(daq->numChannels == 11)
+    if(daq->numChannels == 9)
         memcpy(&(daq->aNames),aNamesTmp11, 100*daq->numChannels*sizeof(char));
-    else if(daq->numChannels == 10)
+    else if(daq->numChannels == 8)
         memcpy(&(daq->aNames),aNamesTmp10, 100*daq->numChannels*sizeof(char));
     else
         memcpy(&(daq->aNames),aNamesTmp6, 100*daq->numChannels*sizeof(char));

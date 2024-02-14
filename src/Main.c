@@ -300,7 +300,8 @@ int main(int argc, char* argv[])
 
                 //*************Initialize Daq*******************
                 controlParams->recordEMG = true;
-                daq->numChannels = 11;
+                daq->numChannels = 9;
+                daq->writeValues[0] = 7; 
                 initDaq(daq);
 
                 /*

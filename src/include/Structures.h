@@ -116,6 +116,9 @@ struct DAQ {
 	int errorAddress;
 	int daqHandle;
 	int numChannels;
+
+	double dataRead[2];
+    double writeValues[1];
 	
 };
 
