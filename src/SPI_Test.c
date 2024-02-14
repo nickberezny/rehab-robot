@@ -48,10 +48,10 @@ void SPI(int handle)
 	printf("int conversion: %d\n", number);
 
 	int iter, errAdress, err;
-	const int numBytes = 2;
- 	char dataWrite[2] = {0x01};
-	char dataRead[2] = {0};
-	char posData[2];
+	const int numBytes = 1;
+ 	char dataWrite[1] = {0x01};
+	char dataRead[1] = {0};
+	char posData[1];
 	int num = 0;
 
 
@@ -86,10 +86,6 @@ void SPI(int handle)
 
 	// Write(TX)/Read(RX) 4 bytes
 	LJM_eWriteName(handle, "SPI_NUM_BYTES", numBytes);
-
-
-
-	
 
 	// Write the bytes
 	dataWrite[0] = 0x88;
