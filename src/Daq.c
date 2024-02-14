@@ -139,7 +139,7 @@ int initDaq(struct DAQ *daq)
     daq->dataRead[1] = 0;
     daq->dataRead[2] = 0;
 
-    daq->writeValues[0] = 0;
+    daq->writeValues[0] = 7;
     
     printf("DAQ Handle: %d\n", daq->daqHandle);
     
