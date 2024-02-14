@@ -33,7 +33,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
     LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
-    usleep(100);
+    usleep(10000);
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 3);
     LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 3, daq->dataRead, &(daq->errorAddress));
 
