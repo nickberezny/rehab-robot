@@ -42,10 +42,10 @@ int main(int aFextrgc, char* argv[])
 		clock_gettime(CLOCK_MONOTONIC, &s->t_start);
 		getElapsedTime(&controlParams->t_first, &s->t_start, &s->dt);  
 		//timeStep(struct timespec * ts, struct timespec * tf, int * dt);
-		
 		ReadWriteDAQ(s, daq);
-		printf("Pos: %.5f\n", s->dx);
+		s->x += s->dx;
 
+		printf("Encoder: %.5f\n", s->dx);
 
 		getTimeToSleep(&s->t_start, &s->t_end);
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &s->t_end, NULL);
