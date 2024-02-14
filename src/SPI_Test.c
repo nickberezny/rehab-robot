@@ -56,10 +56,10 @@ void SPI(int handle)
 
 
 	// Setting CS, CLK, MISO, and MOSI lines for the T7 and other devices.
-	LJM_eWriteName(handle, "SPI_CS_DIONUM", 1);  // CS is FIO1
-	LJM_eWriteName(handle, "SPI_CLK_DIONUM", 0);  // CLK is FIO0
+	LJM_eWriteName(handle, "SPI_CS_DIONUM", 4);  // CS is FIO1
+	LJM_eWriteName(handle, "SPI_CLK_DIONUM", 2);  // CLK is FIO0
 	LJM_eWriteName(handle, "SPI_MISO_DIONUM", 3);  // MISO is FIO3
-	LJM_eWriteName(handle, "SPI_MOSI_DIONUM", 2);  // MOSI is FIO2
+	LJM_eWriteName(handle, "SPI_MOSI_DIONUM", 5);  // MOSI is FIO2
 
 
 	// Selecting Mode CPHA=1 (bit 0), CPOL=1 (bit 1)
@@ -109,6 +109,7 @@ void SPI(int handle)
 	dataWrite[0] = 0x48;
 	LJM_eWriteNameByteArray(handle, "SPI_DATA_TX", 1, dataWrite, &errAdress);
 	err =  LJM_eWriteName(handle, "SPI_GO", 1);  // Initiate the transfer
+	LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
 
 	// Display the bytes written
 	printf("\n");
@@ -117,7 +118,7 @@ void SPI(int handle)
 	}
 
 	// Read the bytes
-	LJM_eReadNameByteArray(handle, "SPI_DATA_RX", numBytes, dataRead, &errAdress);
+	
 	printf("Numbyte %d\n",err);
 	// Display the bytes read
 	printf("\n");
@@ -125,7 +126,7 @@ void SPI(int handle)
 		printf("dataRead[%d]  = 0x%02x\n", iter, dataRead[iter]);
 	}
 
-
+/*
 
 	for(int i = 0; i < 1000; i++)
 	{
@@ -161,5 +162,5 @@ void SPI(int handle)
 
 		sleep(1);
 	}
-
+*/
 }
