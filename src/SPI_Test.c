@@ -82,7 +82,7 @@ void SPI(int handle)
 	// bits 8-15: Reserved
 
 	// Enabling active low clock select pin
-	LJM_eWriteName(handle, "SPI_OPTIONS", 0);
+	LJM_eWriteName(handle, "SPI_OPTIONS", 1);
 
 	// Write(TX)/Read(RX) 4 bytes
 	LJM_eWriteName(handle, "SPI_NUM_BYTES", numBytes);
