@@ -30,7 +30,7 @@ int main(int aFextrgc, char* argv[])
 	daq = calloc(6,sizeof *daq);
 	controlParams = calloc(17, sizeof *controlParams);
 	struct States s[BUFFER_SIZE] = {0};
-	daq->numChannels = 11;
+	daq->numChannels = 9;
 	initDaq(daq);
 	printf("Time, Force, x, LSF, LSB\n");
 	clock_gettime(CLOCK_MONOTONIC, &controlParams->t_first);  
@@ -42,17 +42,10 @@ int main(int aFextrgc, char* argv[])
 		clock_gettime(CLOCK_MONOTONIC, &s->t_start);
 		getElapsedTime(&controlParams->t_first, &s->t_start, &s->dt);  
 		//timeStep(struct timespec * ts, struct timespec * tf, int * dt);
+		
 		ReadWriteDAQ(s, daq);
-		s->x += s->dx*0.001;
-		printf("Pos: %.5f\n", s->x);
-		printf("Force: %.2f\n", s->Fext);
-		//printf("%.2f,%.4f,%.2f,%d,%d\n",s->dt,s->Fext,s->x,s->lsf,s->lsb);
-		//printf("Dir: %.2f, %.6f\n",(double)daq->aValues[4],(double)daq->aValues[5]);
-		s->emg1 = (double)daq->aValues[6];
-		//printf("EMG1: %.6f\n", s->emg1);
+		printf("Pos: %.5f\n", s->dx);
 
-		x = (double)daq->aValues[10]*0.002618;
-		printf("Encoder: %.5f\n", x);
 
 		getTimeToSleep(&s->t_start, &s->t_end);
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &s->t_end, NULL);
