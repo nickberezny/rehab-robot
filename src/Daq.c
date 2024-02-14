@@ -28,14 +28,14 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
      */
 
     int err = LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
-
+/*
     //UART for position 
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
     LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 3);
     LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 3, daq->dataRead, &(daq->errorAddress));
-  
+  */
     
     s->dx = ((int)daq->dataRead[2]) | ((int)daq->dataRead[1]) << 8 | ((int)daq->dataRead[0]) << 16;
 
