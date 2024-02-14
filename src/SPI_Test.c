@@ -119,7 +119,7 @@ void SPI(int handle)
 	// Display the bytes read
 	printf("\n");
 	for (iter = 0; iter < numBytes; iter++) {
-		printf("dataRead[%d]  = 0x%02x\n", iter, dataRead[iter]);
+		printf("dataRead[%d]  = %d", iter, (int)dataRead[iter]);
 	}
 
 /*
