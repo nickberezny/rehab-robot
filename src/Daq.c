@@ -145,7 +145,17 @@ int initDaq(struct DAQ *daq)
     daq->writeValues[0] = 7;
     
     printf("DAQ Handle: %d\n", daq->daqHandle);
+
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
+    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
     
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
+    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
+    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
 
     /*
     s->daq.aValues = aValues;
