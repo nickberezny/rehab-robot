@@ -36,7 +36,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 3);
     LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 3, daq->dataRead, &(daq->errorAddress));
 
-    
+    printf("%d,%d,%d\n",(int)daq->dataRead[0],(int)daq->dataRead[1],(int)daq->dataRead[2]);
     s->dx = ((int)daq->dataRead[0]) | ((int)daq->dataRead[1]) << 8 | ((int)daq->dataRead[2]) << 16;
 
 
