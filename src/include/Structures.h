@@ -117,7 +117,7 @@ struct DAQ {
 	int daqHandle;
 	int numChannels;
 
-	double dataRead[3];
+	double dataRead[4];
     double writeValues[1];
 	
 };

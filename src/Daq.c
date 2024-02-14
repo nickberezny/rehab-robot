@@ -33,7 +33,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
     LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
-    
+
     //s->dx = (1.0 - 2.0*(double)daq->aValues[4])*((double)daq->aValues[5])*ENC_TO_M/(STEP_SIZE_MS/1000.0); //in m/dt
     s->Fext = 0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
     s->lsb = daq->aValues[2];
@@ -41,12 +41,12 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     
     if(err != 0) printf("daq err %d\n", err);
 
-    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 3);
-    LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 3, daq->dataRead, &(daq->errorAddress));
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 4);
+    LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 4, daq->dataRead, &(daq->errorAddress));
 
-    printf("%d,%d,%d\n",(int)daq->dataRead[0],(int)daq->dataRead[1],(int)daq->dataRead[2]);
-    s->dx = ((int)daq->dataRead[0]) | ((int)daq->dataRead[1]) << 8 | ((int)daq->dataRead[2]) << 16;
-
+    printf("%d,%d,%d,%d\n",(int)daq->dataRead[0],(int)daq->dataRead[1],(int)daq->dataRead[2],(int)daq->dataRead[3]);
+    s->dx = (int)daq->dataRead[0] + 100*(int)daq->dataRead[1] + 10000*(int)daq->dataRead[2];
+    
     
 }
 
@@ -138,6 +138,7 @@ int initDaq(struct DAQ *daq)
     daq->dataRead[0] = 0;
     daq->dataRead[1] = 0;
     daq->dataRead[2] = 0;
+    daq->dataRead[3] = 0;
 
     daq->writeValues[0] = 7;
     
