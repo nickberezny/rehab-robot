@@ -33,10 +33,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
     LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
-
     
-
-
     //s->dx = (1.0 - 2.0*(double)daq->aValues[4])*((double)daq->aValues[5])*ENC_TO_M/(STEP_SIZE_MS/1000.0); //in m/dt
     s->Fext = 0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
     s->lsb = daq->aValues[2];
