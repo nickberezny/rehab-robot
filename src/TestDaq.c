@@ -48,8 +48,8 @@ int main(int aFextrgc, char* argv[])
 		printf("Encoder: %.5f\n", s->dx);
 
 		getTimeToSleep(&s->t_start, &s->t_end);
-        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &s->t_end, NULL);
-
+        //clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &s->t_end, NULL);
+		usleep(10000);
 	}
 
 }
