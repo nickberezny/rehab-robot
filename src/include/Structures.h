@@ -139,6 +139,7 @@ struct States {
 	double xstar, cmd;
 	double emg1,emg2,emg3,emg4;
 	double gonio;
+	int d1,d2,d3;
 	
 	
 	int lsb, lsf; //limit switches

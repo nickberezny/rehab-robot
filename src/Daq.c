@@ -27,12 +27,12 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
      * @param[in] *s : pointer to robot States to store results
      */
 
-    int err = LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
-
-    //UART for position 
+        //UART for position 
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
     LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
+
+    int err = LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
 
     //s->dx = (1.0 - 2.0*(double)daq->aValues[4])*((double)daq->aValues[5])*ENC_TO_M/(STEP_SIZE_MS/1000.0); //in m/dt
     s->Fext = 0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
@@ -41,16 +41,35 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     
     if(err != 0) printf("daq err %d\n", err);
 
-    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 4);
-    LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 4, daq->dataRead, &(daq->errorAddress));
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 3);
+    LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 3, daq->dataRead, &(daq->errorAddress));
 
-    printf("%d,%d,%d,%d\n",(int)daq->dataRead[0],(int)daq->dataRead[1],(int)daq->dataRead[2],(int)daq->dataRead[3]);
+    //printf("%d,%d,%d,\n",(int)daq->dataRead[0],(int)daq->dataRead[1],(int)daq->dataRead[2]);
 
-    if((int)daq->dataRead[0] == 255) s->dx = (int)daq->dataRead[1] + 100*(int)daq->dataRead[2] + 10000*(int)daq->dataRead[3];
-    else if((int)daq->dataRead[1] == 255) s->dx = (int)daq->dataRead[2] + 100*(int)daq->dataRead[3] + 10000*(int)daq->dataRead[0];
-    else if((int)daq->dataRead[2] == 255) s->dx = (int)daq->dataRead[3] + 100*(int)daq->dataRead[0] + 10000*(int)daq->dataRead[1];
-    else if((int)daq->dataRead[3] == 255) s->dx = (int)daq->dataRead[0] + 100*(int)daq->dataRead[1] + 10000*(int)daq->dataRead[2];
-    else s->dx = 0.0;
+    s->d1 = (int)daq->dataRead[0];
+    s->d2 = (int)daq->dataRead[1];
+    s->d3 = (int)daq->dataRead[2];
+
+    if(s->d1 == 255) s->dx = s->d2 + 100*s->d3;
+    else if(s->d2 == 255) s->dx = s->d3 + 100*s->d1;
+    else if(s->d3 == 255) s->dx = s->d1 + 100*s->d2;
+    else if(s->d1 == 254) s->dx = -(s->d2 + 100*s->d3);
+    else if(s->d2 == 254) s->dx = -(s->d3 + 100*s->d1);
+    else if(s->d3 == 254) s->dx = -(s->d1 + 100*s->d2);
+    else s->dx = 0.0; 
+
+    s->dx = s->dx*ENC_TO_M/(STEP_SIZE_MS/1000.0);
+
+
+
+}
+
+void zeroDaq(struct DAQ * daq)
+{
+    double writeValues[1] = {4};
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
+    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, writeValues, &(daq->errorAddress));
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
 }
 
 
@@ -98,7 +117,7 @@ int initDaq(struct DAQ *daq)
     LJM_eWriteName(handle, "ASYNCH_ENABLE", 0);
     LJM_eWriteName(handle, "ASYNCH_TX_DIONUM", 2);  
     LJM_eWriteName(handle, "ASYNCH_RX_DIONUM", 3);  
-    LJM_eWriteName(handle, "ASYNCH_BAUD", 19200);
+    LJM_eWriteName(handle, "ASYNCH_BAUD", 38400);
     LJM_eWriteName(handle, "ASYNCH_NUM_DATA_BITS", 8);
     LJM_eWriteName(handle, "ASYNCH_PARITY", 0);
     LJM_eWriteName(handle, "ASYNCH_NUM_STOP_BITS", 1);

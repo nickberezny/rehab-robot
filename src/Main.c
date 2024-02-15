@@ -199,9 +199,10 @@ int main(int argc, char* argv[])
                 sendMessage(&sockfd, "UI::STARTTASK::");
              
                 HomeToBack(d,daq);
+
+                zeroDaq(daq);
                 //controlParams->xend = 0.4;
                 //pthread_create(&preThread, &preRunAttr, &preRunThread, (void *)ps);
-    
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
                 sendMessage(&sockfd, sendData);
@@ -213,6 +214,7 @@ int main(int argc, char* argv[])
             case HOME_FRONT_BACK_STATE:
                 HomeToFront(d,daq);
                 HomeToBack(d,daq);
+                zeroDaq(daq);
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
                 sendMessage(&sockfd, sendData);

@@ -29,7 +29,7 @@ int main(int aFextrgc, char* argv[])
 	//connect to daq
 	daq = calloc(6,sizeof *daq);
 	controlParams = calloc(17, sizeof *controlParams);
-	struct States s[BUFFER_SIZE] = {0};
+	struct States s[1] = {0};
 	daq->numChannels = 9;
 	initDaq(daq);
 	printf("Time, Force, x, LSF, LSB\n");
@@ -44,12 +44,17 @@ int main(int aFextrgc, char* argv[])
 		//timeStep(struct timespec * ts, struct timespec * tf, int * dt);
 		ReadWriteDAQ(s, daq);
 		s->x += s->dx;
+		if(s->x > 0.3)
+		{
+			zeroDaq(daq);
+			s->x = 0;
+		} 
+		printf("Encoder: %.5f\n", s->x);
 
-		printf("Encoder: %.5f\n", s->dx);
 
 		getTimeToSleep(&s->t_start, &s->t_end);
-        //clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &s->t_end, NULL);
-		usleep(10000);
+        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &s->t_end, NULL);
+		//usleep(10000);
 	}
 
 }
