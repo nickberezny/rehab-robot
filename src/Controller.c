@@ -209,6 +209,7 @@ void * controllerThread (void * d)
             s->emg4 = daq->aValues[7];
         }
     
+        s->gonio = ((double)daq->aValues[8]-controlParams->gonio_zero)*0.002618;
 
         s_next->x = s->x + s_next->dx*(STEP_SIZE_MS/1000.0);
         //checkVelocity(s,s_next);

@@ -199,7 +199,7 @@ int main(int argc, char* argv[])
                 sendMessage(&sockfd, "UI::STARTTASK::");
              
                 HomeToBack(d,daq);
-
+                controlParams->gonio_zero = (double)daq->aValues[8];
                 zeroDaq(daq);
                 //controlParams->xend = 0.4;
                 //pthread_create(&preThread, &preRunAttr, &preRunThread, (void *)ps);
@@ -214,6 +214,7 @@ int main(int argc, char* argv[])
             case HOME_FRONT_BACK_STATE:
                 HomeToFront(d,daq);
                 HomeToBack(d,daq);
+                controlParams->gonio_zero = (double)daq->aValues[8];
                 zeroDaq(daq);
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
