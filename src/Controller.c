@@ -203,15 +203,13 @@ void * controllerThread (void * d)
         
          if(controlParams->recordEMG)
         {
-            s->emg1 = daq->aValues[6];
-            s->emg2 = daq->aValues[7];
-            s->emg3 = daq->aValues[8];
-            s->emg4 = daq->aValues[9];
+            s->emg1 = daq->aValues[4];
+            s->emg2 = daq->aValues[5];
+            s->emg3 = daq->aValues[6];
+            s->emg4 = daq->aValues[7];
         }
     
-        
-        s->gonio = (double)daq->aValues[10]*0.002618;
-        
+
         s_next->x = s->x + s_next->dx*(STEP_SIZE_MS/1000.0);
         //checkVelocity(s,s_next);
 

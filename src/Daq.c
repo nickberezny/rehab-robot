@@ -38,6 +38,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     s->Fext = 0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
     s->lsb = daq->aValues[2];
     s->lsf = daq->aValues[3];
+    s->gonio = (double)daq->aValues[8]*0.002618;
     
     if(err != 0) printf("daq err %d\n", err);
 
