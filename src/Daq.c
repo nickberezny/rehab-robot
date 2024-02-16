@@ -50,12 +50,12 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     s->d2 = (int)daq->dataRead[1];
     s->d3 = (int)daq->dataRead[2];
 
-    if(s->d1 == 255) s->dx = s->d2 + 100*s->d3;
-    else if(s->d2 == 255) s->dx = s->d3 + 100*s->d1;
-    else if(s->d3 == 255) s->dx = s->d1 + 100*s->d2;
-    else if(s->d1 == 254) s->dx = -(s->d2 + 100*s->d3);
-    else if(s->d2 == 254) s->dx = -(s->d3 + 100*s->d1);
-    else if(s->d3 == 254) s->dx = -(s->d1 + 100*s->d2);
+    if(s->d1 == 254) s->dx = s->d2 + 100*s->d3;
+    else if(s->d2 == 254) s->dx = s->d3 + 100*s->d1;
+    else if(s->d3 == 254) s->dx = s->d1 + 100*s->d2;
+    else if(s->d1 == 255) s->dx = -(s->d2 + 100*s->d3);
+    else if(s->d2 == 255) s->dx = -(s->d3 + 100*s->d1);
+    else if(s->d3 == 255) s->dx = -(s->d1 + 100*s->d2);
     else s->dx = 0.0; 
 
     s->dx = s->dx*ENC_TO_M/(STEP_SIZE_MS/1000.0);

@@ -44,11 +44,6 @@ int main(int aFextrgc, char* argv[])
 		//timeStep(struct timespec * ts, struct timespec * tf, int * dt);
 		ReadWriteDAQ(s, daq);
 		s->x += s->dx*(STEP_SIZE_MS/1000.0);
-		if(s->x > 0.3)
-		{
-			zeroDaq(daq);
-			s->x = 0;
-		} 
 		printf("Encoder: %.5f\n", s->x);
 
 
