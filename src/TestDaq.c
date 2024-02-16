@@ -44,12 +44,12 @@ int main(int aFextrgc, char* argv[])
 		//timeStep(struct timespec * ts, struct timespec * tf, int * dt);
 		ReadWriteDAQ(s, daq);
 		s->x += s->dx*(STEP_SIZE_MS/1000.0);
-		printf("Encoder: %.5f\n", s->x);
+		printf("Encoder: %.5f, Gonio: %.3f\n", s->x);
 
 
 		getTimeToSleep(&s->t_start, &s->t_end);
-        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &s->t_end, NULL);
-		//usleep(10000);
+        //clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &s->t_end, NULL);
+		usleep(1000);
 	}
 
 }
