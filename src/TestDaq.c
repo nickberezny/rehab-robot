@@ -43,7 +43,7 @@ int main(int aFextrgc, char* argv[])
 		getElapsedTime(&controlParams->t_first, &s->t_start, &s->dt);  
 		//timeStep(struct timespec * ts, struct timespec * tf, int * dt);
 		ReadWriteDAQ(s, daq);
-		s->x += s->dx;
+		s->x += s->dx*(STEP_SIZE_MS/1000.0);
 		if(s->x > 0.3)
 		{
 			zeroDaq(daq);
