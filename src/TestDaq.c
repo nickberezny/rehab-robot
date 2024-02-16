@@ -44,7 +44,8 @@ int main(int aFextrgc, char* argv[])
 		//timeStep(struct timespec * ts, struct timespec * tf, int * dt);
 		ReadWriteDAQ(s, daq);
 		s->x += s->dx*(STEP_SIZE_MS/1000.0);
-		printf("Encoder: %.5f, Gonio: %.3f\n", s->x);
+		s->gonio = ((double)daq->aValues[8])*0.002618;
+		printf("Encoder: %.5f, Gonio: %.3f\n", s->x, s->gonio);
 
 
 		getTimeToSleep(&s->t_start, &s->t_end);
