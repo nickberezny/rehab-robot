@@ -175,7 +175,7 @@ void * controllerThread (void * d)
                 break;
             case FORCE_NORM_MODE:
                 //s->x0 = 0.1
-                s->x0_to_send = 0.2;
+                s->x0_to_send = 0.2*controlParams->xend;
                 AdmittanceMode(s, controlParams);
                 break;
                 
