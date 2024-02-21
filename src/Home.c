@@ -19,7 +19,7 @@
 #include "./include/Home.h"
 #include "./include/Daq.h"
 
-void HomeToBack(struct States * s, struct DAQ * daq)
+void HomeToBack(struct States * s, struct DAQ * daq, bool getXend)
 {
     
     
@@ -47,7 +47,7 @@ void HomeToBack(struct States * s, struct DAQ * daq)
     }
     
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
-    controlParams->xend = s->x;
+    if(getXend) controlParams->xend = s->x;
     printf("xend: %f\n",controlParams->xend); 
 
 
@@ -66,7 +66,7 @@ void HomeToFront(struct States * s, struct DAQ * daq)
     s->lsf = daq->aValues[3];
     
 
-    daq->aValues[0] = CMD_GAIN*(0.45) + CMD_OFFSET;
+    daq->aValues[0] = CMD_GAIN*(0.35) + CMD_OFFSET;
     
     while(s->lsf == 0)
     {
