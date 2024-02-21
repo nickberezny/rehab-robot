@@ -175,7 +175,7 @@ void * controllerThread (void * d)
                 break;
             case FORCE_NORM_MODE:
                 //s->x0 = 0.1
-                s->x0_to_send = 0.0;
+                
                 s->cmd = 0;
                 if(controlParams->x0dist != 0.0 && controlParams->x_save == 0.0)
                 {
@@ -190,9 +190,9 @@ void * controllerThread (void * d)
                 }
                 else
                 {
-                    controlParams->x_save == 0.0;
+                    controlParams->x_save = 0.0;
                 }
-                
+                s->x0_to_send = s->x0;
                 //AdmittanceMode(s, controlParams);
                 break;
                 
