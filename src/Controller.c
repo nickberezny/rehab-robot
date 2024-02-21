@@ -190,7 +190,7 @@ void * controllerThread (void * d)
                 }
                 else
                 {
-                    controlParams->x_save == 0.0
+                    controlParams->x_save == 0.0;
                 }
                 
                 //AdmittanceMode(s, controlParams);
