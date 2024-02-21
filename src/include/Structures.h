@@ -62,6 +62,7 @@ struct ControlParams {
 	double dx_bound;
 	double t_last;
 	double gonio_zero;
+	double x_save;
 
 	struct timespec t_first;
 	bool firstRun;

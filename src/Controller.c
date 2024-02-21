@@ -176,12 +176,21 @@ void * controllerThread (void * d)
             case FORCE_NORM_MODE:
                 //s->x0 = 0.1
                 s->x0_to_send = 0.0;
+                s->cmd = 0;
+                if(controlParams->x0dist != 0.0 && controlParams->x_save == 0.0)
+                {
+                    controlParams->x_save = s->x;  
+                }
                 if(controlParams->x0dist != 0.0)
                 {
-                    s->x0 = controlParams->x0dist*controlParams->xend + s->x;
+                    s->x0 = controlParams->x0dist*controlParams->xend + controlParams->x_save;
                     if(s->x0 < 0.1*controlParams->xend)  s->x0 = 0.1*controlParams->xend;
                     if(s->x0 > 0.9*controlParams->xend)  s->x0 = 0.9*controlParams->xend;
                     PositionMode(s, controlParams);
+                }
+                else
+                {
+                    controlParams->x_save == 0.0
                 }
                 
                 //AdmittanceMode(s, controlParams);
