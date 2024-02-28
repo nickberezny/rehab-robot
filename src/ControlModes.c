@@ -54,6 +54,13 @@ void AdmittanceMode(struct States * s, struct ControlParams * p)
     return;
 }
 
+void AdmittanceZeroStiffnessMode(struct States * s, struct ControlParams * p)
+{
+    VirtualTrajectoryZeroStiffness(s,p);
+    BasicPDxv(s,p);
+    return;
+}
+
 void ImpedanceMode(struct States * s, struct ControlParams * p)
 {
     //TODO: Test

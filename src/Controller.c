@@ -173,7 +173,7 @@ void * controllerThread (void * d)
                 //run imp for delta
                 //run adm for delta (reset)
                 break;
-            case FORCE_NORM_MODE:
+            case ADM_DIST_MODE:
                 //s->x0 = 0.1
                 
                 s->cmd = 0;
@@ -186,16 +186,23 @@ void * controllerThread (void * d)
                     s->x0 = controlParams->x0dist*controlParams->xend + controlParams->x_save;
                     if(s->x0 < 0.1*controlParams->xend)  s->x0 = 0.1*controlParams->xend;
                     if(s->x0 > 0.9*controlParams->xend)  s->x0 = 0.9*controlParams->xend;
-                    PositionMode(s, controlParams);
+                    AdmittanceMode(s, controlParams);
                 }
                 else
                 {
                     controlParams->x_save = 0.0;
+                    AdmittanceZeroStiffnessMode(s, controlParams);
+                    //PositionMode(s, controlParams);
                 }
                 s->x0_to_send = s->x0;
                 //AdmittanceMode(s, controlParams);
                 break;
-                
+            
+            case FORCE_NORM_MODE:  
+                s->x0 = controlParams->x0
+                s->x0_to_send = controlParams->x0dist;
+                AdmittanceMode(s, controlParams);
+                break;
             
         }
 

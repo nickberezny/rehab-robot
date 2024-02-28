@@ -35,6 +35,14 @@ void VirtualTrajectory(struct States * s, struct ControlParams * p)
 
 }
 
+void VirtualTrajectoryZeroStiffness(struct States * s, struct ControlParams * p)
+{
+    s->xv = p->Azero[0]*(s->xv_prev-s->x0) + p->Azero[1]*s->dxv_prev + p->Bd[0]*s->Fext + s->x0 ;
+    s->dxv = p->Azero[2]*(s->xv_prev-s->x0) + p->Azero[3]*s->dxv_prev + p->Bd[1]*s->Fext;
+    s->ddxv = (s->Fext/p->Md - (p->Dd)/(p->Md)*(s->dxv));///(STEP_SIZE_MS*1000.0); 
+
+}
+
 void PeriodicReset(struct States * s)
 {
     s->xv_prev = s->x;

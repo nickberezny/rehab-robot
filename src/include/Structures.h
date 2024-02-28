@@ -46,7 +46,7 @@ struct ControlParams {
 	double kp, kv;
 	double m, c;
 	double delta, alpha;
-	double *Ad, *Bd;
+	double *Ad, *Bd, *Azero;
 	double xend; //length of actuator
 	double x0, dx0, ddx0, x0dist;
 	double *t;

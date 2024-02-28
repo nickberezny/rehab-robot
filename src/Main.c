@@ -249,6 +249,11 @@ int main(int argc, char* argv[])
                 DiscretizeMatrix(Atemp,A);
                 controlParams->Ad = A;
 
+                double Atemp2[2][2] = {{0.0, 1.0},{0.0, -controlParams->Dd/controlParams->Md}};
+                double A2[2][2];
+                DiscretizeMatrix(Atemp2,A2);
+                controlParams->Azero = A2;
+
                 double Btemp[2] = {0.0, 1.0/controlParams->Md};
                 double B[2];
                 DicretizeInput(A, Atemp, Btemp, B);
@@ -256,6 +261,7 @@ int main(int argc, char* argv[])
                 controlParams->Bd = B;
 
                 printf("Ad: %f, %f, %f, %f\n",A[0][0],A[0][1],A[1][0],A[1][1]);
+                printf("Azero: %f, %f, %f, %f\n",A2[0][0],A2[0][1],A2[1][0],A2[1][1]);
                 printf("Bd: %f, %f\n",B[0],B[1]);
 
                 controlParams->dx_bound = 0.01;
