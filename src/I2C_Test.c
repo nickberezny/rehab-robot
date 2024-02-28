@@ -41,10 +41,14 @@ void I2C(int handle)
 	LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, numBytes, aBytes, &errAdress);
 	LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
 
+	sleep(1);
+
 	numBytes = 1;
 	aBytes[0] = 0; // Byte 0: Memory pointer = 0
 	LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, numBytes, aBytes, &errAdress);
 	LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
+
+	sleep(1);
 
 	for(int i = 0; i < 1000; i++)
 	{
