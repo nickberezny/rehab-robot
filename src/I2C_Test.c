@@ -41,6 +41,7 @@ void I2C(int handle)
 	LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, numBytes, aBytes, &errAdress);
 	LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
 
+	int testX;
 
 	sleep(1);
 
@@ -58,10 +59,9 @@ void I2C(int handle)
 		}
 		LJM_eReadNameByteArray(handle, I2C_READ_NAME, numBytes, aBytes, &errAdress);
 
-		printf("Read  User Memory [0-3] = ");
-		for (int i = 0; i < 6; i++) {
-			printf("%d ", (unsigned char)aBytes[i]);
-		}
+	 	testX = (aBytes[0] << 8) + aBytes[1];
+
+		printf("X: %d\n", testX);
 		printf("\n");
 		sleep(1);
 	}
