@@ -199,7 +199,7 @@ void * controllerThread (void * d)
                 break;
             
             case FORCE_NORM_MODE:  
-                s->x0 = controlParams->x0
+                s->x0 = controlParams->x0;
                 s->x0_to_send = controlParams->x0dist;
                 AdmittanceMode(s, controlParams);
                 break;
