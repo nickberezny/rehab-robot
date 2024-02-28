@@ -59,7 +59,7 @@ void I2C(int handle)
 		}
 		LJM_eReadNameByteArray(handle, I2C_READ_NAME, numBytes, aBytes, &errAdress);
 
-	 	testX = (aBytes[0] << 8) + aBytes[1];
+	 	testX = (aBytes[0]) + aBytes[1] << 8;
 
 		printf("X: %d\n", testX);
 		printf("\n");
