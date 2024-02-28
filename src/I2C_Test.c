@@ -30,28 +30,43 @@ void I2C(int handle)
 
 	LJM_eWriteName(handle, "I2C_SPEED_THROTTLE", 0);
 	LJM_eWriteName(handle, "I2C_OPTIONS", 0);
-	LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 8);
+	LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x68);
 
 	LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 1); // Set the number of bytes to transmit
 	LJM_eWriteName(handle, "I2C_NUM_BYTES_RX", 6); // Set the number of bytes to receive
 
 	// Set the TX bytes. We are sending 1 byte for the address.
 	numBytes = 1;
-	aBytes[0] = 0; // Byte 0: Memory pointer = 0
+	aBytes[0] = 0x6B; // Byte 0: Memory pointer = 0
 	LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, numBytes, aBytes, &errAdress);
-
 	LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
 
-	// Read the RX bytes.
-	numBytes = 6;
-	for (int i = 0; i < 6; i++) {
-		aBytes[i] = 0;
-	}
-	LJM_eReadNameByteArray(handle, I2C_READ_NAME, numBytes, aBytes, &errAdress);
+	numBytes = 1;
+	aBytes[0] = 0; // Byte 0: Memory pointer = 0
+	LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, numBytes, aBytes, &errAdress);
+	LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
 
-	printf("Read  User Memory [0-3] = ");
-	for (int i = 0; i < 6; i++) {
-		printf("%d ", (unsigned char)aBytes[i]);
+	for(int i = 0; i < 1000; i++)
+	{
+		numBytes = 1;
+		aBytes[0] = 0x3B; // Byte 0: Memory pointer = 0
+		LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, numBytes, aBytes, &errAdress);
+		LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
+
+		// Read the RX bytes.
+		numBytes = 6;
+		for (int i = 0; i < 6; i++) {
+			aBytes[i] = 0;
+		}
+		LJM_eReadNameByteArray(handle, I2C_READ_NAME, numBytes, aBytes, &errAdress);
+
+		printf("Read  User Memory [0-3] = ");
+		for (int i = 0; i < 6; i++) {
+			printf("%d ", (unsigned char)aBytes[i]);
+		}
+		printf("\n");
+		sleep(1);
 	}
-	printf("\n");
+
+	
 }
