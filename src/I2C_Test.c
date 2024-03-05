@@ -68,7 +68,7 @@ void I2C(int handle)
 		//printf("%d: %d\n", (unsigned char)aBytes[0], (unsigned char)aBytes[0] << 8 );
 		
 		for (int i = 0; i < 3; i++) {
-			printf("%f \n", testX[0]);
+			printf("%f \n", testX[0]/16384.0);
 		}
 		printf("-----\n");
 		sleep(1);
