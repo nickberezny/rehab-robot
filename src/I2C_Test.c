@@ -22,7 +22,7 @@ void I2C(int handle)
 	const char * I2C_WRITE_NAME = "I2C_DATA_TX";
 	const char * I2C_READ_NAME = "I2C_DATA_RX";
 
-	int testX[3];
+	double testX[3];
 
 	int numBytes, errAdress;
 	char aBytes[32] = {0x6B, 0x00}; // TX/RX bytes will go here
@@ -65,10 +65,10 @@ void I2C(int handle)
 		testX[1] = (aBytes[2] << 8) + aBytes[3];
 		testX[2] = (aBytes[4] << 8) + aBytes[5];
 
-		printf("%d: %d\n", (unsigned char)aBytes[0], (unsigned char)aBytes[0] << 8 );
+		//printf("%d: %d\n", (unsigned char)aBytes[0], (unsigned char)aBytes[0] << 8 );
 		
-		for (int i = 0; i < 6; i++) {
-			//printf("%d \n", (unsigned char)aBytes[i]);
+		for (int i = 0; i < 3; i++) {
+			printf("%f \n", testX[0]);
 		}
 		printf("-----\n");
 		sleep(1);
