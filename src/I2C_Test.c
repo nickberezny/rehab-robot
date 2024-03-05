@@ -22,6 +22,8 @@ void I2C(int handle)
 	const char * I2C_WRITE_NAME = "I2C_DATA_TX";
 	const char * I2C_READ_NAME = "I2C_DATA_RX";
 
+	int testX[3];
+
 	int numBytes, errAdress;
 	char aBytes[32] = {0x6B, 0x00}; // TX/RX bytes will go here
 
@@ -58,13 +60,14 @@ void I2C(int handle)
 		}
 		LJM_eReadNameByteArray(handle, I2C_READ_NAME, numBytes, aBytes, &errAdress);
 
-		int testX = (aBytes[0] << 8) + aBytes[1];
-
-		printf("Read  User Memory [0-3] = ");
-		for (int i = 0; i < 6; i++) {
-			printf("%d ", (unsigned char)aBytes[i]);
+		testX[0] = (aBytes[0] << 8) + aBytes[1];
+		testX[1] = (aBytes[2] << 8) + aBytes[3];
+		testX[2] = (aBytes[4] << 8) + aBytes[5];
+	
+		for (int i = 0; i < 3; i++) {
+			printf("%d: %d\n", i, testX[i]);
 		}
-		printf("\n");
+		printf("-----\n");
 		sleep(1);
 	}
 
