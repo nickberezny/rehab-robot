@@ -32,8 +32,9 @@ int main(int aFextrgc, char* argv[])
 	struct States s[1] = {0};
 	daq->numChannels = 9;
 	initDaq(daq);
-	printf("%d \n", (int)daq->i2cAddr[0] );
-	printf("%d \n", (int)daq->i2cAddr[1] );
+	daq->i2cAddr[0] = 0x68;
+	printf("%d \n", (int) daq->i2cAddr[0] );
+	printf("%d \n", (int) daq->i2cAddr[1] );
 	printf("Time, Force, x, LSF, LSB\n");
 	clock_gettime(CLOCK_MONOTONIC, &controlParams->t_first);  
 	s->x = 0.0;
