@@ -34,12 +34,12 @@ void readI2C(struct States * s, struct DAQ * daq, int index)
 
     LJM_eReadNameByteArray(daq->daqHandle, I2C_READ_NAME, 14, s->i2cRead, &(daq->errorAddress));
 
-    s->accel[0] = ((s->i2cRead[0] << 8) + s->i2cRead[1]); //x
-    s->accel[1] = ((s->i2cRead[2] << 8) + s->i2cRead[3]); //y
-    s->accel[2] = ((s->i2cRead[4] << 8) + s->i2cRead[5]); //z
+    s->accel[0] = ((s->i2cRead[0] << 8) + s->i2cRead[1])/16384.0; //x
+    s->accel[1] = ((s->i2cRead[2] << 8) + s->i2cRead[3])/16384.0; //y
+    s->accel[2] = ((s->i2cRead[4] << 8) + s->i2cRead[5])/16384.0; //z
 
-    //s->xAccel[index] = atan2(s->accel[1], sqrt( s->accel[0]*s->accel[0] + s->accel[2]*s->accel[2]));
-    //s->dxGyro[index] = ((s->i2cRead[8] << 8) + s->i2cRead[9])/(1.114*32.0*30023.0);
+    s->xAccel[index] = atan2(s->accel[1], sqrt( s->accel[0]*s->accel[0] + s->accel[2]*s->accel[2]));
+    s->dxGyro[index] = ((s->i2cRead[8] << 8) + s->i2cRead[9])/(1.114*32.0*30023.0);
 
 
     //return x angle (acc) and gryo x vel 

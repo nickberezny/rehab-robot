@@ -47,7 +47,7 @@ int main(int aFextrgc, char* argv[])
 		s->x += s->dx*(STEP_SIZE_MS/1000.0);
 		s->gonio = ((double)daq->aValues[8])*0.002618;
 		//printf("Encoder: %.5f, Gonio: %.3f\n", s->x, s->gonio);
-		printf("%f, %f\n", s->accel[0], s->accel[1]);
+		printf("%f, %f\n", s->xAccel[0], s->xAccel[1]);
 
 		getTimeToSleep(&s->t_start, &s->t_end);
         //clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &s->t_end, NULL);
