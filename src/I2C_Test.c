@@ -43,6 +43,7 @@ void I2C(int handle)
 	LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, numBytes, aBytes, &errAdress);
 	LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
 
+	LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 1); // Set the number of bytes to transmit
 
 	sleep(1);
 
@@ -65,7 +66,11 @@ void I2C(int handle)
 		testX[2] = (aBytes[4] << 8) + aBytes[5];
 	
 		for (int i = 0; i < 3; i++) {
-			printf("%d: %d\n", i, testX[i]);
+			//printf("%d: %d\n", i, testX[i]);
+		}
+
+		for (int i = 0; i < 6; i++) {
+			printf("%d \n", (unsigned char)aBytes[i]);
 		}
 		printf("-----\n");
 		sleep(1);
