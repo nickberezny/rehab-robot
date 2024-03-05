@@ -157,9 +157,9 @@ int initDaq(struct DAQ *daq)
     LJM_eWriteName(handle, "I2C_OPTIONS", 0);
 
     char aBytes[12] = {0x6B, 0x00};
-    daq->i2cAddr[0] = {0x68};
-    daq->i2cAddr[1] = {0x69};
-    daq->i2cSend[0] = {0x3B};
+    daq->i2cAddr[0] = 0x68;
+    daq->i2cAddr[1] = 0x69;
+    daq->i2cSend[0] = 0x3B;
 
     LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x68);
     LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 2); // Set the number of bytes to transmit
