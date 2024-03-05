@@ -90,6 +90,8 @@ struct ControlParams {
 	double dx_filt_y[FILTER_ORDER+1];
 	double F_filt_x[FILTER_ORDER+1];
 	double F_filt_y[FILTER_ORDER+1];
+
+
 };
 
 
@@ -121,6 +123,9 @@ struct DAQ {
 
 	double dataRead[4];
     double writeValues[1];
+
+    char i2cAddr[2] = {0x68, 0x69};
+	char i2cSend[4] = 0x3B;
 	
 };
 
@@ -145,7 +150,11 @@ struct States {
 	
 	int lsb, lsf; //limit switches
 
-	char i2cBytes[64];
+	char i2cRead[64];
+	double accel[3];
+	double xAccel[2];
+	double dxGyro[2];
+
 };
 
 struct regexMatch {

@@ -19,6 +19,30 @@
 #include "./include/Structures.h"
 #include "./include/Daq.h"
 
+void readI2C(struct States * s, struct DAQ * daq, int index)
+{
+
+    LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", daq->i2cAddr[index]);
+
+    LJM_eWriteNameByteArray(daq->daqHandle, I2C_WRITE_NAME, 1, daq->i2cSend, &(daq->errorAddress));
+    LJM_eWriteName(daq->daqHandle, "I2C_GO", 1); // Do the I2C communications.
+
+    // Read the RX bytes.
+    for (int i = 0; i < 14; i++) {
+        s->i2cRead[i] = 0;
+    }
+    LJM_eReadNameByteArray(daq->daqHandle, I2C_READ_NAME, 14, s->i2cRead, &(daq->errorAddress));
+
+    s->accel[0] = ((s->i2cRead[0] << 8) + s->i2cRead[1])/16384.0; //x
+    s->accel[1] = ((s->i2cRead[2] << 8) + s->i2cRead[3])/16384.0; //y
+    s->accel[2] = ((s->i2cRead[4] << 8) + s->i2cRead[5])/16384.0; //z
+
+    s->xAccel[index] = atan2(s->accel[1], sqrt( s->accel[0]*s->accel[0] + s->accel[2]*s->accel[2]));
+    s->dxGyro[index] = ((s->i2cRead[8] << 8) + s->i2cRead[9])/(1.114*32.0*30023.0);
+
+
+    //return x angle (acc) and gryo x vel 
+}
 
 void ReadWriteDAQ(struct States * s, struct DAQ * daq)
 {
@@ -61,27 +85,8 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
 
     s->dx = s->dx*ENC_TO_M/(STEP_SIZE_MS/1000.0);
 
-    numBytes = 1;
-    aBytes[0] = 0x3B; // Byte 0: Memory pointer = 0
-    LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, numBytes, aBytes, &errAdress);
-    LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
-
-    // Read the RX bytes.
-    numBytes = 14;
-    for (int i = 0; i < numBytes; i++) {
-        aBytes[i] = 0;
-    }
-    LJM_eReadNameByteArray(handle, I2C_READ_NAME, numBytes, aBytes, &errAdress);
-
-    testAcc[0] = (aBytes[0] << 8) + aBytes[1];
-    testAcc[1] = (aBytes[2] << 8) + aBytes[3];
-    testAcc[2] = (aBytes[4] << 8) + aBytes[5];
-
-    testGyro[0] = (aBytes[8] << 8) + aBytes[9];
-    testGyro[1] = (aBytes[10] << 8) + aBytes[11];
-    testGyro[2] = (aBytes[11] << 8) + aBytes[12];
-
-
+    readI2C(s, daq, 0);
+    readI2C(s, daq, 1);
 
 }
 
@@ -149,14 +154,23 @@ int initDaq(struct DAQ *daq)
 
     LJM_eWriteName(handle, "I2C_SPEED_THROTTLE", 0);
     LJM_eWriteName(handle, "I2C_OPTIONS", 0);
-    LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x68);
 
+    char aBytes[12] = {0x6B, 0x00};
+
+    LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x68);
     LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 2); // Set the number of bytes to transmit
     LJM_eWriteName(handle, "I2C_NUM_BYTES_RX", 14); // Set the number of bytes to receive
-\
     LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, 2, aBytes, &errAdress);
     LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
     LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 1); // Set the number of bytes to transmit
+
+    LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x69);
+    LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 2); // Set the number of bytes to transmit
+    LJM_eWriteName(handle, "I2C_NUM_BYTES_RX", 14); // Set the number of bytes to receive
+    LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, 2, aBytes, &errAdress);
+    LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
+    LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 1); // Set the number of bytes to transmit
+
 
     double aValues[DAQ_NUM_OF_CH];
     memset( aValues, 0, DAQ_NUM_OF_CH*sizeof(double) );
