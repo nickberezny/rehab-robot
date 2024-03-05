@@ -142,16 +142,16 @@ int initDaq(struct DAQ *daq)
     LJM_eWriteName(handle, "AIN4_RESOLUTION_INDEX", 1);
 
     LJM_eWriteName(handle, "ASYNCH_ENABLE", 0);
-    LJM_eWriteName(handle, "ASYNCH_TX_DIONUM", 4);  
-    LJM_eWriteName(handle, "ASYNCH_RX_DIONUM", 5);  
+    LJM_eWriteName(handle, "ASYNCH_TX_DIONUM", 2);  
+    LJM_eWriteName(handle, "ASYNCH_RX_DIONUM", 3);  
     LJM_eWriteName(handle, "ASYNCH_BAUD", 38400);
     LJM_eWriteName(handle, "ASYNCH_NUM_DATA_BITS", 8);
     LJM_eWriteName(handle, "ASYNCH_PARITY", 0);
     LJM_eWriteName(handle, "ASYNCH_NUM_STOP_BITS", 1);
     LJM_eWriteName(handle, "ASYNCH_ENABLE", 1);
 
-    LJM_eWriteName(handle, "I2C_SDA_DIONUM", 2);
-    LJM_eWriteName(handle, "I2C_SCL_DIONUM", 3);
+    LJM_eWriteName(handle, "I2C_SDA_DIONUM", 4);
+    LJM_eWriteName(handle, "I2C_SCL_DIONUM", 5);
 
     LJM_eWriteName(handle, "I2C_SPEED_THROTTLE", 0);
     LJM_eWriteName(handle, "I2C_OPTIONS", 0);

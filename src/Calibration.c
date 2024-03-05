@@ -24,6 +24,8 @@ void CalibrateForceOffset(struct States * s, struct DAQ * daq)
     extern struct ControlParams *controlParams;
 
     double force = 0;
+    double gyro1 = 0;
+    double gyro2 = 0;
     int samples = 3000;
 
     for(int i = 0; i < samples; i++)
@@ -31,9 +33,13 @@ void CalibrateForceOffset(struct States * s, struct DAQ * daq)
         daq->aValues[0] = 2.5;
         ReadWriteDAQ(s,daq);
         force += s->Fext;
+        gyro1 += s->dxGyro[0];
+        gyro2 += s->dxGyro[1];
         usleep(1000);
     }   
 
+    controlParams->gyro_offset[0] = gyro1/((double)samples);
+    controlParams->gyro_offset[1] = gyro2/((double)samples);
     controlParams->Fext_offset = force/((double)samples);
     printf("Force offset: %f\n", controlParams->Fext_offset);
 }

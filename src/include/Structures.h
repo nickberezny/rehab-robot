@@ -59,6 +59,7 @@ struct ControlParams {
 	double ** cmd;
 	double xstart;
 	double Fext_offset;
+	double gyro_offset[2];
 	double dx_bound;
 	double t_last;
 	double gonio_zero;
@@ -154,6 +155,7 @@ struct States {
 	double accel[3];
 	double xAccel[2];
 	double dxGyro[2];
+	double xGyro[2];
 
 };
 
