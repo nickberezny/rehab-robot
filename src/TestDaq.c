@@ -32,6 +32,8 @@ int main(int aFextrgc, char* argv[])
 	struct States s[1] = {0};
 	daq->numChannels = 9;
 	initDaq(daq);
+	printf("%d \n", (int)daq->i2cAddr[0] );
+	printf("%d \n", (int)daq->i2cAddr[1] );
 	printf("Time, Force, x, LSF, LSB\n");
 	clock_gettime(CLOCK_MONOTONIC, &controlParams->t_first);  
 	s->x = 0.0;
@@ -46,7 +48,7 @@ int main(int aFextrgc, char* argv[])
 		s->x += s->dx*(STEP_SIZE_MS/1000.0);
 		s->gonio = ((double)daq->aValues[8])*0.002618;
 		//printf("Encoder: %.5f, Gonio: %.3f\n", s->x, s->gonio);
-		printf("%f, %f\n", s->accel[0], s->accel[1]);
+		//printf("%f, %f\n", s->accel[0], s->accel[1]);
 
 		getTimeToSleep(&s->t_start, &s->t_end);
         //clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &s->t_end, NULL);
