@@ -22,10 +22,11 @@ void I2C(int handle)
 	const char * I2C_WRITE_NAME = "I2C_DATA_TX";
 	const char * I2C_READ_NAME = "I2C_DATA_RX";
 
-	double testX[3];
+	double testAcc[3];
+	double testGyro[3];
 
 	int numBytes, errAdress;
-	char aBytes[32] = {0x6B, 0x00}; // TX/RX bytes will go here
+	char aBytes[64] = {0x6B, 0x00}; // TX/RX bytes will go here
 
 	LJM_eWriteName(handle, "I2C_SDA_DIONUM", 0);
 	LJM_eWriteName(handle, "I2C_SCL_DIONUM", 1);
@@ -35,7 +36,7 @@ void I2C(int handle)
 	LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x68);
 
 	LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 2); // Set the number of bytes to transmit
-	LJM_eWriteName(handle, "I2C_NUM_BYTES_RX", 6); // Set the number of bytes to receive
+	LJM_eWriteName(handle, "I2C_NUM_BYTES_RX", 14); // Set the number of bytes to receive
 
 	// Set the TX bytes. We are sending 1 byte for the address.
 	numBytes = 2;
@@ -55,20 +56,27 @@ void I2C(int handle)
 		LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
 
 		// Read the RX bytes.
-		numBytes = 6;
-		for (int i = 0; i < 6; i++) {
+		numBytes = 14;
+		for (int i = 0; i < numBytes; i++) {
 			aBytes[i] = 0;
 		}
 		LJM_eReadNameByteArray(handle, I2C_READ_NAME, numBytes, aBytes, &errAdress);
 
-		testX[0] = (aBytes[0] << 8) + aBytes[1];
-		testX[1] = (aBytes[2] << 8) + aBytes[3];
-		testX[2] = (aBytes[4] << 8) + aBytes[5];
+		testAcc[0] = (aBytes[0] << 8) + aBytes[1];
+		testAcc[1] = (aBytes[2] << 8) + aBytes[3];
+		testAcc[2] = (aBytes[4] << 8) + aBytes[5];
+
+		testGyro[0] = (aBytes[8] << 8) + aBytes[9];
+		testGyro[1] = (aBytes[10] << 8) + aBytes[11];
+		testGyro[2] = (aBytes[11] << 8) + aBytes[12];
 
 		//printf("%d: %d\n", (unsigned char)aBytes[0], (unsigned char)aBytes[0] << 8 );
 		
 		for (int i = 0; i < 3; i++) {
-			printf("%f \n", testX[0]/16384.0);
+			printf("%f \n", testAcc[i]/16384.0);
+		}
+		for (int i = 0; i < 3; i++) {
+			printf("%f \n", testGyro[i]/(1.114*32.0*30023.0));
 		}
 		printf("-----\n");
 		sleep(1);
