@@ -27,7 +27,7 @@ int main(int aFextrgc, char* argv[])
 {
 
 	//connect to daq
-	daq = calloc(6,sizeof *daq);
+	daq = calloc(1,sizeof *daq);
 	controlParams = calloc(17, sizeof *controlParams);
 	struct States s[1] = {0};
 	daq->numChannels = 9;
