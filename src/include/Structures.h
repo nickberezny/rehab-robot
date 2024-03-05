@@ -143,8 +143,9 @@ struct States {
 	double gonio;
 	int d1,d2,d3;
 	
-	
 	int lsb, lsf; //limit switches
+
+	char i2cBytes[64];
 };
 
 struct regexMatch {

@@ -50,6 +50,38 @@ void I2C(int handle)
 
 	for(int i = 0; i < 1000; i++)
 	{
+		LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x68);
+		numBytes = 1;
+		aBytes[0] = 0x3B; // Byte 0: Memory pointer = 0
+		LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, numBytes, aBytes, &errAdress);
+		LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
+
+		// Read the RX bytes.
+		numBytes = 14;
+		for (int i = 0; i < numBytes; i++) {
+			aBytes[i] = 0;
+		}
+		LJM_eReadNameByteArray(handle, I2C_READ_NAME, numBytes, aBytes, &errAdress);
+
+		testAcc[0] = (aBytes[0] << 8) + aBytes[1];
+		testAcc[1] = (aBytes[2] << 8) + aBytes[3];
+		testAcc[2] = (aBytes[4] << 8) + aBytes[5];
+
+		testGyro[0] = (aBytes[8] << 8) + aBytes[9];
+		testGyro[1] = (aBytes[10] << 8) + aBytes[11];
+		testGyro[2] = (aBytes[11] << 8) + aBytes[12];
+
+		//printf("%d: %d\n", (unsigned char)aBytes[0], (unsigned char)aBytes[0] << 8 );
+		
+		for (int i = 0; i < 3; i++) {
+			printf("%f \n", testAcc[i]/16384.0);
+		}
+		for (int i = 0; i < 3; i++) {
+			printf("%f \n", testGyro[i]/(1.114*32.0*30023.0));
+		}
+		printf("-----\n");
+
+		LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x69);
 		numBytes = 1;
 		aBytes[0] = 0x3B; // Byte 0: Memory pointer = 0
 		LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, numBytes, aBytes, &errAdress);

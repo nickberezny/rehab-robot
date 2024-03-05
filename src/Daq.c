@@ -61,6 +61,26 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
 
     s->dx = s->dx*ENC_TO_M/(STEP_SIZE_MS/1000.0);
 
+    numBytes = 1;
+    aBytes[0] = 0x3B; // Byte 0: Memory pointer = 0
+    LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, numBytes, aBytes, &errAdress);
+    LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
+
+    // Read the RX bytes.
+    numBytes = 14;
+    for (int i = 0; i < numBytes; i++) {
+        aBytes[i] = 0;
+    }
+    LJM_eReadNameByteArray(handle, I2C_READ_NAME, numBytes, aBytes, &errAdress);
+
+    testAcc[0] = (aBytes[0] << 8) + aBytes[1];
+    testAcc[1] = (aBytes[2] << 8) + aBytes[3];
+    testAcc[2] = (aBytes[4] << 8) + aBytes[5];
+
+    testGyro[0] = (aBytes[8] << 8) + aBytes[9];
+    testGyro[1] = (aBytes[10] << 8) + aBytes[11];
+    testGyro[2] = (aBytes[11] << 8) + aBytes[12];
+
 
 
 }
@@ -124,6 +144,19 @@ int initDaq(struct DAQ *daq)
     LJM_eWriteName(handle, "ASYNCH_NUM_STOP_BITS", 1);
     LJM_eWriteName(handle, "ASYNCH_ENABLE", 1);
 
+    LJM_eWriteName(handle, "I2C_SDA_DIONUM", 2);
+    LJM_eWriteName(handle, "I2C_SCL_DIONUM", 3);
+
+    LJM_eWriteName(handle, "I2C_SPEED_THROTTLE", 0);
+    LJM_eWriteName(handle, "I2C_OPTIONS", 0);
+    LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x68);
+
+    LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 2); // Set the number of bytes to transmit
+    LJM_eWriteName(handle, "I2C_NUM_BYTES_RX", 14); // Set the number of bytes to receive
+\
+    LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, 2, aBytes, &errAdress);
+    LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
+    LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 1); // Set the number of bytes to transmit
 
     double aValues[DAQ_NUM_OF_CH];
     memset( aValues, 0, DAQ_NUM_OF_CH*sizeof(double) );
