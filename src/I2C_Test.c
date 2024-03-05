@@ -64,13 +64,11 @@ void I2C(int handle)
 		testX[0] = (aBytes[0] << 8) + aBytes[1];
 		testX[1] = (aBytes[2] << 8) + aBytes[3];
 		testX[2] = (aBytes[4] << 8) + aBytes[5];
-	
-		for (int i = 0; i < 3; i++) {
-			//printf("%d: %d\n", i, testX[i]);
-		}
 
+		printf("%d: %d\n", (unsigned char)aBytes[0], (unsigned char)aBytes[0] << 8 );
+		
 		for (int i = 0; i < 6; i++) {
-			printf("%d \n", (unsigned char)aBytes[i]);
+			//printf("%d \n", (unsigned char)aBytes[i]);
 		}
 		printf("-----\n");
 		sleep(1);
