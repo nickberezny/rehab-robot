@@ -124,8 +124,8 @@ struct DAQ {
 	double dataRead[4];
     double writeValues[1];
 
-    char i2cAddr[2] = {0x68, 0x69};
-	char i2cSend[4] = 0x3B;
+    char i2cAddr[2];
+	char i2cSend[4];
 	
 };
 

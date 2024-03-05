@@ -22,15 +22,16 @@
 void readI2C(struct States * s, struct DAQ * daq, int index)
 {
 
-    LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", daq->i2cAddr[index]);
+    LJM_eWriteName(daq->daqHandle, "I2C_SLAVE_ADDRESS", daq->i2cAddr[index]);
 
     LJM_eWriteNameByteArray(daq->daqHandle, I2C_WRITE_NAME, 1, daq->i2cSend, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "I2C_GO", 1); // Do the I2C communications.
 
-    // Read the RX bytes.
+    // Read the RX bytes
     for (int i = 0; i < 14; i++) {
         s->i2cRead[i] = 0;
     }
+
     LJM_eReadNameByteArray(daq->daqHandle, I2C_READ_NAME, 14, s->i2cRead, &(daq->errorAddress));
 
     s->accel[0] = ((s->i2cRead[0] << 8) + s->i2cRead[1])/16384.0; //x
@@ -156,6 +157,9 @@ int initDaq(struct DAQ *daq)
     LJM_eWriteName(handle, "I2C_OPTIONS", 0);
 
     char aBytes[12] = {0x6B, 0x00};
+    daq->i2cAddr[0]; = {0x68};
+    daq->i2cAddr[1]; = {0x69};
+    daq->i2cSend[0]; = {0x3B};
 
     LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x68);
     LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 2); // Set the number of bytes to transmit

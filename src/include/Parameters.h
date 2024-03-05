@@ -61,3 +61,6 @@
 #define MOTOR_ZERO 0
 #define MOTOR_SLOW_BWD 0
 #define MOTOR_SLOW_FWD 0
+
+#define I2C_WRITE_NAME "I2C_DATA_TX"
+#define I2C_READ_NAME "I2C_DATA_RX"
