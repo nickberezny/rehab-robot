@@ -19,7 +19,8 @@ int main()
 
 void I2C(int handle)
 {
-	
+	const char * I2C_WRITE_NAME = "I2C_DATA_TX";
+	const char * I2C_READ_NAME = "I2C_DATA_RX";
 
 	double testAcc[3];
 	double testGyro[3];
