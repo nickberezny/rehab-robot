@@ -28,8 +28,8 @@ void I2C(int handle)
 	int numBytes, errAdress;
 	char aBytes[64] = {0x6B, 0x00}; // TX/RX bytes will go here
 
-	LJM_eWriteName(handle, "I2C_SDA_DIONUM", 2);
-	LJM_eWriteName(handle, "I2C_SCL_DIONUM", 3);
+	LJM_eWriteName(handle, "I2C_SDA_DIONUM", 4);
+	LJM_eWriteName(handle, "I2C_SCL_DIONUM", 5);
 
 	LJM_eWriteName(handle, "I2C_SPEED_THROTTLE", 0);
 	LJM_eWriteName(handle, "I2C_OPTIONS", 0);
