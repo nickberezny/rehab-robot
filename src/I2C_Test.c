@@ -93,7 +93,7 @@ void I2C(int handle)
 			printf("%f \n", testGyro[i]/(1.114*32.0*30023.0));
 		}
 		printf("-----\n");
-
+/*
 		LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x69);
 		numBytes = 1;
 		aBytes[0] = 0x3B; // Byte 0: Memory pointer = 0
@@ -124,6 +124,7 @@ void I2C(int handle)
 			printf("%f \n", testGyro[i]/(1.114*32.0*30023.0));
 		}
 		printf("-----\n");
+		*/
 		sleep(1);
 	}
 
