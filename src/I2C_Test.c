@@ -46,7 +46,7 @@ void I2C(int handle)
 
 	LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 1); // Set the number of bytes to transmit
 
-
+/*
 	LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x69);
 	LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 2); // Set the number of bytes to transmit
 	LJM_eWriteName(handle, "I2C_NUM_BYTES_RX", 14); // Set the number of bytes to receive
@@ -58,12 +58,12 @@ void I2C(int handle)
 	LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
 
 	LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 1); // Set the number of bytes to transmit
-
+*/
 	sleep(1);
 
 	for(int i = 0; i < 1000; i++)
 	{
-		LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x68);
+		//LJM_eWriteName(handle, "I2C_SLAVE_ADDRESS", 0x68);
 		numBytes = 1;
 		aBytes[0] = 0x3B; // Byte 0: Memory pointer = 0
 		LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, numBytes, aBytes, &errAdress);
