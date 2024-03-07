@@ -22,7 +22,7 @@
 void readI2C(struct States * s, struct DAQ * daq, int index)
 {
 
-    printf("Addr %d\n", (int)daq->i2cAddr[index]);
+    printf("Send %d\n", (int)daq->i2cSend[0]);
 
     LJM_eWriteName(daq->daqHandle, "I2C_SLAVE_ADDRESS", daq->i2cAddr[index]);
 
