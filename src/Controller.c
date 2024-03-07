@@ -235,11 +235,11 @@ void * controllerThread (void * d)
     
         //s->gonio = ((double)daq->aValues[8]-controlParams->gonio_zero)*0.002618;
 
-        s->xGyro[0] += (s->dxGyro[0] - controlParams->gyro_offset[0])*(STEP_SIZE_MS/1000.0);
-        s->xGyro[1] += (s->dxGyro[1] - controlParams->gyro_offset[1])*(STEP_SIZE_MS/1000.0);
+        //s->xGyro[0] += (s->dxGyro[0] - controlParams->gyro_offset[0])*(STEP_SIZE_MS/1000.0);
+        //s->xGyro[1] += (s->dxGyro[1] - controlParams->gyro_offset[1])*(STEP_SIZE_MS/1000.0);
 
-        s_next->xGyro[0] = s->xGyro[0];
-        s_next->xGyro[1] = s->xGyro[1];
+        //s_next->xGyro[0] = s->xGyro[0];
+        //s_next->xGyro[1] = s->xGyro[1];
 
         s_next->x = s->x + s_next->dx*(STEP_SIZE_MS/1000.0);
         //checkVelocity(s,s_next);
