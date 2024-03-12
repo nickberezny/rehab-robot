@@ -58,7 +58,7 @@ void * clientThread (void * d)
             else
             {
                 sprintf(buffer, "PLOT::%.4f::%.4f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2F::", s_client->x/controlParams->xend, s_client->x0_to_send/controlParams->xend,
-                    s_client->x0_duration,s_client->Fext, s_client->Fext,controlParams->Kest,
+                    s_client->x0_duration,s_client->Fext,controlParams->Kest,
                     s_client->emg1,s_client->emg2,s_client->emg3,s_client->emg4, s_client->xGyro); 
                     
                // double xtest = 1.0;
