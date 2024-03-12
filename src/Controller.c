@@ -195,7 +195,7 @@ void * controllerThread (void * d)
                     AdmittanceZeroStiffnessMode(s, controlParams);
                     //PositionMode(s, controlParams);
                 }
-                s->x0_to_send = controlParams->x0*controlParams->xend;
+                s->x0_to_send = controlParams->x0;
                 //AdmittanceMode(s, controlParams);
                 break;
             
