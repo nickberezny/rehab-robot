@@ -97,7 +97,7 @@ void * controllerThread (void * d)
         s->x0_to_send = controlParams->x0;
         s->x0_duration = controlParams->x0_duration[controlParams->x0_index];
         if(controlParams->x0_is_percent) s->x0 = s->x0*controlParams->xend;
-
+/*
         if(controlParams->x0dist != 0)
         {
             if(controlParams->F_index == 0) controlParams->X_init_for_Kest = s->x;
@@ -114,7 +114,7 @@ void * controllerThread (void * d)
             controlParams->F_index = 0;
             //printf("Kest: %f\n", controlParams->Kest);
         }
-
+*/
         //printf("t:%f, x:%f, x0d: %f\n",s->t,s->x0,s->x0_duration);
         
         //ctl*****************
