@@ -186,7 +186,7 @@ void * controllerThread (void * d)
                 {
 
                     s->x0 = controlParams->x0dist*controlParams->xend + controlParams->x_save;
-                    printf("x0: %f\n",s->x0);
+                    //printf("x0: %f\n",s->x0);
                     if(s->x0 < 0.1*controlParams->xend)  s->x0 = 0.1*controlParams->xend;
                     if(s->x0 > 0.9*controlParams->xend)  s->x0 = 0.9*controlParams->xend;
                     AdmittanceMode(s, controlParams);
@@ -197,7 +197,7 @@ void * controllerThread (void * d)
                     AdmittanceZeroStiffnessMode(s, controlParams);
                     //PositionMode(s, controlParams);
                 }
-                s->x0_to_send = s->x0; //controlParams->x0;
+                s->x0_to_send = controlParams->x0;
                 //AdmittanceMode(s, controlParams);
                 break;
             
