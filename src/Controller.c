@@ -175,12 +175,13 @@ void * controllerThread (void * d)
                 break;
             case ADM_DIST_MODE:
                 //s->x0 = 0.1
-                
+                //
                 s->cmd = 0;
                 if(controlParams->x0dist != 0.0 && controlParams->x_save == 0.0)
                 {
                     controlParams->x_save = s->x;  
                 }
+
                 if(controlParams->x0dist != 0.0)
                 {
                     s->x0 = controlParams->x0dist*controlParams->xend + controlParams->x_save;
@@ -194,7 +195,7 @@ void * controllerThread (void * d)
                     AdmittanceZeroStiffnessMode(s, controlParams);
                     //PositionMode(s, controlParams);
                 }
-                s->x0_to_send = s->x0;
+                s->x0_to_send = controlParams->x0;
                 //AdmittanceMode(s, controlParams);
                 break;
             
