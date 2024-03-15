@@ -130,11 +130,13 @@ void * controllerThread (void * d)
                 break; 
             case ADM_MODE:
                 //Admittance Control
+                printf("stiffness %f\n",controlParams->Kd);
                 if(controlParams->Kd != 0.0){
                     AdmittanceMode(s, controlParams);
                 }
                 else
                 {
+                    printf("Zero stiffness\n");
                     AdmittanceZeroStiffnessMode(s, controlParams);
                 }
                 
