@@ -130,7 +130,14 @@ void * controllerThread (void * d)
                 break; 
             case ADM_MODE:
                 //Admittance Control
-                AdmittanceMode(s, controlParams);
+                if(controlParams->Kd != 0.0){
+                    AdmittanceMode(s, controlParams);
+                }
+                else
+                {
+                    AdmittanceZeroStiffnessMode(s, controlParams);
+                }
+                
                 break; 
             case UIC_MODE:
                 //Unified Interaction Control
