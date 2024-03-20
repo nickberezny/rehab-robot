@@ -37,7 +37,7 @@ void HomeToBack(struct States * s, struct DAQ * daq, bool getXend)
     s->lsb = daq->aValues[2];
     s->x = 0;
     s->dx = 0;
-    daq->aValues[0] = CMD_GAIN*(-0.35) + CMD_OFFSET;
+    daq->aValues[0] = CMD_GAIN*(-0.25) + CMD_OFFSET;
     
     while(s->lsb == 0)
     {
@@ -66,7 +66,7 @@ void HomeToFront(struct States * s, struct DAQ * daq)
     s->lsf = daq->aValues[3];
     
 
-    daq->aValues[0] = CMD_GAIN*(0.35) + CMD_OFFSET;
+    daq->aValues[0] = CMD_GAIN*(0.25) + CMD_OFFSET;
     
     while(s->lsf == 0)
     {
