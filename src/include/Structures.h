@@ -8,8 +8,19 @@
 
 #include "./Parameters.h"
 #include <stdbool.h>
+#include <arpa/inet.h>
 #include "tensorflow/c/c_api.h"
 
+struct ForceSensorData
+{
+	int socket_desc;
+	struct sockaddr_in server_addr;
+	int server_struct_length;
+	int32_t msg[9];
+	int32_t temp[4];
+	double F[3];
+ 	double T[3];
+};
 
 
 struct preRunStates {
@@ -92,7 +103,6 @@ struct ControlParams {
 	double F_filt_x[FILTER_ORDER+1];
 	double F_filt_y[FILTER_ORDER+1];
 
-
 };
 
 
@@ -127,6 +137,8 @@ struct DAQ {
 
     char i2cAddr[2];
 	char i2cSend[4];
+
+	struct ForceSensorData *fdata;
 	
 };
 
@@ -156,6 +168,8 @@ struct States {
 	double xAccel[2];
 	double dxGyro[2];
 	double xGyro[2];
+
+
 
 };
 

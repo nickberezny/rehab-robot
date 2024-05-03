@@ -17,6 +17,7 @@
 
 #include "./include/Parameters.h"
 #include "./include/Structures.h"
+#include "./include/ForceSensor.h"
 #include "./include/Daq.h"
 
 void readI2C(struct States * s, struct DAQ * daq, int index)
@@ -28,6 +29,7 @@ void readI2C(struct States * s, struct DAQ * daq, int index)
 
     LJM_eWriteNameByteArray(daq->daqHandle, I2C_WRITE_NAME, 1, daq->i2cSend, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "I2C_GO", 1); // Do the I2C communications.
+
 
     // Read the RX bytes
     for (int i = 0; i < 14; i++) {
@@ -55,22 +57,23 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
      */
 
         //UART for position 
-    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
-    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
-    LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
+    //LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
+    //LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
+    //LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
 
     int err = LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
+    readFroceSensor(daq->fdata);
 
     //s->dx = (1.0 - 2.0*(double)daq->aValues[4])*((double)daq->aValues[5])*ENC_TO_M/(STEP_SIZE_MS/1000.0); //in m/dt
-    s->Fext = 0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
+    s->Fext = daq->fdata->F[2];//0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
     s->lsb = daq->aValues[2];
     s->lsf = daq->aValues[3];
     
     
     if(err != 0) printf("daq err %d\n", err);
 
-    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 3);
-    LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 3, daq->dataRead, &(daq->errorAddress));
+    //LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 3);
+    //LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 3, daq->dataRead, &(daq->errorAddress));
 
     //printf("%d,%d,%d,\n",(int)daq->dataRead[0],(int)daq->dataRead[1],(int)daq->dataRead[2]);
 

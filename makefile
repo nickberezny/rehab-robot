@@ -50,6 +50,7 @@ FILES := $(filter-out %I2C_Test.c, $(FILES))
 FILES := $(filter-out %UART_Test.c, $(FILES))
 
 build:
+	sudo ifconfig eno1 192.168.1.10 netmask 255.255.255.0
 	sudo gcc $(FILES)  -o robotController $(LIB)
 
 docs:
@@ -57,7 +58,8 @@ docs:
 	firefox doc/html/index.html
 
 daq: 
-	sudo gcc $(PATHS)TestDaq.c $(PATHS)Daq.c $(PATHS)TimeUtilities.c -o testDaq $(LIB)
+	sudo ifconfig eno1 192.168.1.10 netmask 255.255.255.0
+	sudo gcc $(PATHS)TestDaq.c $(PATHS)Daq.c $(PATHS)ForceSensor.c $(PATHS)TimeUtilities.c -o testDaq $(LIB)
 
 spi:
 	sudo gcc $(PATHS)SPI_Test.c -o spiTest $(LIB)

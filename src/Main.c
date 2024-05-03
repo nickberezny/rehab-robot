@@ -103,7 +103,10 @@ int main(int argc, char* argv[])
     ps = calloc(1, sizeof *ps);
     tensorflow = calloc(1, sizeof *tensorflow);
 
-
+    //daq->fdata = calloc(1, sizeof daq->fdata);
+   // struct ForceSensorData *fdata = calloc(1, sizeof fdata);
+   // daq->fdata=fdata;
+   // initForceSensorUDP(daq->fdata);
 
     pthread_t thread[NUMBER_OF_THREADS];
     memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
