@@ -61,7 +61,7 @@ int main(int aFextrgc, char* argv[])
 		clock_gettime(CLOCK_MONOTONIC, &s->t_start);
 		getElapsedTime(&controlParams->t_first, &s->t_start, &s->dt);  
 		//timeStep(struct timespec * ts, struct timespec * tf, int * dt);
-		//ReadWriteDAQ(s, daq);
+		ReadWriteDAQ(s, daq);
 		//s->x += s->dx*(STEP_SIZE_MS/1000.0);
 		//s->gonio = ((double)daq->aValues[8])*0.002618;
 		//printf("Encoder: %.5f, Gonio: %.3f\n", s->x, s->gonio);
@@ -69,7 +69,9 @@ int main(int aFextrgc, char* argv[])
 		//readFroceSensor(fdata);
 		//printf("%d,%f, %f, %f\n",s->t_start.tv_nsec,fdata->F[0],fdata->F[1],fdata->F[2]);
 
-		readI2C(s, daq, 0);
+		//readI2C(s, daq, 0);
+		//readI2C(s, daq, 1);
+		printf("%f, %f, %f\n",  s->accel[0],  s->accel[1],  s->accel[2]);
 
 		if(s->t_start.tv_nsec-prev_t > 1200000)
 		{

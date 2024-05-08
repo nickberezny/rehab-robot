@@ -65,6 +65,9 @@ struct ControlParams {
 	double *tdist;
 	double *xdist;
 	double *x0_duration;
+	double *x_for_q;
+	double *q1;
+	double *q2;
 	int x0_is_percent;
 	int trajSize;
 	double ** cmd;
@@ -80,6 +83,7 @@ struct ControlParams {
 	bool firstRun;
 
     int x0_index;
+    int qn;
 
 	int recordEMG;
 	int currentState; 
@@ -159,6 +163,7 @@ struct States {
 	double xstar, cmd;
 	double emg1,emg2,emg3,emg4;
 	double gonio;
+	double qhip, qknee, qhip_prev, qknee_prev;
 	int d1,d2,d3;
 	
 	int lsb, lsf; //limit switches
@@ -168,9 +173,6 @@ struct States {
 	double xAccel[2];
 	double dxGyro[2];
 	double xGyro[2];
-
-
-
 };
 
 struct regexMatch {

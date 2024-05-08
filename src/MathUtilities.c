@@ -181,8 +181,6 @@ void Butterworth10(double * x0, double * y0, double * x, double * y, double * a,
 		y[i] = y[i-1];
 	}
 
-	
-
 	x[0] = *x0;
 	y[0] = b[0]*x[0];
 
@@ -203,6 +201,9 @@ void Butterworth10(double * x0, double * y0, double * x, double * y, double * a,
 
 void Interpolation(double * t, double * x, double *ti, double *xi, int *index, int n)
 {
+
+	//interpolate in vectors t, x at point ti, return xi. n = size 
+
 	int i = (int)(1000*(*ti));
 
 	//printf("intep index init: %f, %f\n",t[i], *ti);

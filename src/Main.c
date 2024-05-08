@@ -103,6 +103,10 @@ int main(int argc, char* argv[])
     ps = calloc(1, sizeof *ps);
     tensorflow = calloc(1, sizeof *tensorflow);
 
+    controlParams->x_for_q = malloc(600000.0*sizeof(double));
+    controlParams->q1 = malloc(600000.0*sizeof(double));
+    controlParams->q2 = malloc(600000.0*sizeof(double));
+
     //daq->fdata = calloc(1, sizeof daq->fdata);
    // struct ForceSensorData *fdata = calloc(1, sizeof fdata);
    // daq->fdata=fdata;
@@ -201,7 +205,7 @@ int main(int argc, char* argv[])
                 
                 sendMessage(&sockfd, "UI::STARTTASK::");
              
-                HomeToBack(d,daq, false);
+                HomeToBack(d,daq,controlParams, false);
                 //controlParams->gonio_zero = (double)daq->aValues[8];
                 zeroDaq(daq);
                 //controlParams->xend = 0.4;
@@ -215,8 +219,8 @@ int main(int argc, char* argv[])
                 break;
 
             case HOME_FRONT_BACK_STATE:
-                HomeToFront(d,daq);
-                HomeToBack(d,daq, true);
+                HomeToFront(d,daq,controlParams);
+                HomeToBack(d,daq,controlParams, true);
                 //controlParams->gonio_zero = (double)daq->aValues[8];
                 zeroDaq(daq);
                 sleep(2);

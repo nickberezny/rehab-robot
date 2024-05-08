@@ -10,7 +10,7 @@
 #define NSEC_IN_SEC 1000000000.0
 #define BUFFER_SIZE 10
 #define STEP_SIZE_MS 1.0
-#define DAQ_NUM_OF_CH 8
+#define DAQ_NUM_OF_CH 7
 #define MAT_EXP_ITERATIONS 50
 
 #define WAIT_STATE 0

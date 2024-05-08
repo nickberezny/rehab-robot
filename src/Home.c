@@ -22,8 +22,6 @@
 void HomeToBack(struct States * s, struct DAQ * daq, bool getXend)
 {
     
-    
-
     extern struct ControlParams *controlParams;
     /**
      * @brief Slowly moves robot until contact with back limit switch
@@ -32,20 +30,37 @@ void HomeToBack(struct States * s, struct DAQ * daq, bool getXend)
     
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
     ReadWriteDAQ(s, daq);
-
+    readI2C(s, daq, 0);
+    readI2C(s, daq, 1);
    
     s->lsb = daq->aValues[2];
     s->x = 0;
     s->dx = 0;
     daq->aValues[0] = CMD_GAIN*(-0.25) + CMD_OFFSET;
+
+    controlParams->x_for_q[0] = 0;
+    controlParams->q1[0] = s->xAccel[0];
+    controlParams->q2[0] = s->xAccel[1];
+    controlParams->qn = 1;
     
     while(s->lsb == 0)
     {
         s->x -= s->dx*(STEP_SIZE_MS/1000.0);
         ReadWriteDAQ(s,daq);
+        readI2C(s, daq, 0);
+        readI2C(s, daq, 1);
         s->lsb = daq->aValues[2];
+
+        //store new value of q if x - x_prev > thresh
+        if(s->x < controlParams->x_for_q[controlParams->qn-1])
+        {
+            controlParams->x_for_q[controlParams->qn] = s->x;
+            controlParams->q1[controlParams->qn] = s->xAccel[0];
+            controlParams->q2[controlParams->qn] = s->xAccel[1];
+            controlParams->qn += 1;
+        }
     }
-    
+
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
     if(getXend) controlParams->xend = s->x;
     printf("xend: %f\n",controlParams->xend); 

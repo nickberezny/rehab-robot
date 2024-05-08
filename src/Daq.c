@@ -23,7 +23,7 @@
 void readI2C(struct States * s, struct DAQ * daq, int index)
 {
 
-    printf("Send %d\n", (int)daq->i2cSend[0]);
+    //printf("Send %d\n", (int)daq->i2cSend[0]);
 
     LJM_eWriteName(daq->daqHandle, "I2C_SLAVE_ADDRESS", daq->i2cAddr[index]);
 
@@ -55,25 +55,26 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
      * @brief simultaneously read and write to Daq
      * @param[in] *s : pointer to robot States to store results
      */
+    //readI2C(s, daq, 0);
+    //readI2C(s, daq, 1);
 
-        //UART for position 
-    //LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
-    //LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
-    //LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
+    //UART for position 
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
+    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
 
     int err = LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
     readFroceSensor(daq->fdata);
 
-    //s->dx = (1.0 - 2.0*(double)daq->aValues[4])*((double)daq->aValues[5])*ENC_TO_M/(STEP_SIZE_MS/1000.0); //in m/dt
     s->Fext = daq->fdata->F[2];//0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
-    s->lsb = daq->aValues[2];
-    s->lsf = daq->aValues[3];
-    
+    s->lsb = daq->aValues[1];
+    s->lsf = daq->aValues[2];
     
     if(err != 0) printf("daq err %d\n", err);
 
-    //LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 3);
-    //LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 3, daq->dataRead, &(daq->errorAddress));
+    //read UART
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 3);
+    LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 3, daq->dataRead, &(daq->errorAddress));
 
     //printf("%d,%d,%d,\n",(int)daq->dataRead[0],(int)daq->dataRead[1],(int)daq->dataRead[2]);
 
@@ -91,8 +92,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
 
     s->dx = s->dx*ENC_TO_M/(STEP_SIZE_MS/1000.0);
 
-    //readI2C(s, daq, 0);
-    //readI2C(s, daq, 1);
+    
 
 }
 
@@ -112,29 +112,15 @@ int initDaq(struct DAQ *daq)
      * @brief initialize Daq 
      * @param[in] *s : pointer to robot States to store results
      */
+
     printf("Daq size: %d\n", daq->numChannels);
     
     int err, handle, errAdress;
     handle = 0;
-    // Open first found LabJack
+   
     err = LJM_Open(LJM_dtANY, LJM_ctANY, "LJM_idANY", &handle);
-    //ErrorCheck(err, "LJM_Open");
 
     LJM_eStreamStop(handle); //stop any previous streams
-    //LJM_eWriteName(handle, "DAC0", MOTOR_ZERO); //set motor to zero
-
-    /*
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 0));
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_INDEX", 8));
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO3_EF_ENABLE", 1));
-    */
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO6_EF_ENABLE", 0));
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO6_EF_INDEX", 10));
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO6_EF_ENABLE", 1));
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO7_EF_ENABLE", 0));
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO7_EF_INDEX", 10));
-    printf("LJM error: %d\n",LJM_eWriteName(handle, "DIO7_EF_ENABLE", 1));
-   
 
     //set Analog in resolution
     LJM_eWriteName(handle, "AIN0_RESOLUTION_INDEX", 1);
@@ -147,15 +133,15 @@ int initDaq(struct DAQ *daq)
     LJM_eWriteName(handle, "AIN4_RESOLUTION_INDEX", 1);
 
     LJM_eWriteName(handle, "ASYNCH_ENABLE", 0);
-    LJM_eWriteName(handle, "ASYNCH_TX_DIONUM", 2);  
-    LJM_eWriteName(handle, "ASYNCH_RX_DIONUM", 3);  
+    LJM_eWriteName(handle, "ASYNCH_TX_DIONUM", 4);  
+    LJM_eWriteName(handle, "ASYNCH_RX_DIONUM", 5);  
     LJM_eWriteName(handle, "ASYNCH_BAUD", 38400);
     LJM_eWriteName(handle, "ASYNCH_NUM_DATA_BITS", 8);
     LJM_eWriteName(handle, "ASYNCH_PARITY", 0);
     LJM_eWriteName(handle, "ASYNCH_NUM_STOP_BITS", 1);
     LJM_eWriteName(handle, "ASYNCH_ENABLE", 1);
 
-    /*
+    
     //I2C
     LJM_eWriteName(handle, "I2C_SDA_DIONUM", 3);
     LJM_eWriteName(handle, "I2C_SCL_DIONUM", 2);
@@ -179,7 +165,7 @@ int initDaq(struct DAQ *daq)
     LJM_eWriteNameByteArray(handle, I2C_WRITE_NAME, 2, aBytes, &errAdress);
     LJM_eWriteName(handle, "I2C_GO", 1); // Do the I2C communications.
     LJM_eWriteName(handle, "I2C_NUM_BYTES_TX", 1); // Set the number of bytes to transmit
-    */
+    
 
     double aValues[DAQ_NUM_OF_CH];
     memset( aValues, 0, DAQ_NUM_OF_CH*sizeof(double) );
@@ -193,20 +179,10 @@ int initDaq(struct DAQ *daq)
     for(int i = 0; i <DAQ_NUM_OF_CH;i++)
         aNumValues[i] = 1;
 
-    const char * aNamesTmp6[4] = {"DAC0", "AIN0","FIO0", "FIO1"}; 
-    const char * aNamesTmp10[8] = {"DAC0", "AIN0","FIO0", "FIO1","AIN1","AIN2","AIN3","AIN4"}; 
-    const char * aNamesTmp11[9] = {"DAC0", "AIN0","FIO0", "FIO1","AIN1","AIN2","AIN3","AIN4","DIO6_EF_READ_A_F"}; 
+    const char * aNamesTmp10[7] = {"DAC0","FIO0", "FIO1","AIN0","AIN1","AIN2","AIN3"};  
 
-    printf("DAQ NUM %d\n", daq->numChannels);
+    memcpy(&(daq->aNames),aNamesTmp10, 100*daq->numChannels*sizeof(char));
 
-    
-    if(daq->numChannels == 9)
-        memcpy(&(daq->aNames),aNamesTmp11, 100*daq->numChannels*sizeof(char));
-    else if(daq->numChannels == 8)
-        memcpy(&(daq->aNames),aNamesTmp10, 100*daq->numChannels*sizeof(char));
-    else
-        memcpy(&(daq->aNames),aNamesTmp6, 100*daq->numChannels*sizeof(char));
-    
     printf("DAQ NUM %d\n", daq->numChannels);
     memcpy(&(daq->aValues), aValues, DAQ_NUM_OF_CH*sizeof(double));
     memcpy(&(daq->aNumValues),aNumValues, DAQ_NUM_OF_CH*sizeof(int));
@@ -238,12 +214,6 @@ int initDaq(struct DAQ *daq)
     LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
 
-    /*
-    s->daq.aValues = aValues;
-    s->daq.aNumValues = aNumValues;
-    s->daq.aWrites = aWrites;
-    s->daq.errorAddress = 0;
-    */
     return handle;
 
 }

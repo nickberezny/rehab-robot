@@ -43,7 +43,7 @@ void * controllerThread (void * d)
     iter_cont = 0;
 
 
-    extern struct States *s; // = (struct CUICStruct*)d;
+    extern struct States *s; 
     extern struct ControlParams *controlParams;
     extern struct DAQ *daq;
     extern quitThreads;
@@ -87,6 +87,24 @@ void * controllerThread (void * d)
             quitThreads = true;
         }
 
+        //interpolate joint angles
+        Interpolation(controlParams->x_for_q, controlParams->q1, &(s->x), &(s->qhip), &(controlParams->x0_index), controlParams->qn);
+        Interpolation(controlParams->x_for_q, controlParams->q2, &(s->x), &(s->qknee), &(controlParams->x0_index), controlParams->qn);
+
+        s->dqhip = (s->qhip - s->qhip_prev)/(STEP_SIZE_MS/1000.0);
+        s->dqknee = (s->qknee- s->qknee_prev)/(STEP_SIZE_MS/1000.0);
+
+        /*
+        controlParams->tensorflow->inputVals[0] = s->qhip;
+        controlParams->tensorflow->inputVals[1] = s->dqhip;
+        controlParams->tensorflow->inputVals[2] = s->qknee;
+        controlParams->tensorflow->inputVals[3] = s->dqknee;
+        controlParams->tensorflow->inputVals[4] = s->emg1;
+        controlParams->tensorflow->inputVals[5] = s->emg2;
+        controlParams->tensorflow->inputVals[6] = s->emg3;
+        controlParams->tensorflow->inputVals[7] = s->emg4;
+        runModel(controlParams->tensorflow);
+        */
         
         //set trajectory
         Interpolation((controlParams->t), (controlParams->x), &(s->t), &(controlParams->x0), &(controlParams->x0_index), controlParams->trajSize);
@@ -97,25 +115,7 @@ void * controllerThread (void * d)
         s->x0_to_send = controlParams->x0;
         s->x0_duration = controlParams->x0_duration[controlParams->x0_index];
         if(controlParams->x0_is_percent) s->x0 = s->x0*controlParams->xend;
-/*
-        if(controlParams->x0dist != 0)
-        {
-            if(controlParams->F_index == 0) controlParams->X_init_for_Kest = s->x;
-            controlParams->F_for_Kest[controlParams->F_index] = s->Fext;
-            controlParams->F_index = controlParams->F_index + 1;
-        }
-        else if(controlParams->x0dist == 0 && controlParams->F_index != 0)
-        {
-            //calc Kest
-            //avg force
-            //controlParams->Kest = Fmean/(s->x-controlParam->X_init_for_Kest);
-            AverageVector(controlParams->F_for_Kest, &(controlParams->Kest), 100);
-            controlParams->Kest = controlParams->Kest/(s->x - controlParams->X_init_for_Kest + 0.000001);
-            controlParams->F_index = 0;
-            //printf("Kest: %f\n", controlParams->Kest);
-        }
-*/
-        //printf("t:%f, x:%f, x0d: %f\n",s->t,s->x0,s->x0_duration);
+
         
         //ctl*****************
         switch((int)controlParams->controlMode)
@@ -239,25 +239,15 @@ void * controllerThread (void * d)
         
          if(controlParams->recordEMG)
         {
-            s->emg1 = daq->aValues[4];
-            s->emg2 = daq->aValues[5];
-            s->emg3 = daq->aValues[6];
-            s->emg4 = daq->aValues[7];
+            s_next->emg1 = daq->aValues[3];
+            s_next->emg2 = daq->aValues[4];
+            s_next->emg3 = daq->aValues[5];
+            s_next->emg4 = daq->aValues[6];
         }
     
-        //s->gonio = ((double)daq->aValues[8]-controlParams->gonio_zero)*0.002618;
-
-        //s->xGyro[0] += (s->dxGyro[0] - controlParams->gyro_offset[0])*(STEP_SIZE_MS/1000.0);
-        //s->xGyro[1] += (s->dxGyro[1] - controlParams->gyro_offset[1])*(STEP_SIZE_MS/1000.0);
-
-        //s_next->xGyro[0] = s->xGyro[0];
-        //s_next->xGyro[1] = s->xGyro[1];
-
         s_next->x = s->x + s_next->dx*(STEP_SIZE_MS/1000.0);
-        //checkVelocity(s,s_next);
-
-        //FIR_FILTER(FextArray, &s_next->Fext, &FextOrder);
-        //FIR_FILTER(VelArray, &s_next->dx, &VelOrder);
+        s_next->qhip_prev = s->qhip;
+        s_next->qknee_prev = s->qknee;
 
         Butterworth10(&(s_next->dx),&(s->dx),controlParams->dx_filt_x,controlParams->dx_filt_y, controlParams->filter_a_100Hz, controlParams->filter_b_100Hz);
         Butterworth10(&(s_next->Fext),&(s->Fext),controlParams->F_filt_x,controlParams->F_filt_y, controlParams->filter_a_10Hz, controlParams->filter_b_10Hz);
@@ -265,7 +255,6 @@ void * controllerThread (void * d)
         s_next->Fext = s->Fext;
         s_next->dx = s->dx;
         
-
         s_next->xv_prev = s->xv;
         s_next->dxv_prev = s->dxv;
 
