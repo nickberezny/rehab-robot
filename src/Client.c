@@ -51,14 +51,14 @@ void * clientThread (void * d)
             //sprintf(buffer, "PLOT::%.2f::%.2f", s_client->x, s_client->x0);
             if(controlParams->x0_is_percent)
             {
-                sprintf(buffer, "PLOT::%.4f::%.4f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2F::", s_client->x/controlParams->xend, 
-                    s_client->x0_to_send,s_client->x0_duration,s_client->Fext,controlParams->Kest,
+                sprintf(buffer, "PLOT::%.4f::%.4f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::", s_client->x/controlParams->xend, 
+                    s_client->x0_to_send,s_client->x0_duration,s_client->Fext,
                     s_client->emg1,s_client->emg2,s_client->emg3,s_client->emg4, s_client->xGyro);
             }
             else
             {
-                sprintf(buffer, "PLOT::%.4f::%.4f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2F::", s_client->x/controlParams->xend, s_client->x0_to_send/controlParams->xend,
-                    s_client->x0_duration,s_client->Fext,controlParams->Kest,
+                sprintf(buffer, "PLOT::%.4f::%.4f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2f::%.2F::", s_client->x/controlParams->xend, s_client->x0_to_send/controlParams->xend,
+                    s_client->x0_duration,s_client->Fext,
                     s_client->emg1,s_client->emg2,s_client->emg3,s_client->emg4, s_client->xGyro); 
                     
                // double xtest = 1.0;

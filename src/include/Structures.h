@@ -89,14 +89,9 @@ struct ControlParams {
 	int currentState; 
 	int cont_iteration;
 	double controlMode; //0 = PD, 1 = Adm, 2 = Imp, 3 = UIC, 4 = Stoch. Force
+	int getKest;
 
-	int useFriction;
 	struct tensorFlowVars * tensorflow;
-
-	double F_for_Kest[100];
-	int F_index;
-	double X_init_for_Kest;
-	double Kest;
 
 	double filter_a_10Hz[4];
 	double filter_b_10Hz[4]; 
@@ -164,6 +159,8 @@ struct States {
 	double emg1,emg2,emg3,emg4;
 	double gonio;
 	double qhip, qknee, qhip_prev, qknee_prev;
+	double dqhip, dqknee;
+	double kest[2];
 	int d1,d2,d3;
 	
 	int lsb, lsf; //limit switches

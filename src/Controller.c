@@ -94,29 +94,33 @@ void * controllerThread (void * d)
         s->dqhip = (s->qhip - s->qhip_prev)/(STEP_SIZE_MS/1000.0);
         s->dqknee = (s->qknee- s->qknee_prev)/(STEP_SIZE_MS/1000.0);
 
-        /*
-        controlParams->tensorflow->inputVals[0] = s->qhip;
-        controlParams->tensorflow->inputVals[1] = s->dqhip;
-        controlParams->tensorflow->inputVals[2] = s->qknee;
-        controlParams->tensorflow->inputVals[3] = s->dqknee;
-        controlParams->tensorflow->inputVals[4] = s->emg1;
-        controlParams->tensorflow->inputVals[5] = s->emg2;
-        controlParams->tensorflow->inputVals[6] = s->emg3;
-        controlParams->tensorflow->inputVals[7] = s->emg4;
-        runModel(controlParams->tensorflow);
-        */
+        if(controlParams->getKest)
+        {
+            controlParams->tensorflow->inputVals[0] = s->qhip;
+            controlParams->tensorflow->inputVals[1] = s->dqhip;
+            controlParams->tensorflow->inputVals[2] = s->qknee;
+            controlParams->tensorflow->inputVals[3] = s->dqknee;
+            controlParams->tensorflow->inputVals[4] = s->emg1;
+            controlParams->tensorflow->inputVals[5] = s->emg2;
+            controlParams->tensorflow->inputVals[6] = s->emg3;
+            controlParams->tensorflow->inputVals[7] = s->emg4;
+            runModel(controlParams->tensorflow);
+            s->kest[0] = controlParams->tensorflow->outputVals[0];  
+            s->kest[1] = controlParams->tensorflow->outputVals[1]; 
+        }
+        
+        
+
         
         //set trajectory
         Interpolation((controlParams->t), (controlParams->x), &(s->t), &(controlParams->x0), &(controlParams->x0_index), controlParams->trajSize);
         Interpolation((controlParams->tdist), (controlParams->xdist), &(s->t), &(controlParams->x0dist), &(controlParams->x0_index), controlParams->trajSize);
-
-        
+       
         s->x0 = controlParams->x0 + controlParams->x0dist;
         s->x0_to_send = controlParams->x0;
         s->x0_duration = controlParams->x0_duration[controlParams->x0_index];
         if(controlParams->x0_is_percent) s->x0 = s->x0*controlParams->xend;
-
-        
+       
         //ctl*****************
         switch((int)controlParams->controlMode)
         {
@@ -130,7 +134,6 @@ void * controllerThread (void * d)
                 break; 
             case ADM_MODE:
                 //Admittance Control
-                printf("stiffness %f\n",controlParams->Kd);
                 if(controlParams->Kd != 0.0){
                     AdmittanceMode(s, controlParams);
                 }

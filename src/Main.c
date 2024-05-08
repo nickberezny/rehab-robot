@@ -107,6 +107,8 @@ int main(int argc, char* argv[])
     controlParams->q1 = malloc(600000.0*sizeof(double));
     controlParams->q2 = malloc(600000.0*sizeof(double));
 
+    controlParams->getKest = false;
+
     //daq->fdata = calloc(1, sizeof daq->fdata);
    // struct ForceSensorData *fdata = calloc(1, sizeof fdata);
    // daq->fdata=fdata;
@@ -135,7 +137,8 @@ int main(int argc, char* argv[])
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
 
-    if(false)
+/*
+    if(controlParams->getKest)
     {
         controlParams->tensorflow = tensorflow;
 
@@ -149,12 +152,12 @@ int main(int argc, char* argv[])
 
         for(int i = 0; i<controlParams->tensorflow->NumInputs; i++)
         {
-            //controlParams->tensorflow->inputVals[i] = 0.1;
+            controlParams->tensorflow->inputVals[i] = 0.1;
         }
         
         runModel(controlParams->tensorflow);
     }
-
+*/
 
    
     
@@ -320,8 +323,8 @@ int main(int argc, char* argv[])
                 daq->writeValues[0] = 7; 
                 initDaq(daq);
 
-                /*
-                if(true)
+                
+                if(controlParams->getKest)
                 {
                     controlParams->tensorflow = tensorflow;
 
@@ -333,9 +336,6 @@ int main(int argc, char* argv[])
 
                     initModel(controlParams->tensorflow);
                 }
-
-             */
-                    
                 
                 sleep(2);
                 sprintf(sendData, "UI::SET");
