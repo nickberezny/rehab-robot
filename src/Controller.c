@@ -139,7 +139,6 @@ void * controllerThread (void * d)
                 }
                 else
                 {
-                    printf("Zero stiffness\n");
                     AdmittanceZeroStiffnessMode(s, controlParams);
                 }
                 

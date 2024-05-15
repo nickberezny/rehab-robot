@@ -30,8 +30,7 @@ void HomeToBack(struct States * s, struct DAQ * daq, bool getXend)
     
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
     ReadWriteDAQ(s, daq);
-    readI2C(s, daq, 0);
-    readI2C(s, daq, 1);
+    
    
     s->lsb = daq->aValues[2];
     s->x = 0;
@@ -50,15 +49,6 @@ void HomeToBack(struct States * s, struct DAQ * daq, bool getXend)
         readI2C(s, daq, 0);
         readI2C(s, daq, 1);
         s->lsb = daq->aValues[2];
-
-        //store new value of q if x - x_prev > thresh
-        if(s->x < controlParams->x_for_q[controlParams->qn-1])
-        {
-            controlParams->x_for_q[controlParams->qn] = s->x;
-            controlParams->q1[controlParams->qn] = s->xAccel[0];
-            controlParams->q2[controlParams->qn] = s->xAccel[1];
-            controlParams->qn += 1;
-        }
     }
 
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;

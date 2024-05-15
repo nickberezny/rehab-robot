@@ -28,8 +28,6 @@ void reverseBits(struct ForceSensorData * forceSensorData, int32_t * num)
 void initForceSensorUDP(struct ForceSensorData * forceSensorData)
 {
 
-    
-
     //forceSensorData->server_addr;
     forceSensorData->server_struct_length = sizeof(forceSensorData->server_addr);
     forceSensorData->socket_desc = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -51,6 +49,7 @@ void initForceSensorUDP(struct ForceSensorData * forceSensorData)
     
     forceSensorData->server_struct_length = sizeof(forceSensorData->server_addr);
 
+    /*
     uint64_t command_header = 0x1234;
     uint64_t command = 0x002; //start stream
     uint64_t argument = 1; //doesn't work??
@@ -71,8 +70,8 @@ void initForceSensorUDP(struct ForceSensorData * forceSensorData)
     b[7] = (data &  0xff000000) >> 8;
 
 
-    uint64_t sendData = 72057595162014738; //bias set
-    sendData = 72057595178791954; //bias set
+    uint64_t sendData = 72057595162014738; //bias set (0x0043)
+    //sendData = 72057595178791954; //bias reset (0x0044)
 
     printf("data %" PRIu64 "\n", sendData);
 
@@ -89,6 +88,7 @@ void initForceSensorUDP(struct ForceSensorData * forceSensorData)
          (struct sockaddr*)&(forceSensorData->server_addr), forceSensorData->server_struct_length) < 0){
         printf("Unable to send message\n");
     }
+    */
 }
 
 void readFroceSensor(struct ForceSensorData * forceSensorData)
@@ -126,14 +126,41 @@ void readFroceSensor(struct ForceSensorData * forceSensorData)
     reverseBits(forceSensorData,&(forceSensorData->msg[8]));
     forceSensorData->T[2] = (double)forceSensorData->msg[8]/1000000.0;
     
-    /*
-    F[0] = (double)reverseBits(forceSensorData,msg[3])/1000000.0;
-    F[1] = (double)reverseBits(forceSensorData,msg[4])/1000000.0;
-    F[2] = (double)reverseBits(forceSensorData,msg[5])/1000000.0;
 
-    T[0] = (double)reverseBits(forceSensorData,msg[6])/1000000.0;
-    T[1] = (double)reverseBits(forceSensorData,msg[7])/1000000.0;
-    T[2] = (double)reverseBits(forceSensorData,msg[8])/1000000.0;
-    */
+}
 
+void tareForceSensor(struct ForceSensorData * forceSensorData)
+{
+    forceSensorData->sendData = 72057595162014738; //bias set (0x0043)
+
+    if(sendto(forceSensorData->socket_desc, &forceSensorData->sendData, 8, 0,
+     (struct sockaddr*)&(forceSensorData->server_addr), forceSensorData->server_struct_length) < 0){
+    printf("Unable to send message\n");
+    }
+
+    return;
+}
+
+void startForceSensorStream(struct ForceSensorData * forceSensorData)
+{
+    forceSensorData->sendData = 33567762; //bias start stream (0x0002)
+
+    if(sendto(forceSensorData->socket_desc, &forceSensorData->sendData, 8, 0,
+     (struct sockaddr*)&(forceSensorData->server_addr), forceSensorData->server_struct_length) < 0){
+    printf("Unable to send message\n");
+    }
+
+    return;
+}
+
+void stopForceSensorStream(struct ForceSensorData * forceSensorData)
+{
+    forceSensorData->sendData = 0; //stop(0x000)
+
+    if(sendto(forceSensorData->socket_desc, &forceSensorData->sendData, 8, 0,
+     (struct sockaddr*)&(forceSensorData->server_addr), forceSensorData->server_struct_length) < 0){
+    printf("Unable to send message\n");
+    }
+
+    return;
 }

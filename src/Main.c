@@ -41,8 +41,6 @@
 #include "./include/ReadProcessFile.h"
 #include "./include/PreRun.h"
 
-
-
 //global variables 
 char buffer[4096];
 char buffer_small[10];
@@ -102,17 +100,17 @@ int main(int argc, char* argv[])
     daq = calloc(6,sizeof *daq);
     ps = calloc(1, sizeof *ps);
     tensorflow = calloc(1, sizeof *tensorflow);
+    struct ForceSensorData *fdata = calloc(1, sizeof fdata);
+    daq->fdata=fdata;
 
     controlParams->x_for_q = malloc(600000.0*sizeof(double));
     controlParams->q1 = malloc(600000.0*sizeof(double));
     controlParams->q2 = malloc(600000.0*sizeof(double));
 
     controlParams->getKest = false;
+    
 
-    //daq->fdata = calloc(1, sizeof daq->fdata);
-   // struct ForceSensorData *fdata = calloc(1, sizeof fdata);
-   // daq->fdata=fdata;
-   // initForceSensorUDP(daq->fdata);
+    initForceSensorUDP(daq->fdata);
 
     pthread_t thread[NUMBER_OF_THREADS];
     memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
@@ -137,7 +135,7 @@ int main(int argc, char* argv[])
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
 
-/*
+
     if(controlParams->getKest)
     {
         controlParams->tensorflow = tensorflow;
@@ -155,11 +153,9 @@ int main(int argc, char* argv[])
             controlParams->tensorflow->inputVals[i] = 0.1;
         }
         
-        runModel(controlParams->tensorflow);
+        runModel(controlParams->tensorflow); //run once to init
     }
-*/
 
-   
     
     initFolder(timeinfo,folder);
 
@@ -175,14 +171,10 @@ int main(int argc, char* argv[])
     
     //*************Initialize Tensorflow Neural Net*******************
 
-
-
     for(int i = 0; i < BUFFER_SIZE; i++)
     {
         commData->sockfd = &sockfd;
     }
-
-
 
     sendMessage(commData->sockfd, "ROBOT");
     read(sockfd, buffer, sizeof(buffer));
@@ -208,9 +200,8 @@ int main(int argc, char* argv[])
                 
                 sendMessage(&sockfd, "UI::STARTTASK::");
              
-                HomeToBack(d,daq,controlParams, false);
-                //controlParams->gonio_zero = (double)daq->aValues[8];
-                zeroDaq(daq);
+                HomeToBack(d,daq, false);
+                clearEncoderCounter(daq);
                 //controlParams->xend = 0.4;
                 //pthread_create(&preThread, &preRunAttr, &preRunThread, (void *)ps);
                 sleep(2);
@@ -222,10 +213,10 @@ int main(int argc, char* argv[])
                 break;
 
             case HOME_FRONT_BACK_STATE:
-                HomeToFront(d,daq,controlParams);
-                HomeToBack(d,daq,controlParams, true);
-                //controlParams->gonio_zero = (double)daq->aValues[8];
-                zeroDaq(daq);
+                HomeToFront(d,daq);
+                HomeToBack(d,daq, true);
+                clearEncoderCounter(daq);
+                
                 sleep(2);
                 sprintf(sendData, "UI::HOME");
                 sendMessage(&sockfd, sendData);
@@ -238,7 +229,8 @@ int main(int argc, char* argv[])
             case CALIBRATE_STATE:
                 sendMessage(&sockfd, "UI::STARTTASK::");
                 //run fn
-                CalibrateForceOffset(d,daq);
+                //CalibrateForceOffset(d,daq);
+                tareForceSensor(daq->fdata);
 
                 sleep(1);
                 sprintf(sendData, "UI::CALIBRATE");
@@ -246,6 +238,12 @@ int main(int argc, char* argv[])
                 calibrated = true;
                 controlParams->currentState = WAIT_STATE;
                 break;
+
+            case ANGLE_STATE:
+                //collect angle data (average over time period)
+                AddJointAngel(d,daq);
+                controlParams->currentState = WAIT_STATE;
+                break; 
 
             case SET_STATE:
                 sendMessage(&sockfd, "UI::STARTTASK::");
@@ -320,7 +318,7 @@ int main(int argc, char* argv[])
                 //*************Initialize Daq*******************
                 controlParams->recordEMG = true;
                 daq->numChannels = 8;
-                daq->writeValues[0] = 7; 
+    
                 initDaq(daq);
 
                 
@@ -394,6 +392,7 @@ int main(int argc, char* argv[])
     return 0;
 
 }
+
 
 
 void WaitForParamMsg(int *fd)
@@ -496,6 +495,12 @@ void WaitForMsg(int *fd, int *state)
         else if(strcmp(buffer, "CALIBRATE") == 0)
         {
             if(*state == WAIT_STATE || *state == READY_STATE) *state = CALIBRATE_STATE;
+            break;
+        }
+        else if(strcmp(buffer, "ANGLE") == 0)
+        {
+            //add current q/x values for joint angle interpolation
+            if(*state == WAIT_STATE || *state == READY_STATE) *state = ANGLE_STATE;
             break;
         }
         else if(strcmp(buffer, "SET") == 0)
@@ -603,6 +608,8 @@ void ReadyController(struct States * data, pthread_attr_t *attr, pthread_t *thre
         printf("%d mutex: %d\n", i, pthread_mutex_init(&data[i].lock, NULL));
         pthread_mutex_unlock(&data[i].lock);
     }
+
+    startForceSensorStream(daq->fdata);
 
     //*************Lock Memory*******************
 

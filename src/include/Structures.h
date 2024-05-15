@@ -18,6 +18,7 @@ struct ForceSensorData
 	int server_struct_length;
 	int32_t msg[9];
 	int32_t temp[4];
+ 	uint64_t sendData;
 	double F[3];
  	double T[3];
 };
@@ -132,7 +133,9 @@ struct DAQ {
 	int numChannels;
 
 	double dataRead[4];
-    double writeValues[1];
+    double readDiff;
+    double clearCnt;
+    double readAbs;
 
     char i2cAddr[2];
 	char i2cSend[4];
@@ -151,6 +154,8 @@ struct States {
 
 	double x, dx, ddx;
 	double Fext, Fraw;
+	double F[3];
+ 	double T[3];
 	double xv,dxv,ddxv;
 	double xv_prev, dxv_prev, ddxv_prev;
 	double x0,dx0,ddx0,x0_to_send;

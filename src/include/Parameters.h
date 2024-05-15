@@ -22,6 +22,7 @@
 #define RUN_STATE 6
 #define STOP_STATE 7
 #define SHUTDOWN_STATE 8
+#define ANGLE_STATE 9
 
 #define PD_MODE 1
 #define IMP_MODE 2

@@ -19,6 +19,43 @@
 #include "./include/Calibration.h"
 #include "./include/Daq.h"
 
+
+void AddJointAngel(struct States * s, struct DAQ * daq)
+{
+    //read Daq
+    //read I2C
+    //Add to interp vectors ...
+
+    double n = 100.0;
+
+    extern struct ControlParams *controlParams;
+
+    controlParams->x_for_q[controlParams->qn] = 0;
+    controlParams->q1[controlParams->qn] = 0;
+    controlParams->q2[controlParams->qn] = 0;
+
+    for(int i = 0; i < n; i++)
+    {
+        daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
+        readAbsolutePosition(s, daq);
+        readI2C(s, daq, 0);
+        readI2C(s, daq, 1);
+
+        controlParams->x_for_q[controlParams->qn] += s->x;
+        controlParams->q1[controlParams->qn] += s->xAccel[0];
+        controlParams->q2[controlParams->qn] += s->xAccel[1];
+
+        
+    }
+
+    controlParams->x_for_q[controlParams->qn] = controlParams->x_for_q[controlParams->qn]/n;
+    controlParams->q1[controlParams->qn] = controlParams->q1[controlParams->qn]/n;
+    controlParams->q2[controlParams->qn] = controlParams->q2[controlParams->qn]/n;
+    controlParams->qn += 1;
+
+
+}
+
 void CalibrateForceOffset(struct States * s, struct DAQ * daq)
 {
     extern struct ControlParams *controlParams;

@@ -20,6 +20,27 @@
 #include "./include/ForceSensor.h"
 #include "./include/Daq.h"
 
+void clearEncoderCounter(struct DAQ * daq)
+{
+        //TODO CHANGE COMMAND TO GET ABS POS
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
+    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, &daq->clearCnt, &(daq->errorAddress));
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
+}
+
+void readAbsolutePosition(struct States * s, struct DAQ * daq)
+{
+        //TODO CHANGE COMMAND TO GET ABS POS
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
+    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, &daq->readAbs, &(daq->errorAddress));
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
+
+    if(s->d1 == 254) s->x = s->d2 + 100*s->d3;
+    else if(s->d2 == 254) s->x = s->d3 + 100*s->d1;
+    else if(s->d3 == 254) s->x = s->d1 + 100*s->d2;
+    else s->x = 0.0; 
+}
+
 void readI2C(struct States * s, struct DAQ * daq, int index)
 {
 
@@ -59,14 +80,25 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     //readI2C(s, daq, 1);
 
     //UART for position 
+
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
-    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
+    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, &daq->readDiff, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
+
+    
 
     int err = LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
     readFroceSensor(daq->fdata);
 
     s->Fext = daq->fdata->F[2];//0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
+    
+    s->F[0] = daq->fdata->F[0];
+    s->F[1] = daq->fdata->F[1];
+    s->F[2] = daq->fdata->F[2];
+    s->T[0] = daq->fdata->T[0];
+    s->T[1] = daq->fdata->T[1];
+    s->T[2] = daq->fdata->T[2];
+
     s->lsb = daq->aValues[1];
     s->lsf = daq->aValues[2];
     
@@ -81,7 +113,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     s->d1 = (int)daq->dataRead[0];
     s->d2 = (int)daq->dataRead[1];
     s->d3 = (int)daq->dataRead[2];
-
+   
     if(s->d1 == 254) s->dx = s->d2 + 100*s->d3;
     else if(s->d2 == 254) s->dx = s->d3 + 100*s->d1;
     else if(s->d3 == 254) s->dx = s->d1 + 100*s->d2;
@@ -92,16 +124,6 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
 
     s->dx = s->dx*ENC_TO_M/(STEP_SIZE_MS/1000.0);
 
-    
-
-}
-
-void zeroDaq(struct DAQ * daq)
-{
-    double writeValues[1] = {4};
-    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
-    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, writeValues, &(daq->errorAddress));
-    LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
 }
 
 
@@ -195,7 +217,9 @@ int initDaq(struct DAQ *daq)
     daq->dataRead[2] = 0;
     daq->dataRead[3] = 0;
 
-    daq->writeValues[0] = 7;
+    daq->readDiff = 7;
+    daq->clearCnt = 4;
+    daq->readAbs = 9;
 
     daq->i2cAddr[0] = 0x68;
     daq->i2cAddr[1] = 0x69;
@@ -204,14 +228,14 @@ int initDaq(struct DAQ *daq)
     printf("DAQ Handle: %d\n", daq->daqHandle);
 
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
-    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
+    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, &daq->readDiff, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
     
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
-    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
+    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, &daq->readDiff, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
-    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, daq->writeValues, &(daq->errorAddress));
+    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, &daq->readDiff, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
 
     return handle;
