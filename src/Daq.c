@@ -35,10 +35,21 @@ void readAbsolutePosition(struct States * s, struct DAQ * daq)
     LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, &daq->readAbs, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
 
+    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 3);
+    LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 3, daq->dataRead, &(daq->errorAddress));
+
+    s->d1 = (int)daq->dataRead[0];
+    s->d2 = (int)daq->dataRead[1];
+    s->d3 = (int)daq->dataRead[2];
+
+    printf("%d,%d,%d\n",s->d1,s->d2,s->d3);
+
     if(s->d1 == 254) s->x = s->d2 + 100*s->d3;
     else if(s->d2 == 254) s->x = s->d3 + 100*s->d1;
     else if(s->d3 == 254) s->x = s->d1 + 100*s->d2;
     else s->x = 0.0; 
+
+    s->x = s->x*ENC_TO_M;
 }
 
 void readI2C(struct States * s, struct DAQ * daq, int index)
@@ -88,8 +99,8 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     
 
     int err = LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
-    readFroceSensor(daq->fdata);
-
+    //readFroceSensor(daq->fdata);
+    /*
     s->Fext = daq->fdata->F[2];//0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
     
     s->F[0] = daq->fdata->F[0];
@@ -98,7 +109,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     s->T[0] = daq->fdata->T[0];
     s->T[1] = daq->fdata->T[1];
     s->T[2] = daq->fdata->T[2];
-
+*/
     s->lsb = daq->aValues[1];
     s->lsf = daq->aValues[2];
     

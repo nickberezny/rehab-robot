@@ -70,9 +70,26 @@ void ImpedanceMode(struct States * s, struct ControlParams * p)
 
 void UICMode(struct States * s, struct ControlParams * p)
 {
-      
     VirtualTrajectory(s,p);
     ComputedTorque(s,p);
     return;
 }
+
+void ImpFFWMode(struct States * s, struct ControlParams * p)
+{
+    //kp is the feedforward gain
+    s->cmd = (1.0+p->kp)*(-p->Bd*(s->dx-s->dx0) - p->Kd*(s->x-s->x0)) + p->kp*(s->Fext);
+}
+
+void ImpAccelMode(struct States * s, struct ControlParams * p)
+{
+    //note we are subtracting Md and Bd; Kd is added as normal 
+    s->cmd = -p->Md*s->dxx - p->Bd*(s->dx-s->dx0) + p->Kd*(s->x-s->x0);
+}
+
+//Imp Accel
+//Imp FFW
+//Adm CT
+
+//Post-sensor mass compensation? 
 

@@ -23,6 +23,7 @@ void HomeToBack(struct States * s, struct DAQ * daq, bool getXend)
 {
     
     extern struct ControlParams *controlParams;
+    extern struct CommData *commData;
     /**
      * @brief Slowly moves robot until contact with back limit switch
      * @param[in] *s : pointer to robot States
@@ -30,6 +31,8 @@ void HomeToBack(struct States * s, struct DAQ * daq, bool getXend)
     
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
     ReadWriteDAQ(s, daq);
+
+    char buffer[100];
     
    
     s->lsb = daq->aValues[2];
@@ -49,7 +52,13 @@ void HomeToBack(struct States * s, struct DAQ * daq, bool getXend)
         readI2C(s, daq, 0);
         readI2C(s, daq, 1);
         s->lsb = daq->aValues[2];
+
+        sprintf(buffer, "%.4f::%.4f::%.4f::%.4f", s->x, s->xAccel[0], s->x, s->xAccel[1]);
+        sendMessage(commData->sockfd, buffer);
     }
+
+    sprintf(buffer, "END");
+    sendMessage(commData->sockfd, buffer);
 
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
     if(getXend) controlParams->xend = s->x;

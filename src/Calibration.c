@@ -53,7 +53,6 @@ void AddJointAngel(struct States * s, struct DAQ * daq)
     controlParams->q2[controlParams->qn] = controlParams->q2[controlParams->qn]/n;
     controlParams->qn += 1;
 
-
 }
 
 void CalibrateForceOffset(struct States * s, struct DAQ * daq)

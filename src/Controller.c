@@ -217,7 +217,12 @@ void * controllerThread (void * d)
                 s->x0_to_send = controlParams->x0dist;
                 AdmittanceMode(s, controlParams);
                 break;
-            
+            case IMP_FFW_MODE:
+                ImpFFWMode(s, p);
+                break;
+            case IMP_ACCEL_MODE:
+                ImpAccelMode(s, p);
+                break;
         }
 
         //ctl***************
@@ -246,7 +251,7 @@ void * controllerThread (void * d)
             s_next->emg3 = daq->aValues[5];
             s_next->emg4 = daq->aValues[6];
         }
-    
+        s_next->ddx = (s_next->dx - s->dx)/(STEP_SIZE_MS/1000.0);
         s_next->x = s->x + s_next->dx*(STEP_SIZE_MS/1000.0);
         s_next->qhip_prev = s->qhip;
         s_next->qknee_prev = s->qknee;

@@ -31,6 +31,9 @@
 #define UIAC_MODE 5
 #define ADM_DIST_MODE 6
 #define FORCE_NORM_MODE 7
+#define IMP_FFW_MODE 8
+#define IMP_ACCEL_MODE 9
+
 
 
 #define STATIC_MODE 0
