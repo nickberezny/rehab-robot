@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
     ps = calloc(1, sizeof *ps);
     tensorflow = calloc(1, sizeof *tensorflow);
     struct ForceSensorData *fdata = calloc(1, sizeof fdata);
-    daq->fdata=fdata;
+    
 
     controlParams->x_for_q = malloc(600000.0*sizeof(double));
     controlParams->q1 = malloc(600000.0*sizeof(double));
@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
     controlParams->getKest = false;
     
 
-    initForceSensorUDP(daq->fdata);
+    
 
     pthread_t thread[NUMBER_OF_THREADS];
     memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
@@ -158,7 +158,14 @@ int main(int argc, char* argv[])
 
     
     initFolder(timeinfo,folder);
+    /*
+    initDaq(daq);
+    daq->fdata=fdata;
+    initForceSensorUDP(daq->fdata);
+    tareForceSensor(daq->fdata);
 
+    HomeToBack(d,daq, false);
+*/
     openClientSocket(&sockfd, &servaddr, &port);
     controlParams->currentState = WAIT_STATE; //State = Set
 
@@ -320,6 +327,9 @@ int main(int argc, char* argv[])
                 daq->numChannels = 8;
     
                 initDaq(daq);
+                daq->fdata=fdata;
+                initForceSensorUDP(daq->fdata);
+                tareForceSensor(daq->fdata);
 
                 
                 if(controlParams->getKest)

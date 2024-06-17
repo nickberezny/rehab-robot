@@ -153,7 +153,7 @@ struct States {
 	double t;
 
 	double x, dx, ddx;
-	double Fext, Fraw;
+	double Fext, Fraw, Text;
 	double F[3];
  	double T[3];
 	double xv,dxv,ddxv;

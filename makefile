@@ -59,7 +59,7 @@ docs:
 
 daq: 
 	sudo ifconfig eno1 192.168.1.10 netmask 255.255.255.0
-	sudo gcc $(PATHS)TestDaq.c $(PATHS)Daq.c $(PATHS)ForceSensor.c $(PATHS)TimeUtilities.c -o testDaq $(LIB)
+	sudo gcc $(PATHS)TestDaq.c $(PATHS)Daq.c $(PATHS)ForceSensor.c $(PATHS)TimeUtilities.c $(PATHS)Home.c -o testDaq $(LIB)
 
 spi:
 	sudo gcc $(PATHS)SPI_Test.c -o spiTest $(LIB)

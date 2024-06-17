@@ -17,6 +17,7 @@
 #include "./include/Structures.h"
 #include "./include/TimeUtilities.h"
 #include "./include/Daq.h"
+#include "./include/Home.h"
 #include "./include/ForceSensor.h"
 
 
@@ -30,61 +31,47 @@ int main(int aFextrgc, char* argv[])
 
 	
 	fdata = calloc(1,sizeof *fdata);
-	// /initForceSensorUDP(fdata);
 
 	long prev_t = 0;
-/*
-	
-	for(int i=0;i<10000;i++)
-	{
-		readFroceSensor(fdata);
-		printf("%f, %f, %f\n",fdata->F[0],fdata->F[1],fdata->F[2]);
-		usleep(500);
-	}
-	*/
-	
 	int ii = 0;
-	//connect to daq
+	
 	daq = calloc(1,sizeof *daq);
 	controlParams = calloc(17, sizeof *controlParams);
 	struct States s[1] = {0};
-	daq->numChannels = 9;
+	
+	daq->numChannels = 7;
 	initDaq(daq);
-	daq->i2cAddr[0] = 0x68;
+	daq->fdata = fdata; //need this after init daq????
+
+	initForceSensorUDP(daq->fdata);
+
 	printf("Time, Force, x, LSF, LSB\n");
-	//clock_gettime(CLOCK_MONOTONIC, &controlParams->t_first);  
+	//
+	clock_gettime(CLOCK_MONOTONIC, &controlParams->t_first);  
 	s->x = 0.0;
+	sleep(2);
+	tareForceSensor(daq->fdata);
+	sleep(2);
+	//tareForceSensor(daq->fdata);
+	//sleep(1);
+	//tareForceSensor(daq->fdata);
+
+	startForceSensorStream(daq->fdata);
+	printf("Time, Force, x, LSF, LSB\n");
 
 	while(1)
 	{
-		if(s->x < -0.0015) 
-		{
-			clearEncoderCounter(daq);
-			s->x = 0;
-		}
+
 		//read + print FT, ENC, LS
-		//clock_gettime(CLOCK_MONOTONIC, &s->t_start);
-		//getElapsedTime(&controlParams->t_first, &s->t_start, &s->dt);  
-		//timeStep(struct timespec * ts, struct timespec * tf, int * dt);
-		//ReadWriteDAQ(s, daq);
-		readAbsolutePosition(s, daq);
-
-		//s->x += s->dx*(STEP_SIZE_MS/1000.0);
-		//s->gonio = ((double)daq->aValues[8])*0.002618;
-		printf("Encoder: %.5f\n", s->x);
-		//printf("%f, %f, %f\n",  s->accel[0],  s->accel[1],  s->accel[2]);
-		//readFroceSensor(fdata);
-		//printf("%d,%f, %f, %f\n",s->t_start.tv_nsec,fdata->F[0],fdata->F[1],fdata->F[2]);
-
-		//readI2C(s, daq, 0);
-		//readI2C(s, daq, 1);
-		//printf("%f, %f, %f\n",  s->accel[0],  s->accel[1],  s->accel[2]);
-
-
-		//prev_t = s->t_start.tv_nsec;
-
-		//getTimeToSleep(&s->t_start, &s->t_end);
-        //clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &s->t_end, NULL);
+		s->cmd = 2.45;
+		daq->aValues[1] = s->cmd;
+		ReadWriteDAQ(s, daq);
+		//readFroceSensor(daq->fdata);
+		s->x += s->dx*(STEP_SIZE_MS/1000.0);
+		s->Fext = daq->fdata->F[2];
+		
+		//printf("%f, %f, %d, %d\n", s->x, s->Fext, s->lsb, s->lsf);
+		printf("%f, %f\n", s->Fext,s->Text);
 
         ii = ii + 1;
 		usleep(1000);

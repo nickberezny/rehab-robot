@@ -218,10 +218,10 @@ void * controllerThread (void * d)
                 AdmittanceMode(s, controlParams);
                 break;
             case IMP_FFW_MODE:
-                ImpFFWMode(s, p);
+                ImpFFWMode(s, controlParams);
                 break;
             case IMP_ACCEL_MODE:
-                ImpAccelMode(s, p);
+                ImpAccelMode(s, controlParams);
                 break;
         }
 

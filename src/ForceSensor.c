@@ -44,7 +44,7 @@ void initForceSensorUDP(struct ForceSensorData * forceSensorData)
     printf("Socket created successfully\n");
     
     forceSensorData->server_addr.sin_family = AF_INET;
-    forceSensorData->server_addr.sin_port = htons(547);
+    forceSensorData->server_addr.sin_port = htons(10547);
     forceSensorData->server_addr.sin_addr.s_addr = inet_addr("192.168.1.11");
     
     forceSensorData->server_struct_length = sizeof(forceSensorData->server_addr);
@@ -106,11 +106,16 @@ void readFroceSensor(struct ForceSensorData * forceSensorData)
    
     int i = 0;
 
+    //printf("%d, %d\n",forceSensorData->socket_desc, forceSensorData->msg);
+
+
     while(recvfrom(forceSensorData->socket_desc, forceSensorData->msg, 4*9, 0,
-     (struct sockaddr*)&(forceSensorData->server_addr), &(forceSensorData->server_struct_length)) <= -10000)
+     (struct sockaddr*)&(forceSensorData->server_addr), &(forceSensorData->server_struct_length)) != -1)
     {
-        printf("%d\n",i++);
+        //printf("%d\n",i++);
     }
+
+    //printf("%d\n",forceSensorData->msg[3]);
     
     reverseBits(forceSensorData,&(forceSensorData->msg[3]));
     forceSensorData->F[0] = (double)forceSensorData->msg[3]/1000000.0;
@@ -131,7 +136,7 @@ void readFroceSensor(struct ForceSensorData * forceSensorData)
 
 void tareForceSensor(struct ForceSensorData * forceSensorData)
 {
-    forceSensorData->sendData = 72057595162014738; //bias set (0x0043)
+    forceSensorData->sendData = 1124086802;//72057595162014738; //bias set (0x0043) //
 
     if(sendto(forceSensorData->socket_desc, &forceSensorData->sendData, 8, 0,
      (struct sockaddr*)&(forceSensorData->server_addr), forceSensorData->server_struct_length) < 0){
@@ -143,7 +148,7 @@ void tareForceSensor(struct ForceSensorData * forceSensorData)
 
 void startForceSensorStream(struct ForceSensorData * forceSensorData)
 {
-    forceSensorData->sendData = 33567762; //bias start stream (0x0002)
+    forceSensorData->sendData = 33567762; // start stream (0x0002) 
 
     if(sendto(forceSensorData->socket_desc, &forceSensorData->sendData, 8, 0,
      (struct sockaddr*)&(forceSensorData->server_addr), forceSensorData->server_struct_length) < 0){

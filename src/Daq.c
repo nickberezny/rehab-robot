@@ -87,6 +87,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
      * @brief simultaneously read and write to Daq
      * @param[in] *s : pointer to robot States to store results
      */
+
     //readI2C(s, daq, 0);
     //readI2C(s, daq, 1);
 
@@ -96,12 +97,12 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, &daq->readDiff, &(daq->errorAddress));
     LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
 
-    
-
     int err = LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
-    //readFroceSensor(daq->fdata);
-    /*
-    s->Fext = daq->fdata->F[2];//0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
+
+    readFroceSensor(daq->fdata);
+
+    s->Fext = -daq->fdata->F[2];//0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
+    s->Text = daq->fdata->T[1];
     
     s->F[0] = daq->fdata->F[0];
     s->F[1] = daq->fdata->F[1];
@@ -109,22 +110,20 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     s->T[0] = daq->fdata->T[0];
     s->T[1] = daq->fdata->T[1];
     s->T[2] = daq->fdata->T[2];
-*/
+
     s->lsb = daq->aValues[1];
     s->lsf = daq->aValues[2];
     
     if(err != 0) printf("daq err %d\n", err);
-
     //read UART
+    
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 3);
     LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 3, daq->dataRead, &(daq->errorAddress));
-
-    //printf("%d,%d,%d,\n",(int)daq->dataRead[0],(int)daq->dataRead[1],(int)daq->dataRead[2]);
-
+    
     s->d1 = (int)daq->dataRead[0];
     s->d2 = (int)daq->dataRead[1];
     s->d3 = (int)daq->dataRead[2];
-   
+
     if(s->d1 == 254) s->dx = s->d2 + 100*s->d3;
     else if(s->d2 == 254) s->dx = s->d3 + 100*s->d1;
     else if(s->d3 == 254) s->dx = s->d1 + 100*s->d2;
@@ -133,7 +132,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     else if(s->d3 == 255) s->dx = -(s->d1 + 100*s->d2);
     else s->dx = 0.0; 
 
-    s->dx = s->dx*ENC_TO_M/(STEP_SIZE_MS/1000.0);
+    s->dx = -s->dx*ENC_TO_M/(STEP_SIZE_MS/1000.0);
 
 }
 
@@ -214,7 +213,7 @@ int initDaq(struct DAQ *daq)
 
     const char * aNamesTmp10[7] = {"DAC0","FIO0", "FIO1","AIN0","AIN1","AIN2","AIN3"};  
 
-    memcpy(&(daq->aNames),aNamesTmp10, 100*daq->numChannels*sizeof(char));
+    memcpy(&(daq->aNames),aNamesTmp10, 100*10.0*sizeof(char));
 
     printf("DAQ NUM %d\n", daq->numChannels);
     memcpy(&(daq->aValues), aValues, DAQ_NUM_OF_CH*sizeof(double));
