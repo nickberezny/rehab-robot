@@ -68,13 +68,13 @@ int main(int aFextrgc, char* argv[])
 		daq->aValues[1] = s->cmd;
 		ReadWriteDAQ(s, daq);
 		//readFroceSensor(daq->fdata);
-		//s->x += s->dx*(STEP_SIZE_MS/1000.0);
+		s->x += s->dx*(STEP_SIZE_MS/1000.0);
 		s->Fext = daq->fdata->F[2];
 
-		s->x += s->lsf;
+	
 		
-		//printf("%f, %f, %d, %d\n", s->x, s->Fext, s->lsb, s->lsf);
-		printf("%f, %f\n", s->x,s->Text);
+		printf("%f, %f, %d, %d\n", s->x, s->Fext, s->lsb, s->lsf);
+		//printf("%f, %f\n", s->x,s->Text);
 
         ii = ii + 1;
 		usleep(1000);

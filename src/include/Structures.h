@@ -136,6 +136,7 @@ struct DAQ {
     double readDiff;
     double clearCnt;
     double readAbs;
+    double readDir;
 
     char i2cAddr[2];
 	char i2cSend[4];

@@ -103,9 +103,7 @@ int main(int argc, char* argv[])
     struct ForceSensorData *fdata = calloc(1, sizeof fdata);
     
 
-    controlParams->x_for_q = malloc(600000.0*sizeof(double));
-    controlParams->q1 = malloc(600000.0*sizeof(double));
-    controlParams->q2 = malloc(600000.0*sizeof(double));
+   
 
     controlParams->getKest = false;
     
@@ -166,6 +164,7 @@ int main(int argc, char* argv[])
 
     HomeToBack(d,daq, false);
 */
+
     openClientSocket(&sockfd, &servaddr, &port);
     controlParams->currentState = WAIT_STATE; //State = Set
 
@@ -255,10 +254,14 @@ int main(int argc, char* argv[])
             case SET_STATE:
                 sendMessage(&sockfd, "UI::STARTTASK::");
                 //run fn
-
+                
                 
                 WaitForParamMsg(&sockfd);
                 
+                controlParams->x_for_q = malloc(600000.0*sizeof(double));
+                controlParams->q1 = malloc(600000.0*sizeof(double));
+                controlParams->q2 = malloc(600000.0*sizeof(double));
+
                 double Atemp[2][2] = {{0.0, 1.0},{-controlParams->Kd/controlParams->Md, -controlParams->Dd/controlParams->Md}};
                 double A[2][2];
                 DiscretizeMatrix(Atemp,A);
@@ -412,12 +415,13 @@ void WaitForParamMsg(int *fd)
 
     while(true)
     {
-        
+        printf("waitFor\n");
         /* open, read, and display the message from the FIFO */
         //sprintf(buffer,"");
         bzero(buffer, sizeof(buffer));
+        printf("waitFor\n");
         read(*fd, buffer, sizeof(buffer));
-
+        printf("waitFor\n");
         if(strcmp(buffer, "") != 0) printf("Received (Main): %s\n", buffer);
 
         if(strncmp(buffer, "T_", 2) == 0)
@@ -636,7 +640,7 @@ void RunController(struct States *data, pthread_t *thread, pthread_attr_t *attr,
     printf("thread: %d\n",pthread_create(&thread[2], &attr[2], clientThread, (void *)data));
     //pthread_join(thread[0], NULL);
     //pthread_join(thread[1], NULL);
-
+    printf("Done join...\n");
     WaitForMsg(commData->sockfd, &(controlParams->currentState));
 
     printf("Finished Threads...\n");

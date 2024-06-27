@@ -36,15 +36,17 @@ void * logThread (void * d)
     extern struct LogData *logData;
     extern quitThreads;
     iter_log = 0;
-
     while(!quitThreads)
     {
+
         s_log = &((struct States*)d)[iter_log];
         pthread_mutex_lock(&s_log->lock);
         iter_log= iter_log + 1;
         if(iter_log== BUFFER_SIZE) iter_log = 0;
-
-        fprintf (logData->fp,"%d, %d, %.8f,%.8f, %.8f,%.8f, %.8f, %.8f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f\n", s_log->t_start.tv_sec, s_log->t_start.tv_nsec, s_log->x, s_log->dx, s_log->xv, s_log->dxv, s_log->ddxv, s_log->x0, s_log->cmd, s_log->F[0], s_log->F[1], s_log->F[2], s_log->T[0], s_log->T[1], s_log->T[2],s_log->emg1,s_log->emg2,s_log->emg3,s_log->emg4,s_log->qhip,s_log->qknee);
+     
+        //fprintf (logData->fp,"%d, %d, %.8f,%.8f, %.8f,%.8f, %.8f, %.8f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f\n", s_log->t_start.tv_sec, s_log->t_start.tv_nsec, s_log->x, s_log->dx, s_log->xv, s_log->dxv, s_log->ddxv, s_log->x0, s_log->cmd, s_log->F[0], s_log->F[1], s_log->F[2], s_log->T[0], s_log->T[1], s_log->T[2],s_log->emg1,s_log->emg2,s_log->emg3,s_log->emg4,s_log->qhip,s_log->qknee);
+        
+        fprintf (logData->fp,"%.8f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f\n", s_log->t,s_log->x, s_log->dx, s_log->xv, s_log->dxv, s_log->ddxv, s_log->x0, s_log->cmd, s_log->F[0], s_log->Fext, s_log->Text,s_log->emg1,s_log->emg2,s_log->emg3,s_log->emg4,s_log->qhip,s_log->qknee);
         pthread_mutex_unlock(&s_log->lock);
     }
     
@@ -102,7 +104,7 @@ void initLog(char * filename, struct LogData *logData, char * folder)
     logData->fp = fopen(folder,"w");
 
     //file header
-    fprintf(logData->fp,"t(s),t(nsec),x,dx,xv,dxv,ddxv,x0,cmd,Fext,emg1,emg2,emg3,emg4,Fraw,Gonio\n");
+    fprintf(logData->fp,"t,x,dx,xv,dxv,ddxv,x0,cmd,Fext,Text,emg1,emg2,emg3,emg4,qhip,qknee\n");
     fclose(logData->fp);
 
     printf("%s\n", folder); 

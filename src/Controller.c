@@ -41,8 +41,7 @@ void * controllerThread (void * d)
     extern int iter_cont;
     extern int iter_reset;
     iter_cont = 0;
-
-
+    
     extern struct States *s; 
     extern struct ControlParams *controlParams;
     extern struct DAQ *daq;
@@ -50,9 +49,9 @@ void * controllerThread (void * d)
     //what?
     
     sleep(1);
-
+    
     clock_gettime(CLOCK_MONOTONIC, &controlParams->t_first);  
-
+    
     iter_reset = 0;
     double FextArray[FEXT_FIR_SIZE + 1] = {0};
     int FextOrder = FEXT_FIR_SIZE;
@@ -67,7 +66,7 @@ void * controllerThread (void * d)
     
     while(!quitThreads)
     {
-        
+       
         s = &((struct States*)d)[iter_cont];
         iter_cont= iter_cont + 1;
         if(iter_cont == BUFFER_SIZE)
@@ -109,9 +108,7 @@ void * controllerThread (void * d)
             s->kest[1] = controlParams->tensorflow->outputVals[1]; 
         }
         
-        
-
-        
+    
         //set trajectory
         Interpolation((controlParams->t), (controlParams->x), &(s->t), &(controlParams->x0), &(controlParams->x0_index), controlParams->trajSize);
         Interpolation((controlParams->tdist), (controlParams->xdist), &(s->t), &(controlParams->x0dist), &(controlParams->x0_index), controlParams->trajSize);
@@ -120,7 +117,7 @@ void * controllerThread (void * d)
         s->x0_to_send = controlParams->x0;
         s->x0_duration = controlParams->x0_duration[controlParams->x0_index];
         if(controlParams->x0_is_percent) s->x0 = s->x0*controlParams->xend;
-       
+
         //ctl*****************
         switch((int)controlParams->controlMode)
         {
