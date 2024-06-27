@@ -371,6 +371,7 @@ int main(int argc, char* argv[])
                 {
                     pthread_mutex_unlock(&data[i].lock);
                 }
+
                 ResetController();
                 homed = false;
                 calibrated = false;
@@ -645,7 +646,7 @@ void RunController(struct States *data, pthread_t *thread, pthread_attr_t *attr,
 
 void ResetController()
 {
-
+    stopForceSensorStream(daq->fdata);
     munlockall();
     memset(controlParams, 0, sizeof(*controlParams));
     //memset(logData, 0, sizeof(*logData));

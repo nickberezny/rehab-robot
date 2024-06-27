@@ -155,6 +155,25 @@ void startForceSensorStream(struct ForceSensorData * forceSensorData)
     printf("Unable to send message\n");
     }
 
+    sleep(0.1);
+    readFroceSensor(forceSensorData);
+    sleep(0.1);
+
+    while(forceSensorData->F[0] == 0.0 && forceSensorData->F[1] == 0.0 && forceSensorData->F[2] == 0.0)
+    {
+
+        printf("Failed to start force sensor...\n");
+
+        if(sendto(forceSensorData->socket_desc, &forceSensorData->sendData, 8, 0,
+        (struct sockaddr*)&(forceSensorData->server_addr), forceSensorData->server_struct_length) < 0){
+        printf("Unable to send message\n");
+        }
+
+        sleep(0.5);
+        readFroceSensor(forceSensorData);
+        sleep(0.1);
+    }
+
     return;
 }
 

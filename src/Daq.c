@@ -103,7 +103,7 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
 
     s->Fext = -daq->fdata->F[2];//0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
     s->Text = daq->fdata->T[1];
-    
+
     s->F[0] = daq->fdata->F[0];
     s->F[1] = daq->fdata->F[1];
     s->F[2] = daq->fdata->F[2];
@@ -111,8 +111,8 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     s->T[1] = daq->fdata->T[1];
     s->T[2] = daq->fdata->T[2];
 
-    s->lsb = daq->aValues[1];
-    s->lsf = daq->aValues[2];
+    s->lsb = daq->aValues[2];
+    s->lsf = daq->aValues[1];
     
     if(err != 0) printf("daq err %d\n", err);
     //read UART
@@ -124,6 +124,8 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     s->d2 = (int)daq->dataRead[1];
     s->d3 = (int)daq->dataRead[2];
 
+    s->dxp = s->dx;
+
     if(s->d1 == 254) s->dx = s->d2 + 100*s->d3;
     else if(s->d2 == 254) s->dx = s->d3 + 100*s->d1;
     else if(s->d3 == 254) s->dx = s->d1 + 100*s->d2;
@@ -133,6 +135,8 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     else s->dx = 0.0; 
 
     s->dx = -s->dx*ENC_TO_M/(STEP_SIZE_MS/1000.0);
+
+    if(abs(s->dx-s->dxp) > 0.15) s->dx = s->dxp; //check if enc read error
 
 }
 
@@ -211,7 +215,8 @@ int initDaq(struct DAQ *daq)
     for(int i = 0; i <DAQ_NUM_OF_CH;i++)
         aNumValues[i] = 1;
 
-    const char * aNamesTmp10[7] = {"DAC0","FIO0", "FIO1","AIN0","AIN1","AIN2","AIN3"};  
+    //const char * aNamesTmp10[7] = {"DAC0","FIO0", "FIO1","AIN0","AIN1","AIN2","AIN3"};  
+    const char * aNamesTmp10[7] = {"DAC0","DIO0_EF_READ_A_AND_RESET", "FIO1","AIN0","AIN1","AIN2","AIN3"};  
 
     memcpy(&(daq->aNames),aNamesTmp10, 100*10.0*sizeof(char));
 
@@ -236,6 +241,10 @@ int initDaq(struct DAQ *daq)
     daq->i2cSend[0] = 0x3B;
     
     printf("DAQ Handle: %d\n", daq->daqHandle);
+
+    LJM_eWriteName(daq->daqHandle, "DIO0_EF_ENABLE", 0);
+    LJM_eWriteName(daq->daqHandle, "DIO0_EF_INDEX", 8);
+    LJM_eWriteName(daq->daqHandle, "DIO0_EF_ENABLE", 1);
 
     LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
     LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, &daq->readDiff, &(daq->errorAddress));

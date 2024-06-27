@@ -20,39 +20,36 @@
 #include "./include/Daq.h"
 
 void HomeToBack(struct States * s, struct DAQ * daq, bool getXend)
-{
-    printf("Hi1\n");
+{ 
     extern struct ControlParams *controlParams;
     extern struct CommData *commData;
     /**
      * @brief Slowly moves robot until contact with back limit switch
      * @param[in] *s : pointer to robot States
      */
-    printf("Hi1\n");
+    
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
-    printf("Hi1\n");
+    
     ReadWriteDAQ(s, daq);
-    printf("Hi1\n");
+    
     char buffer[100];
     
-   
-    s->lsb = daq->aValues[2];
     s->x = 0;
     s->dx = 0;
-    daq->aValues[0] = CMD_GAIN*(-0.25) + CMD_OFFSET;
+    daq->aValues[0] = CMD_GAIN*(-0.15) + CMD_OFFSET;
 
     //controlParams->x_for_q[0] = 0;
     //controlParams->q1[0] = s->xAccel[0];
     //controlParams->q2[0] = s->xAccel[1];
     //controlParams->qn = 1;
-    printf("Hi1\n");
+
     while(s->lsb == 0)
     {
         s->x += s->dx*(STEP_SIZE_MS/1000.0);
         ReadWriteDAQ(s,daq);
         //readI2C(s, daq, 0);
         //readI2C(s, daq, 1);
-        s->lsb = daq->aValues[2];
+        
 
         //sprintf(buffer, "%.4f::%.4f::%.4f::%.4f", s->x, s->xAccel[0], s->x, s->xAccel[1]);
         //sendMessage(commData->sockfd, buffer);
@@ -62,7 +59,7 @@ void HomeToBack(struct States * s, struct DAQ * daq, bool getXend)
     //sendMessage(commData->sockfd, buffer);
 
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
-    if(getXend) controlParams->xend = s->x;
+    if(getXend) controlParams->xend = -s->x;
     printf("xend: %f\n",controlParams->xend); 
 
 
@@ -78,15 +75,14 @@ void HomeToFront(struct States * s, struct DAQ * daq)
     printf("daqhandle %d\n", daq->daqHandle);
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
     LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
-    s->lsf = daq->aValues[3];
-    
 
-    daq->aValues[0] = CMD_GAIN*(0.25) + CMD_OFFSET;
+    
+    daq->aValues[0] = CMD_GAIN*(0.28) + CMD_OFFSET;
     
     while(s->lsf == 0)
     {
-        LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
-        s->lsf = daq->aValues[3];
+        ReadWriteDAQ(s,daq);        
+
     }
     
     daq->aValues[0] = CMD_GAIN*(0.0) + CMD_OFFSET;
