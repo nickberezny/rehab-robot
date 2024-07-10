@@ -78,13 +78,13 @@ void UICMode(struct States * s, struct ControlParams * p)
 void ImpFFWMode(struct States * s, struct ControlParams * p)
 {
     //kp is the feedforward gain
-    s->cmd = (1.0+p->kp)*(- p->Dd*(s->dx-s->dx0) - p->Kd*(s->x-s->x0)) + p->kp*(s->Fext);
+    s->cmd = ((1.0+p->kp)*(- p->Dd*(s->dx-s->dx0) - p->Kd*(s->x-s->x0)) + p->kp*(s->Fext))/420.7;
 }
 
 void ImpAccelMode(struct States * s, struct ControlParams * p)
 {
     //note we are subtracting Md and Bd; Kd is added as normal 
-    s->cmd = -p->Md*s->ddx - p->Dd*(s->dx-s->dx0) + p->Kd*(s->x-s->x0);
+    s->cmd = (p->Md*s->ddx + p->Dd*(s->dx-s->dx0) - p->Kd*(s->x-s->x0))/420.7;
 }
 
 //Imp Accel

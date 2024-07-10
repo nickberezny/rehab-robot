@@ -93,15 +93,16 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
 
     //UART for position 
 
-    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
-    LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, &daq->readDir, &(daq->errorAddress));
-    LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
+    //LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_TX", 1);
+    //LJM_eWriteNameArray(daq->daqHandle, "ASYNCH_DATA_TX", 1, &daq->readDir, &(daq->errorAddress));
+    //LJM_eWriteName(daq->daqHandle, "ASYNCH_TX_GO", 1);
 
     int err = LJM_eNames(daq->daqHandle, DAQ_NUM_OF_CH, daq->aNames, daq->aWrites, daq->aNumValues, daq->aValues, &(daq->errorAddress));
 
     readFroceSensor(daq->fdata);
 
     s->Fext = -daq->fdata->F[2];//0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
+    //printf("%f\n",s->Fext);
     s->Text = daq->fdata->T[1];
 
     s->F[0] = daq->fdata->F[0];
@@ -117,23 +118,11 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
     if(err != 0) printf("daq err %d\n", err);
     //read UART
     
-    LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 1);
-    LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 1, daq->dataRead, &(daq->errorAddress));
+    //LJM_eWriteName(daq->daqHandle, "ASYNCH_NUM_BYTES_RX", 1);
+    //LJM_eReadNameArray(daq->daqHandle, "ASYNCH_DATA_RX", 1, daq->dataRead, &(daq->errorAddress));
     
 
-    if((int)daq->dataRead[0] == 255)
-    {
-        s->dx = ((double)daq->aValues[7])*ENC_TO_M/(STEP_SIZE_MS/1000.0);
-    }
-    else if((int)daq->dataRead[0] == 254)
-    {
-        s->dx = -((double)daq->aValues[7])*ENC_TO_M/(STEP_SIZE_MS/1000.0);
-    }
-    else
-    {
-        printf("Direction read error\n");
-        s->dx = s->dxp;
-    }
+    s->dx = (2.0*(double)daq->aValues[8]-1.0)*((double)daq->aValues[7])*ENC_TO_M/(STEP_SIZE_MS/1000.0);
 
     s->dxp = s->dx;
     
@@ -234,7 +223,7 @@ int initDaq(struct DAQ *daq)
         aNumValues[i] = 1;
 
     //const char * aNamesTmp10[7] = {"DAC0","FIO0", "FIO1","AIN0","AIN1","AIN2","AIN3"};  
-    const char * aNamesTmp10[8] = {"DAC0","FIO0", "FIO1","AIN0","AIN1","AIN2","AIN3","DIO6_EF_READ_A_AND_RESET"};  
+    const char * aNamesTmp10[9] = {"DAC0","FIO0", "FIO1","AIN0","AIN1","AIN2","AIN3","DIO6_EF_READ_A_AND_RESET","FIO5"};  
 
     memcpy(&(daq->aNames),aNamesTmp10, 100*10.0*sizeof(char));
 

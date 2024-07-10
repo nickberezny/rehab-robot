@@ -45,6 +45,7 @@ IGNORE = `grep -s IGNORE $(PATHR)*.txt`
 
 FILES = $(wildcard $(PATHS)*.c)
 FILES := $(filter-out %TestDaq.c, $(FILES))
+FILES := $(filter-out %TestTF.c, $(FILES))
 FILES := $(filter-out %SPI_Test.c, $(FILES))
 FILES := $(filter-out %I2C_Test.c, $(FILES))
 FILES := $(filter-out %UART_Test.c, $(FILES))
@@ -60,6 +61,9 @@ docs:
 daq: 
 	sudo ifconfig eno1 192.168.1.10 netmask 255.255.255.0
 	sudo gcc $(PATHS)TestDaq.c $(PATHS)Daq.c $(PATHS)ForceSensor.c $(PATHS)TimeUtilities.c $(PATHS)Home.c -o testDaq $(LIB)
+
+tf: 
+	sudo gcc $(PATHS)TestTF.c  $(PATHS)Tensorflow.c $(PATHS)TimeUtilities.c -o testTF $(LIB)
 
 spi:
 	sudo gcc $(PATHS)SPI_Test.c -o spiTest $(LIB)

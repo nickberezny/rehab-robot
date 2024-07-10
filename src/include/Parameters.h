@@ -10,7 +10,7 @@
 #define NSEC_IN_SEC 1000000000.0
 #define BUFFER_SIZE 10
 #define STEP_SIZE_MS 1.0
-#define DAQ_NUM_OF_CH 8
+#define DAQ_NUM_OF_CH 9
 #define MAT_EXP_ITERATIONS 50
 
 #define WAIT_STATE 0
@@ -33,8 +33,6 @@
 #define FORCE_NORM_MODE 7
 #define IMP_FFW_MODE 8
 #define IMP_ACCEL_MODE 9
-
-
 
 #define STATIC_MODE 0
 #define TRAJECTORY_MODE 1

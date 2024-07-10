@@ -22,13 +22,13 @@ void runModel(struct tensorFlowVars * tf)
  
     float data[1*tf->InputSize];
     
-    /*
+    
     for(int i = 0; i < tf->NumInputs; i++)
     {
         data[i] = tf->inputVals[i];
     }
-    */
-
+    
+/*
     data[0]=1.5;
     data[1]=-0.3;
     data[2]=-1.7;
@@ -37,7 +37,7 @@ void runModel(struct tensorFlowVars * tf)
     data[5]=0.03;
     data[6]=0.02;
     data[7]=0.3;
-
+*/
 
     int ndims = 2;
     int64_t dims[] = {1,tf->InputSize};
@@ -49,9 +49,12 @@ void runModel(struct tensorFlowVars * tf)
     //Run the Session
     TF_SessionRun(tf->Session, NULL, tf->Input, tf->InputValues, tf->NumInputs, tf->Output, tf->OutputValues, tf->NumOutputs, NULL, 0,NULL , tf->Status);
 
-    void* buff = TF_TensorData(tf->OutputValues[0]);
-    float* offsets = (float*)buff;
 
+    tf->outputVals[0] = *(float*)(TF_TensorData(tf->OutputValues[0]));
+    tf->outputVals[1] = *(float*)(TF_TensorData(tf->OutputValues[0]));
+    //buff = TF_TensorData(tf->OutputValues[1]);
+    //offsets = (float*)buff;
+    //tf->outputVals[1] = *offsets;
 
 }
 

@@ -77,7 +77,7 @@ int main(int aFextrgc, char* argv[])
 		//printf("%f, %f\n", s->x,s->Text);
 
         ii = ii + 1;
-		usleep(1000);
+		usleep(700);
 	}
 	
 }

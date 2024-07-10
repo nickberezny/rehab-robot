@@ -102,14 +102,8 @@ int main(int argc, char* argv[])
     tensorflow = calloc(1, sizeof *tensorflow);
     struct ForceSensorData *fdata = calloc(1, sizeof fdata);
     
-
-   
-
-    controlParams->getKest = false;
+    controlParams->getKest = true;
     
-
-    
-
     pthread_t thread[NUMBER_OF_THREADS];
     memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
     pthread_attr_t attr[NUMBER_OF_THREADS];
@@ -254,7 +248,7 @@ int main(int argc, char* argv[])
             case SET_STATE:
                 sendMessage(&sockfd, "UI::STARTTASK::");
                 //run fn
-                
+
                 
                 WaitForParamMsg(&sockfd);
                 
@@ -283,8 +277,8 @@ int main(int argc, char* argv[])
                 printf("Bd: %f, %f\n",B[0],B[1]);
 
                 controlParams->dx_bound = 0.01;
-                controlParams->m = 0.858;//1.0/0.8041;
-                controlParams->c = 0.35;//1.096/0.8041;
+                controlParams->m = 0.695;//0.858;//1.0/0.8041;
+                controlParams->c = 0.714;//0.35;//1.096/0.8041;
 
                 if(controlParams->controlMode == UIC_MODE)
                 {

@@ -63,7 +63,7 @@ void BasicPDxv(struct States * s, struct ControlParams * p)
 
 void ComputedTorque(struct States * s, struct ControlParams * p)
 {
-    s->cmd = p->m*(s->ddxv + (p->kv)*(s->dxv - s->dx) + (p->kp)*(s->xv - s->x)) + p->c*s->dx + s->Fext/466.0;
+    s->cmd = p->m*(s->ddxv + (p->kv)*(s->dxv - s->dx) + (p->kp)*(s->xv - s->x)) + p->c*s->dx - s->Fext/420.0;
     //printf("x0: %.2f\n", s->x0);
     //if(p->useFriction) GetFriction(s, p);
 }

@@ -49,6 +49,13 @@ void initForceSensorUDP(struct ForceSensorData * forceSensorData)
     
     forceSensorData->server_struct_length = sizeof(forceSensorData->server_addr);
 
+    forceSensorData->F[0]=0.0;
+    forceSensorData->F[1]=0.0;
+    forceSensorData->F[2]=0.0;
+    forceSensorData->T[0]=0.0;
+    forceSensorData->T[1]=0.0;
+    forceSensorData->T[2]=0.0;
+
     /*
     uint64_t command_header = 0x1234;
     uint64_t command = 0x002; //start stream
@@ -112,25 +119,32 @@ void readFroceSensor(struct ForceSensorData * forceSensorData)
     while(recvfrom(forceSensorData->socket_desc, forceSensorData->msg, 4*9, 0,
      (struct sockaddr*)&(forceSensorData->server_addr), &(forceSensorData->server_struct_length)) != -1)
     {
+        i = i + 1;
         //printf("%d\n",i++);
     }
 
     //printf("%d\n",forceSensorData->msg[3]);
-    
-    reverseBits(forceSensorData,&(forceSensorData->msg[3]));
-    forceSensorData->F[0] = (double)forceSensorData->msg[3]/1000000.0;
-    reverseBits(forceSensorData,&(forceSensorData->msg[4]));
-    forceSensorData->F[1] = (double)forceSensorData->msg[4]/1000000.0;
-    reverseBits(forceSensorData,&(forceSensorData->msg[5]));
-    forceSensorData->F[2] = (double)forceSensorData->msg[5]/1000000.0;
+    if(i>0)
+    {
+        reverseBits(forceSensorData,&(forceSensorData->msg[3]));
+        forceSensorData->F[0] = (double)forceSensorData->msg[3]/1000000.0;
+        reverseBits(forceSensorData,&(forceSensorData->msg[4]));
+        forceSensorData->F[1] = (double)forceSensorData->msg[4]/1000000.0;
+        reverseBits(forceSensorData,&(forceSensorData->msg[5]));
+        forceSensorData->F[2] = (double)forceSensorData->msg[5]/1000000.0;
 
-    reverseBits(forceSensorData,&(forceSensorData->msg[6]));
-    forceSensorData->T[0] = (double)forceSensorData->msg[6]/1000000.0;
-    reverseBits(forceSensorData,&(forceSensorData->msg[7]));
-    forceSensorData->T[1] = (double)forceSensorData->msg[7]/1000000.0;
-    reverseBits(forceSensorData,&(forceSensorData->msg[8]));
-    forceSensorData->T[2] = (double)forceSensorData->msg[8]/1000000.0;
-    
+        reverseBits(forceSensorData,&(forceSensorData->msg[6]));
+        forceSensorData->T[0] = (double)forceSensorData->msg[6]/1000000.0;
+        reverseBits(forceSensorData,&(forceSensorData->msg[7]));
+        forceSensorData->T[1] = (double)forceSensorData->msg[7]/1000000.0;
+        reverseBits(forceSensorData,&(forceSensorData->msg[8]));
+        forceSensorData->T[2] = (double)forceSensorData->msg[8]/1000000.0;
+    }
+
+    if(forceSensorData->F[2]>100 || forceSensorData->F[2]<-100)
+    {
+        printf("%d, %f",i,forceSensorData->F[2]);
+    }
 
 }
 

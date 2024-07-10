@@ -46,7 +46,7 @@ void * logThread (void * d)
      
         //fprintf (logData->fp,"%d, %d, %.8f,%.8f, %.8f,%.8f, %.8f, %.8f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f, %.6f\n", s_log->t_start.tv_sec, s_log->t_start.tv_nsec, s_log->x, s_log->dx, s_log->xv, s_log->dxv, s_log->ddxv, s_log->x0, s_log->cmd, s_log->F[0], s_log->F[1], s_log->F[2], s_log->T[0], s_log->T[1], s_log->T[2],s_log->emg1,s_log->emg2,s_log->emg3,s_log->emg4,s_log->qhip,s_log->qknee);
         
-        fprintf (logData->fp,"%.8f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f\n", s_log->t,s_log->x, s_log->dx, s_log->xv, s_log->dxv, s_log->ddxv, s_log->x0, s_log->cmd, s_log->F[0], s_log->Fext, s_log->Text,s_log->emg1,s_log->emg2,s_log->emg3,s_log->emg4,s_log->qhip,s_log->qknee);
+        fprintf (logData->fp,"%.8f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f\n", s_log->t,s_log->x, s_log->dx, s_log->xv, s_log->dxv, s_log->ddxv, s_log->x0, s_log->cmd, s_log->Fext, s_log->Text,s_log->emg1,s_log->emg2,s_log->emg3,s_log->emg4,s_log->qhip,s_log->qknee);
         pthread_mutex_unlock(&s_log->lock);
     }
     
