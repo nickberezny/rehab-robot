@@ -221,34 +221,6 @@ void * controllerThread (void * d)
             case IMP_ACCEL_MODE:
                 ImpAccelMode(s, controlParams);
                 break;
-            case UIC_WALL_MODE:
-                //check x,
-                if(iter_cont == iter_reset && controlParams->delta !=0 )
-                {
-                    PeriodicReset(s);
-                    iter_reset += controlParams->delta;
-                    printf("iter reset %d\n", iter_cont);
-
-                    if(iter_reset>BUFFER_SIZE-1)
-                    {
-
-                        iter_reset = iter_reset-BUFFER_SIZE;
-                    }
-
-                }
-
-                if(s->x >= 0.15)
-                {
-                    //hit wall
-                    s->x0 = 0.15;
-                    UICMode(s, controlParams);
-                }
-                else
-                {
-                    //free space
-                    UICZeroStiffnessMode(s, controlParams);
-                }
-                break;
         }
 
         //ctl***************
@@ -285,19 +257,14 @@ void * controllerThread (void * d)
         s_next->qknee_prev = s->qknee;
 
         Butterworth10(&(s_next->dx),&(s->dx),controlParams->dx_filt_x,controlParams->dx_filt_y, controlParams->filter_a_100Hz, controlParams->filter_b_100Hz);
-        Butterworth10(&(s_next->ddx),&(s->ddx),controlParams->ddx_filt_x,controlParams->ddx_filt_y, controlParams->filter_a_10Hz, controlParams->filter_b_10Hz);
+        Butterworth10(&(s_next->ddx),&(s->ddx),controlParams->ddx_filt_x,controlParams->ddx_filt_y, controlParams->filter_a_100Hz, controlParams->filter_b_100Hz);
         Butterworth10(&(s_next->Fext),&(s->Fext),controlParams->F_filt_x,controlParams->F_filt_y, controlParams->filter_a_10Hz, controlParams->filter_b_10Hz);
 
         s_next->Fext = s->Fext;
         s_next->dx = s->dx;
         s_next->ddx = s->ddx;
-	if(s_next->ddx>6.0)
-	{
-		s_next->ddx = 6.0;
-	}else if(s_next->ddx<-6.0)
-	{
-		s_next->ddx = -6.0;
-	}
+	if(
+
         
         s_next->xv_prev = s->xv;
         s_next->dxv_prev = s->dxv;

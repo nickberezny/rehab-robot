@@ -100,6 +100,8 @@ struct ControlParams {
 	double filter_b_100Hz[4]; 
 	double dx_filt_x[FILTER_ORDER+1];
 	double dx_filt_y[FILTER_ORDER+1];
+	double ddx_filt_x[FILTER_ORDER+1];
+	double ddx_filt_y[FILTER_ORDER+1];
 	double F_filt_x[FILTER_ORDER+1];
 	double F_filt_y[FILTER_ORDER+1];
 
@@ -153,13 +155,13 @@ struct States {
 	double dt;
 	double t;
 
-	double x, dx, ddx, dxp;
+	double x, dx, ddx, dxp, dxraw;
 	double Fext, Fraw, Text;
 	double F[3];
  	double T[3];
 	double xv,dxv,ddxv;
 	double xv_prev, dxv_prev, ddxv_prev;
-	double x0,dx0,ddx0,x0_to_send;
+	double x0,dx0,ddx0,x0_to_send,x0_dist;
 	double x0_duration;
 	double xstar, cmd;
 	double emg1,emg2,emg3,emg4;

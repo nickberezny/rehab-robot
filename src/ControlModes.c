@@ -75,6 +75,13 @@ void UICMode(struct States * s, struct ControlParams * p)
     return;
 }
 
+void UICZeroStiffnessMode(struct States * s, struct ControlParams * p)
+{
+    VirtualTrajectoryZeroStiffness(s,p);
+    ComputedTorque(s,p);
+    return;
+}
+
 void ImpFFWMode(struct States * s, struct ControlParams * p)
 {
     //kp is the feedforward gain

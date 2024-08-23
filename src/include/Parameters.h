@@ -33,6 +33,7 @@
 #define FORCE_NORM_MODE 7
 #define IMP_FFW_MODE 8
 #define IMP_ACCEL_MODE 9
+#define UIC_WALL_MODE 10
 
 #define STATIC_MODE 0
 #define TRAJECTORY_MODE 1

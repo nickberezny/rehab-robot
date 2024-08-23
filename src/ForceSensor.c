@@ -172,7 +172,8 @@ void startForceSensorStream(struct ForceSensorData * forceSensorData)
     sleep(0.1);
     readFroceSensor(forceSensorData);
     sleep(0.1);
-
+    //UNCOMMENT LATER!!!!
+/*
     while(forceSensorData->F[0] == 0.0 && forceSensorData->F[1] == 0.0 && forceSensorData->F[2] == 0.0)
     {
 
@@ -187,7 +188,7 @@ void startForceSensorStream(struct ForceSensorData * forceSensorData)
         readFroceSensor(forceSensorData);
         sleep(0.1);
     }
-
+*/
     return;
 }
 

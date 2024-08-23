@@ -79,3 +79,25 @@ void CalibrateForceOffset(struct States * s, struct DAQ * daq)
     controlParams->Fext_offset = force/((double)samples);
     printf("Force offset: %f\n", controlParams->Fext_offset);
 }
+
+void CalibrateFSR(struct States * s, struct DAQ * daq)
+{
+
+    double fsr1 = 0;
+    double fsr2 = 0;
+    int samples = 3000;
+
+    for(int i = 0; i < samples; i++)
+    {
+        daq->aValues[0] = 2.5;
+        ReadWriteDAQ(s,daq);
+        fsr1 += daq->aValues[3];
+        fsr2 += daq->aValues[4];
+        usleep(1000);
+    }
+
+    fsr1 = fsr1/3000.0;
+    fsr2 = fsr2/3000.0;
+
+
+}

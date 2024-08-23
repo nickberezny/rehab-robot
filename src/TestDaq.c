@@ -52,9 +52,9 @@ int main(int aFextrgc, char* argv[])
 	sleep(2);
 	tareForceSensor(daq->fdata);
 	sleep(2);
-	//tareForceSensor(daq->fdata);
-	//sleep(1);
-	//tareForceSensor(daq->fdata);
+	tareForceSensor(daq->fdata);
+	sleep(1);
+	tareForceSensor(daq->fdata);
 
 	startForceSensorStream(daq->fdata);
 	printf("Time, Force, x, LSF, LSB\n");
@@ -67,7 +67,7 @@ int main(int aFextrgc, char* argv[])
 		s->cmd = 2.45;
 		daq->aValues[1] = s->cmd;
 		ReadWriteDAQ(s, daq);
-		//readFroceSensor(daq->fdata);
+		readFroceSensor(daq->fdata);
 		s->x += s->dx*(STEP_SIZE_MS/1000.0);
 		s->Fext = daq->fdata->F[2];
 

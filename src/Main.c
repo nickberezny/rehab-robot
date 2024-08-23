@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
     tensorflow = calloc(1, sizeof *tensorflow);
     struct ForceSensorData *fdata = calloc(1, sizeof fdata);
     
-    controlParams->getKest = true;
+    controlParams->getKest = false;
     
     pthread_t thread[NUMBER_OF_THREADS];
     memset (thread, 0, NUMBER_OF_THREADS * sizeof (pthread_t));
@@ -256,11 +256,19 @@ int main(int argc, char* argv[])
                 controlParams->q1 = malloc(600000.0*sizeof(double));
                 controlParams->q2 = malloc(600000.0*sizeof(double));
 
-                double Atemp[2][2] = {{0.0, 1.0},{-controlParams->Kd/controlParams->Md, -controlParams->Dd/controlParams->Md}};
+                double Dd1 = 0;
+                if(controlParams->controlMode == UIC_WALL_MODE)
+                {
+                    Dd1 = 1000.0;
+                }else{
+                    Dd1 = controlParams->Dd;
+                }
+                
+                double Atemp[2][2] = {{0.0, 1.0},{-controlParams->Kd/controlParams->Md, -Dd1/controlParams->Md}};
                 double A[2][2];
                 DiscretizeMatrix(Atemp,A);
                 controlParams->Ad = A;
-
+                
                 double Atemp2[2][2] = {{0.0, 1.0},{0.0, -controlParams->Dd/controlParams->Md}};
                 double A2[2][2];
                 DiscretizeMatrix(Atemp2,A2);
@@ -277,8 +285,8 @@ int main(int argc, char* argv[])
                 printf("Bd: %f, %f\n",B[0],B[1]);
 
                 controlParams->dx_bound = 0.01;
-                controlParams->m = 0.695;//0.858;//1.0/0.8041;
-                controlParams->c = 0.714;//0.35;//1.096/0.8041;
+                controlParams->m = 0.695;//0.695;//0.858;//1.0/0.8041;
+                controlParams->c = 0.75;//0.35;//1.096/0.8041;
 
                 if(controlParams->controlMode == UIC_MODE)
                 {
