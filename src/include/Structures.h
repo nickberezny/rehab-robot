@@ -105,6 +105,8 @@ struct ControlParams {
 	double F_filt_x[FILTER_ORDER+1];
 	double F_filt_y[FILTER_ORDER+1];
 
+	
+
 };
 
 
@@ -144,6 +146,8 @@ struct DAQ {
 	char i2cSend[4];
 
 	struct ForceSensorData *fdata;
+
+	double FSR1,FSR2;
 	
 };
 

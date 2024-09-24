@@ -231,6 +231,7 @@ int main(int argc, char* argv[])
                 //run fn
                 //CalibrateForceOffset(d,daq);
                 tareForceSensor(daq->fdata);
+                CalibrateFSR(d, daq);
 
                 sleep(1);
                 sprintf(sendData, "UI::CALIBRATE");
@@ -259,7 +260,7 @@ int main(int argc, char* argv[])
                 double Dd1 = 0;
                 if(controlParams->controlMode == UIC_WALL_MODE)
                 {
-                    Dd1 = 1000.0;
+                    Dd1 = 100.0;
                 }else{
                     Dd1 = controlParams->Dd;
                 }

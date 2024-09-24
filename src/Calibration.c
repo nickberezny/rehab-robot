@@ -83,6 +83,8 @@ void CalibrateForceOffset(struct States * s, struct DAQ * daq)
 void CalibrateFSR(struct States * s, struct DAQ * daq)
 {
 
+    extern struct ControlParams *controlParams;
+
     double fsr1 = 0;
     double fsr2 = 0;
     int samples = 3000;
@@ -96,8 +98,10 @@ void CalibrateFSR(struct States * s, struct DAQ * daq)
         usleep(1000);
     }
 
-    fsr1 = fsr1/3000.0;
-    fsr2 = fsr2/3000.0;
+    daq->FSR1 = fsr1/3000.0;
+    daq->FSR2 = fsr2/3000.0;
+
+
 
 
 }

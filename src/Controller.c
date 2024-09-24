@@ -156,7 +156,14 @@ void * controllerThread (void * d)
                     }
 
                 }
-                UICMode(s, controlParams);
+                
+                if(controlParams->Kd != 0.0){
+                    UICMode(s, controlParams);
+                }
+                else
+                {
+                    UICZeroStiffnessMode(s, controlParams);
+                }
                 break; 
             case UIAC_MODE:
                 //Unified Impedance and Admittance Control
@@ -267,8 +274,8 @@ void * controllerThread (void * d)
         daq->aValues[0] = s->cmd;
         
         ReadWriteDAQ(s_next, daq);
-        s_next->Fext -= controlParams->Fext_offset;
-        s->Fraw = s_next->Fext;
+        //s_next->Fext -= controlParams->Fext_offset;
+        s->Fraw = -daq->fdata->F[2];
         s->dxraw = s->dx;
         
          if(controlParams->recordEMG)

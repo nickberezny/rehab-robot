@@ -101,9 +101,14 @@ void ReadWriteDAQ(struct States * s, struct DAQ * daq)
 
     readFroceSensor(daq->fdata);
 
-    s->Fext = -daq->fdata->F[2];//0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
+    //s->Fext = -daq->fdata->F[2];//0.001*(FT_GAIN_g*daq->aValues[1] + FT_OFFSET_g)*9.81; //in N
     //printf("%f\n",s->Fext);
     s->Text = daq->fdata->T[1];
+
+    //s->emg3 = -daq->fdata->F[2]
+    s->Fext = -50.0*(daq->aValues[3] - daq->FSR1) + 50.0*(daq->aValues[4] -  daq->FSR2);
+    //if(s->Fext > 100.0) s->Fext = 100.0;
+    //if(s->Fext < -100.0) s->Fext = -100.0;
 
     s->F[0] = daq->fdata->F[0];
     s->F[1] = daq->fdata->F[1];
